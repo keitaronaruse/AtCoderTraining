@@ -23,16 +23,16 @@ int main()
     }
 
     //  DP table
-    std::vector<int> dp_table( N + 1, 0 );
+    std::vector<int> dp( N + 1, 0 );
     //  Initial value
-    dp_table.at( 0 ) = 0;
+    dp.at( 0 ) = 0;
     //  DP calculation
     for( size_t i = 0; i != N; ++i ) {
-        dp_table.at( i + 1 ) = std::max( dp_table.at( i ), dp_table.at( i ) + A.at( i ) );
+        dp.at( i + 1 ) = std::max( dp.at( i ), dp.at( i ) + A.at( i ) );
     }
     
     //  Print DP result
-    std::cout << dp_table.at( N ) << std::endl;
+    std::cout << dp.at( N ) << std::endl;
 
     //  Finalize
     return( 0 );
