@@ -30,14 +30,22 @@ int main()
     }
 
     //  DP table
-    std::vector< std::vector<int> > dp_table( N + 1, std::vector<int>( W, 0 ) );
-    // //  DP calculation
-    // for( size_t i = 0; i != N; ++i ) {
-    //     dp_table.at( i + 1 ) = std::max( dp_table.at( i ), dp_table.at( i ) + A.at( i ) );
-    // }
+    std::vector< std::vector<int> > dp( N + 1, std::vector<int>( W + 1, 0 ) );
+    //  DP calculation
+    for( size_t i = 0; i != N; ++i ) {
+        for( size_t j = 0; j != W + 1; ++j ) {
+            if( w.at( i ) <= j ) {
+                dp.at( i + 1 ).at( j ) = 
+                std::max( dp.at( i ).at( j - w.at( i ) ) + v.at( i ), dp.at( i ).at( j ) );
+            }
+            else {
+                dp.at( i + 1 ).at( j ) = dp.at( i ).at( j );
+            }
+        }
+    }
     
-    // //  Print DP result
-    // std::cout << dp_table.at( N ) << std::endl;
+    //  Print DP result
+    std::cout << dp.at( N ).at( W ) << std::endl;
 
     //  Finalize
     return( 0 );
