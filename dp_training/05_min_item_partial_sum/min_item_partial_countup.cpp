@@ -12,6 +12,8 @@
 
 int main()
 {
+    const size_t inf = 1e9;
+
     //  Read N: the number of items
     size_t N( 0 );
     std::cin >> N;
@@ -27,13 +29,15 @@ int main()
     }
 
     //  DP table
-    std::vector< std::vector<size_t> > dp( N + 1, std::vector<size_t>( A + 1, 0 ) );
-    dp.at( 0 ).at( 0 ) = true;
+    std::vector< std::vector<size_t> > dp( N + 1, std::vector<size_t>( A + 1, inf ) );
+    dp.at( 0 ).at( 0 ) = 0;
     //  DP calculation
     for( size_t i = 0; i != N; ++i ) {
         for( size_t j = 0; j != A + 1; ++j ) {
             if( a.at( i ) <= j ) {
-                dp.at( i + 1 ).at( j ) = dp.at( i ).at( j - a.at( i ) ) + dp.at( i ).at( j );
+                dp.at( i + 1 ).at( j ) = std::min( 
+                    dp.at( i ).at( j - a.at( i ) ) + 1, dp.at( i ).at( j )
+                );
             }
             else {
                 dp.at( i + 1 ).at( j ) = dp.at( i ).at( j );
@@ -42,7 +46,12 @@ int main()
     }
     
     //  Print DP result
-    std::cout << dp.at( N ).at( A ) << std::endl;
+    if( inf > dp.at( N ).at( A ) ) {
+        std::cout << dp.at( N ).at( A ) << std::endl;
+    }
+    else {
+        std::cout << "-1" << std::endl;
+    }
 
     //  Finalize
     return( 0 );

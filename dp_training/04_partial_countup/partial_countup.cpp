@@ -28,7 +28,7 @@ int main()
 
     //  DP table
     std::vector< std::vector<size_t> > dp( N + 1, std::vector<size_t>( A + 1, 0 ) );
-    dp.at( 0 ).at( 0 ) = true;
+    dp.at( 0 ).at( 0 ) = 1;
     //  DP calculation
     for( size_t i = 0; i != N; ++i ) {
         for( size_t j = 0; j != A + 1; ++j ) {
