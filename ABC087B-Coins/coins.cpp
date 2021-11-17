@@ -1,7 +1,7 @@
 /*
     ABC087B Coins
         Author: Keitaro Naruse
-        Date:   2021-11-08
+        Date:   2021-11-16
         MIT License
 */
 
@@ -10,50 +10,39 @@
 
 int main()
 {
-    int A( 0 ), B( 0 ), C( 0 ), X( 0 );
+    size_t A( 0 ), B( 0 ), C( 0 ), X( 0 );
 
     //  Read A, B, C, X
+    //  A: the number of 500 coins
+    //  B: the number of 100 coins
+    //  C: the number of  50 coins
+    //  X: a target price
     std::cin >> A >> B >> C >> X;
     std::cout << A << " " << B << " " << C << " " << X << std::endl;
 
-    //  Solve this problem by dynamic programming
-    //  The number of coins
-    int N( A + B + C ); 
-    std::cout << N << std::endl;
-    //  The total ammount of money scaled by 50-yen
-    int W( X / 50 ); 
-    std::cout << W << std::endl;
-    //  The ammount of money of each of the coins scaled by 50-yen
-    std::vector<int> w( N );
-    for( size_t i = 0; i != A; ++i ) {
-        w.push_back( 10 );
-        std::cout << "10 ";
+    //  Look-up table of prices by the number of 500 coins
+    std::vector< size_t > price_table_500_coins( A+1 );
+    for(size_t i = 0; i != A+1; i++) {
+        price_table_500_coins.at( i ) = 500 * i;
+        std::cerr << price_table_500_coins.at( i ) << " ";
     }
-    for( size_t i = 0; i != B; ++i ) {
-        w.push_back( 2 );
-        std::cout << "2 ";
+    std::cerr << std::endl;
+    //  Look-up table of prices by the number of 100 coins
+    std::vector< size_t > price_table_100_coins( B+1 );
+    for(size_t i = 0; i != B+1; i++) {
+        price_table_100_coins.at( i ) = 100 * i;
+        std::cerr << price_table_100_coins.at( i ) << " ";
     }
-    for( size_t i = 0; i != C; ++i ) {
-        w.push_back( 1 );
-        std::cout << "1 ";
+    std::cerr << std::endl;
+    //  Look-up table of prices by the number of 50 coins
+    std::vector< size_t > price_table_50_coins( C+1 );
+    for(size_t i = 0; i != C+1; i++) {
+        price_table_50_coins.at( i ) = 50 * i;
+        std::cerr << price_table_50_coins.at( i ) << " ";
     }
-    std::cout << std::endl;
+    std::cerr << std::endl;
 
-    //  DP table
-    std::vector< std::vector< int > > dp( N + 1, std::vector<int>( W + 1, 0 ) );
-    dp.at( 0 ).at( 0 ) = 1;
-    //  DP calculation
-    for( size_t i = 0; i != N; ++i ) {
-        for( size_t j = 0; j != W + 1; ++j ) {
-            if( w.at( i ) <= j ) {
-                dp.at( i + 1 ).at( j ) = dp.at( i ).at( j - w.at( i ) ) + dp.at( i ).at( j );
-            }
-            else {
-                dp.at( i + 1 ).at( j ) = dp.at( i ).at( j );
-            }
-        }
-    }
-
-    std::cout << dp.at( N ).at( W ) << std::endl;
+    //  Finalize
+    std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
