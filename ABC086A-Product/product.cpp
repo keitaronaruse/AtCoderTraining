@@ -1,5 +1,6 @@
 /*
     ABC086A Product
+        https://atcoder.jp/contests/abs/tasks/abc086_a
         Author: Keitaro Naruse
         Date:   2021-11-08
         MIT License

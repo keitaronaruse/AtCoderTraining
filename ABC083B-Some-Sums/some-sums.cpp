@@ -1,6 +1,6 @@
 /*
     ABC083B - Some Sums
-        URL: https://atcoder.jp/contests/abs/tasks/abc083_b
+        https://atcoder.jp/contests/abs/tasks/abc083_b
         Author: Keitaro Naruse
         Date:   2021-11-17
         MIT License

@@ -1,5 +1,6 @@
 /*
     ABC087B Coins
+        https://atcoder.jp/contests/abs/tasks/abc087_b
         Author: Keitaro Naruse
         Date:   2021-11-17
         MIT License

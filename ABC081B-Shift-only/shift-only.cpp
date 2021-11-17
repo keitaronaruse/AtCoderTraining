@@ -1,5 +1,6 @@
 /*
     ABC081B Shift only
+        https://atcoder.jp/contests/abs/tasks/abc081_b
         Author: Keitaro Naruse
         Date:   2021-11-08
         MIT License
