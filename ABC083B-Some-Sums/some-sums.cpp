@@ -34,7 +34,7 @@ int main()
     //  Finalize
     std::cout << total << std::endl;
 
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
 
     return( 0 );
 }
