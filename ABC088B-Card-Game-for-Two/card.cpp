@@ -20,24 +20,19 @@ int main()
     //  Read N
     size_t N( 0 );
     std::cin >> N;
-    std::cerr << N << std::endl;
+    // std::cerr << N << std::endl;
 
     //  Read ai's
     std::vector< size_t > cards( N );
     for( size_t i = 0; i != N; i++ ) {
         std::cin >> cards.at( i );
-        std::cerr << cards.at( i ) << " ";
+        // std::cerr << cards.at( i ) << " ";
     }
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
 
     //  Sort cards
     std::vector< size_t > sorted_card( cards );
     std::sort( sorted_card.begin(), sorted_card.end(), compare );
-    for( auto e : sorted_card ) {
-        std::cerr << e << " ";
-    }
-    std::cerr << std::endl;
-
 
     //  Max point calculation
     size_t A( 0 ), B( 0 );
@@ -52,7 +47,7 @@ int main()
     std::cout << A - B << std::endl;
 
     //  Finalize
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
 
     return( 0 );
 }
