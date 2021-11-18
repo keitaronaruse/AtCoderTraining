@@ -15,6 +15,9 @@ int main()
     
     //  Read a and b
     std::cin >> a >> b;
+    //  Debug
+    std::cerr << a << " " << b << std::endl;
+    
     //  Check if a*b is even and odd 
     if( 0 == a * b % 2 ) {
         std::cout << "Even" << std::endl;
@@ -22,6 +25,8 @@ int main()
     else {
         std::cout << "Odd" << std::endl;
     }
-        
+
+    //  Finalize
+    std::cerr << "Normally terminated." << std::endl;      
     return( 0 );
 }

@@ -13,10 +13,16 @@ int main()
     //  Read N
     size_t N( 0 );
     std::cin >> N;
+<<<<<<< HEAD
+=======
+    //  Debug
+    std::cerr << N << std::endl;
+>>>>>>> 25ce3e186d5cb1aecc95f014ed58c6c36b35de93
     
     //  Read Y
     size_t Y( 0 );
     std::cin >> Y;
+<<<<<<< HEAD
 
     //  Debug
     std::cerr << N << " " << Y << std::endl;
@@ -36,6 +42,10 @@ int main()
         }
     }
     std::cout << "-1 -1 -1" << std::endl;
+=======
+    //  Debug
+    std::cerr << Y << std::endl;
+>>>>>>> 25ce3e186d5cb1aecc95f014ed58c6c36b35de93
 
     //  Finalize
     std::cerr << "Normally teminated as not found." << std::endl;

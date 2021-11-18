@@ -16,6 +16,8 @@ int main()
 
     //  Read string   
     std::cin >> s;
+    //  Debug routine
+    std::cerr << s << std::endl;
 
     //  For all the characters
     for( i = 0; i != s.size(); ++i ) {
@@ -28,5 +30,7 @@ int main()
     //  Print the appearance
     std::cout << n << std::endl;
     
+    //  Finalize
+    std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
