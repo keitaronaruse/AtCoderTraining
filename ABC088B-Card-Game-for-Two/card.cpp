@@ -20,15 +20,18 @@ int main()
     //  Read N
     size_t N( 0 );
     std::cin >> N;
-    // std::cerr << N << std::endl;
+    //  Debug
+    std::cerr << N << std::endl;
 
     //  Read ai's
     std::vector< size_t > cards( N );
     for( size_t i = 0; i != N; i++ ) {
         std::cin >> cards.at( i );
-        // std::cerr << cards.at( i ) << " ";
+        //  Debug
+        std::cerr << cards.at( i ) << " ";
     }
-    // std::cerr << std::endl;
+    //  Debug
+    std::cerr << std::endl;
 
     //  Sort cards
     std::vector< size_t > sorted_card( cards );
@@ -47,7 +50,7 @@ int main()
     std::cout << A - B << std::endl;
 
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    std::cerr << "Normally terminated." << std::endl;
 
     return( 0 );
 }

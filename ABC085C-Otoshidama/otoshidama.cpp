@@ -13,11 +13,13 @@ int main()
     //  Read N
     size_t N( 0 );
     std::cin >> N;
+    //  Debug
     std::cerr << N << std::endl;
     
     //  Read Y
     size_t Y( 0 );
     std::cin >> Y;
+    //  Debug
     std::cerr << Y << std::endl;
 
     //  Finalize

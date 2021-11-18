@@ -15,25 +15,30 @@ int main()
     //  Read N
     size_t N( 0 );
     std::cin >> N;
+    //  Debug
     std::cerr << N << std::endl;
 
     //  Read d
     std::vector< size_t > d( N );
     for( size_t i = 0; i != N; i++ ) {
         std::cin >> d.at( i );
+        //  Debug
         std::cerr << d.at( i ) << " ";
     }
+    //  Debug
     std::cerr << std::endl;
 
     //  Sort
     std::vector< size_t > sorted_d( d );
     std::sort( sorted_d.begin(), sorted_d.end() );
     for( size_t i = 0; i != N; i++ ) {
+        //  Debug
         std::cerr << sorted_d.at( i ) << " ";
     }
+    //  Debug
     std::cerr << std::endl;
     
-    //  Count
+    //  Count the number of gaps
     size_t steps( 1 ), prev_d = sorted_d.at( 0 );
     for( size_t i = 1; i != N; i++ ) {
         if( sorted_d.at( i ) != prev_d ) {
