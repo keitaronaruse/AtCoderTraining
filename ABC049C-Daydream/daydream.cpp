@@ -2,15 +2,34 @@
     ABC049C - 白昼夢
         https://atcoder.jp/contests/abs/tasks/arc065_a
         Author: Keitaro Naruse
-        Date:   2021-11-18
+        Date:   2021-11-18, 2021-11-20
         MIT License
 */
-
+//
+//  # Programming point
+//  - Distinguish dream-erase? from dreamer-* 
+//  # My solution
+//  - if a string matches with dream-eraser or dream-erase
+//    update the string
+//  - else if it matches with dream or dreamer
+//    update the string
+//  - else if it matchers with erase or eraser
+//    update the string
+//  - else
+//    No match -> No
+//
 #include <iostream>
 #include <string>
 #include <algorithm>
 
-bool match_at(std::string::iterator b, std::string::iterator e, 
+/*
+    match_strings(b, e, b2, e2)
+        # return 
+        - true if [b, e] matches with [b2, e2]
+        - false if not
+        - matching length: a shorter string if [b, e] or [b2, e2]
+*/
+bool match_strings(std::string::iterator b, std::string::iterator e, 
     std::string::iterator b2, std::string::iterator e2 )
 {
     //  Loop by b2-e2 word
@@ -54,25 +73,25 @@ int main()
         std::string s;
         std::copy( b, e, std::back_inserter( s ) );
         std::cerr << s << std::endl;
-        if( match_at( b, e, dreamer.begin(), dreamer.end() ) ) {
+        if( match_strings( b, e, dreamer.begin(), dreamer.end() ) ) {
             b += dreamer.size();
             //  dreamer is found
             //  Debug 
             std::cerr << "dreamer" << std::endl;
         }
-        else if( match_at( b, e, dream.begin(), dream.end() ) ) {
+        else if( match_strings( b, e, dream.begin(), dream.end() ) ) {
             b += dream.size();
             //  dream is found
             //  Debug 
             std::cerr << "dream" << std::endl;
         }
-        else if( match_at( b, e, eraser.begin(), eraser.end() ) ) {
+        else if( match_strings( b, e, eraser.begin(), eraser.end() ) ) {
             b += eraser.size();
             //  eraser is found
             //  Debug 
             std::cerr << "eraser" << std::endl;
         }
-        else if( match_at( b, e, erase.begin(), erase.end() ) ) {
+        else if( match_strings( b, e, erase.begin(), erase.end() ) ) {
             b += erase.size();
             //  erase is found
             //  Debug 
