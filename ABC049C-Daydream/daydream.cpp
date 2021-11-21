@@ -2,22 +2,22 @@
     ABC049C - 白昼夢
         https://atcoder.jp/contests/abs/tasks/arc065_a
         Author: Keitaro Naruse
-        Date:   2021-11-18, 2021-11-20
+        Date:   2021-11-18, 2021-11-21
         MIT License
 */
 //
 //  # Programming point
 //  - Distinguish dream-erase? from dreamer-* 
 //  # My solution
-//  - if a string matches with dream-eraser or dream-erase
-//    update the string
-//  - else if it matches with dream or dreamer
-//    update the string
-//  - else if it matchers with erase or eraser
-//    update the string
-//  - else
-//    No match -> No
-//
+//  - if a string matches with dream
+//    - if the follwoing matches with erase -> continue
+//    - else if it does with er -> dreamer
+//    - else -> No
+//  - else if a string matches with erase
+//    - if the following matches with r -> eraser
+//    - else -> erase
+//  - else -> No
+
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -27,38 +27,41 @@
         # return 
         - true if [b, e] matches with [b2, e2]
         - false if not
-        - matching length: a shorter string if [b, e] or [b2, e2]
 */
 bool match_strings(std::string::iterator b, std::string::iterator e, 
     std::string::iterator b2, std::string::iterator e2 )
 {
-    //  Loop by b2-e2 word
-    while( b2 != e2 ) {
-        //  If b-e word is short for matching b2-e2 word
-        if( b == e ) {
-            //  Not mach
-            return( false );
-        }
+    //  Check empty strings
+    //  If both of the strings are empty, matched
+    if( ( b == e ) && ( b2 == e2 ) ) {
+        return( true );
+    }
 
+    while( true ) {
         //  Continue the loop if the characters are same
         if(*b == *b2) {
             b ++;
             b2 ++;
+            //  if either of the words is ended, matched
+            if( ( b == e ) || ( b2 == e2 ) ) {
+                return( true );
+            }
         }
         else {
             //  Not match
             return( false );
         }
     }
-    
+  
     //  If it has come to here, all match
     return( true );
 }
 
 int main()
 {
+    //  Initialize
     //  literals
-    std::string dreamer("dreamer"), dream("dream"), eraser("eraser"), erase("erase");
+    std::string dream("dream"), erase("erase"), er("er"), r("r"); 
 
     //  Read S
     std::string S;
@@ -66,48 +69,66 @@ int main()
     //  Debug
     std::cerr << S << std::endl;
 
-    //
+    //  Main 
+    bool isMatched = true;
     std::string::iterator b = S.begin(), e = S.end();
-    while(b != e) {
-        //  Debug
-        std::string s;
-        std::copy( b, e, std::back_inserter( s ) );
-        std::cerr << s << std::endl;
-        if( match_strings( b, e, dreamer.begin(), dreamer.end() ) ) {
-            b += dreamer.size();
-            //  dreamer is found
-            //  Debug 
-            std::cerr << "dreamer" << std::endl;
-        }
-        else if( match_strings( b, e, dream.begin(), dream.end() ) ) {
+    while( b != e ) {
+        //  Match with dream
+        if( match_strings( b, e, dream.begin(), dream.end() ) ) {
             b += dream.size();
-            //  dream is found
-            //  Debug 
-            std::cerr << "dream" << std::endl;
+            //  If it is at the end of the sentence, matched 
+            if( b == e ) {
+                break;
+            } 
+
+            //  Match with erase
+            if( match_strings( b, e, erase.begin(), erase.end() ) ) {
+                continue;
+            }
+            //  Match with er
+            else if( match_strings( b, e, er.begin(), er.end() ) ) {
+                b += er.size();
+                //  If it is at the end of the sentence, matched 
+                if( b == e ) {
+                    break;
+                } 
+            }
+            //  No match
+            else {
+                isMatched = false;
+                break;
+            }
         }
-        else if( match_strings( b, e, eraser.begin(), eraser.end() ) ) {
-            b += eraser.size();
-            //  eraser is found
-            //  Debug 
-            std::cerr << "eraser" << std::endl;
-        }
+        //  Match with erase
         else if( match_strings( b, e, erase.begin(), erase.end() ) ) {
             b += erase.size();
-            //  erase is found
-            //  Debug 
-            std::cerr << "erase" << std::endl;
+            //  If it is at the end of the sentence, matched 
+            if( b == e ) {
+                break;
+            } 
+
+            if( match_strings( b, e, r.begin(), r.end() ) ) {
+                b += r.size();
+                //  If it is at the end of the sentence, matched 
+                if( b == e ) {
+                    break;
+                } 
+            }
         }
         else {
-            //  None of the above is found
-            std::cout << "NO" << std::endl;
-            //  Finalize
-            std::cerr << "Normally terminated with no found." << std::endl;
-            return( 0 );
+            //  No match
+            isMatched = false;
+            break;
         }
     }
 
-    //  If it come here, it is found
-    std::cout << "YES" << std::endl;
+    //  Print result
+    if( isMatched ) {
+        std::cout << "YES" << std::endl;
+    }
+    else {
+        std::cout << "NO" << std::endl;
+    }
 
     //  Finalize
     std::cerr << "Normally terminated." << std::endl;
