@@ -8,8 +8,8 @@ dream - dreamer
 dream - dream
 dream - eraser
 dream - erase
-dreamer - er
-dreamer - dr
+dream - er
+dream - dr
 eraser - dreamer
 eraser - dream
 eraser - eraser
@@ -20,5 +20,5 @@ erase - dreamer
 erase - dream
 erase - eraser
 erase - erase
-eraser - er
-eraser - dr
+erase - er
+erase - dr
