@@ -60,15 +60,9 @@ int main()
     //  Debug
     // std::cerr << std::endl;
 
-    //  Calculate and output target sums
+    //  Calculate and display target sums
     for( int i = 0; i != H; i++ ) {
         for( int j = 0; j != W; j++ ) {
-            //  The following is slow
-            // int sum = 0;
-            // sum += row_table.at( i ) + col_table.at( j ) - A.at( i ).at( j );
-            // std::cout << sum << " ";
-
-            //  Insted
             std::cout << row_table.at( i ) + col_table.at( j ) - A.at( i ).at( j ) << " ";
         }
         std::cout << std::endl;

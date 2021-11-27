@@ -54,7 +54,7 @@ int main()
     //  Main
     //  Calculate a sum from L to R by cumulation(R) - cumulation(L)
     for( int j = 1; j != Q + 1; j ++ ) {
-        //  Output
+        //  Calulate and display the sum 
         std::cout
         << cumulation.at( 1 ).at( R.at( j ) ) - cumulation.at( 1 ).at( L.at( j ) - 1 ) 
         << " " 
