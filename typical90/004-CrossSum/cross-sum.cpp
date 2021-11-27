@@ -6,6 +6,10 @@
         MIT License
 */
 
+//  # Solution: Memoization
+//  - Make a sum table of rows and one of colums
+//  - Calculate the target sum by the tables
+
 #include <iostream>
 #include <vector>
 
@@ -31,30 +35,20 @@ int main()
     }
 
     //  Main
-    //  Memo table strategy
+    //  Memoization strategy
     //  Calculate sum of columns for each row
     //  Debug
     // std::cerr << "row_table" << std::endl;
+    // std::cerr << "col_table" << std::endl;
     std::vector<int> row_table( H, 0 );
+    std::vector<int> col_table( W );
     for( int i = 0; i != H; i++ ) {
         for( int j = 0; j != W; j++ ) {
             row_table.at( i ) +=  A.at( i ).at( j );
-        }
-        //  Debug
-        // std::cerr << row_table.at( i ) << " ";
-    }
-    //  Debug
-    // std::cerr << std::endl;
-
-    //  Calculate sum of columns for each row
-    //  Debug
-    // std::cerr << "col_table" << std::endl;
-    std::vector<int> col_table( W );
-    for( int j = 0; j != W; j++ ) {
-        for( int i = 0; i != H; i++ ) {
             col_table.at( j ) +=  A.at( i ).at( j );
         }
         //  Debug
+        // std::cerr << row_table.at( i ) << " ";
         // std::cerr << col_table.at( j ) << " ";
     }
     //  Debug
