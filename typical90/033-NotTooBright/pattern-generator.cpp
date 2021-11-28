@@ -17,28 +17,28 @@ int main()
     const size_t H = 2, W = 2;
 
     //  Main
+    int max_ones = 0;
     //  Make and disply all possible patterns
-    int num_good = 0;
-    for( int k = 0; k != ( 1 << H + W ); k ++ ) {
-        std::bitset< ( H + W ) > b( k );
-        if( ( b.count() == 0 ) || ( b.count() == 1 ) ) {
-            num_good ++;
-            //  Debug
-            std::cerr << b << std::endl;
-            //  Debug
-            //  b[0] b[1]
-            //  b[2] b[3]
-            // ( b[0] == true ) ? std::cerr << "#" : std::cerr << "."; 
-            // ( b[1] == true ) ? std::cerr << "#" : std::cerr << ".";
-            // std::cerr << std::endl; 
-            // ( b[2] == true ) ? std::cerr << "#" : std::cerr << "."; 
-            // ( b[3] == true ) ? std::cerr << "#" : std::cerr << ".";
-            // std::cerr << std::endl; 
+    for( int k = ( 1 << H * W ) - 1; k != -1; k -- ) {
+        bool isGood = true;
+        std::bitset< ( H * W ) > b( k );
+        for( int i = 0; isGood && ( i != H - 1 ); i ++ ) {
+            for( int j = 0; isGood && j != W - 1; j ++ ) {
+                int num_bit = 
+                b[ W * i + j ] + b[ W * i + j + 1 ] 
+                + b[ W * (i + 1) + j ] + b[ W * (i + 1) + j + 1 ];
+                if( num_bit >= 2 ) {
+                    isGood = false;
+                }
+            }
+        }
+        if( isGood ) {
+            if( max_ones < b.count() ) {
+                max_ones = b.count();
+                std::cout << b << " " << max_ones << std::endl;
+            }
         }
     }
-
-    //  Display result
-    std::cout << num_good << std::endl;
 
     //  Finalize
     //  Debug

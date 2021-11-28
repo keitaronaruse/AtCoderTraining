@@ -21,14 +21,20 @@ int main()
     int H = 0, W = 0;
     std::cin >> H >> W;
     //  Debug
-    std::cerr << H << " " << W << std::endl;
+    // std::cerr << H << " " << W << std::endl;
 
     //  Main
-    //  Regular case
-    std::cout << ( H / 2 + H % 2 ) * ( W / 2 + W % 2 ) << std::endl;
+    //  Abnormal case
+    if(  (H == 1 ) || ( W == 1 ) ) {
+        std::cout << H * W << std::endl;
+    }
+    else {
+        //  Regular case
+        std::cout << ( ( H / 2 ) + ( H % 2 ) ) * ( ( W / 2 ) + ( W % 2 ) ) << std::endl;
+    }
 
     //  Finalize
     //  Debug
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
