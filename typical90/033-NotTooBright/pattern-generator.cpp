@@ -9,24 +9,19 @@
 
 #include <iostream>
 #include <vector>
+#include <bitset>
 
 int main()
 {
     //  Initialize
-    //  Read H and W
-    int H = 0, W = 0;
-    std::cin >> H >> W;
-    //  Debug
-    // std::cerr << H << " " << W << std::endl;
+    const size_t H = 5, W = 5;
 
     //  Main
     //  Make and disply all possible patterns
-    std::vector< std::vector<char> > pattern( H, std::vector<char>( W, '.') );
-    for( int i = 0; i != H; i++ ) {
-        for( int j = 0; j != W; j++ ) {
-            ;
-        }
-    } 
+    for( int i = 0; i != ( 1 << H + W ); i ++ ) {
+        std::bitset< ( H + W ) > b( i );
+        std::cout << b << std::endl;
+    }
 
     //  Finalize
     //  Debug
