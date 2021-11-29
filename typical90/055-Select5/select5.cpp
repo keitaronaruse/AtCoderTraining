@@ -6,13 +6,33 @@
         MIT License
 */
 
+// # Solution
+// - Ai = (ki * P + Qi)
+// - Ai*Aj*...*Am 
+//   = (ki * P + Qi)*(kj * P + Qj) *...* (km * P + Qm)
+//   = (...)*P + Qi*Qj*...Qm
+// - Ai*Aj*...*Am % P == Qi*Qj*...Qm % P
+
 #include <iostream>
+#include <vector>
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read N, P, Q
+    int N = 0, P = 0, Q = 0;
+    std::cin >> N >> P >> Q;
+    //  Debug
+    std::cerr << N << " " << P << " " << Q << std::endl;
+    
+    //  Read Ai
+    std::vector< int > A( N );
+    for( int i = 0; i != N; i ++ ) {
+        std::cin >> A.at( i );
+        //  Debug
+        std::cerr << A.at( i ) << " ";
+    }
+    //  Debug
+    std::cerr << std::endl;
 
     //  Make all the patterns of picking up 5 out of N
     int count = 0;
