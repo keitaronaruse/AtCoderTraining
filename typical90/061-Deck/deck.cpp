@@ -7,6 +7,7 @@
 */
 
 // # Solution
+// - Implement deck by deque
 
 #include <iostream>
 #include <deque>
@@ -26,7 +27,7 @@ int main()
         //  Debug
         std::cerr << t.at( i ) << " " << x.at( i ) << std::endl;
     }
-    
+
     //  Main
     std::deque<int> deck;
 
