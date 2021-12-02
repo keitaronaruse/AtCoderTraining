@@ -7,6 +7,8 @@
 */
 
 // # Solution
+// - For each node, store adjacent nodes in list
+// - Store all of the nodes in vector
 
 #include <iostream>
 #include <vector>
