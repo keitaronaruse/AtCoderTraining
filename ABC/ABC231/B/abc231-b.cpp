@@ -1,14 +1,11 @@
 /*
-    ABC231 Problem A
-    A - AtCoder Quiz 3
-        https://atcoder.jp/contests/abc230/tasks/abc230_a
+    ABC231 Problem B
         Author: Keitaro Naruse
         Date:   2021-12-11
         MIT License
 */
 
 #include <iostream>
-#include <cstdio>
 
 int main()
 {
@@ -17,6 +14,6 @@ int main()
     std::cin >> N;
 
     //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
