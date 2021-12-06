@@ -7,59 +7,40 @@
 */
 
 // # Solution
+// - Loop for k, the number of coins
+// - Split k into (ka, kb, kc) and judge if ka*A + kb*B + kc*C == N
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <cstdio>
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  The number of maximum coins
+    // const int K = 9999;
+    const int K = 500;
+    //  Read N, A, B, C
+    int N = 0, A = 0, B = 0, C = 0;
+    std::cin >> N >> A >> B >> C;
     //  Debug
-    // std::cerr << N << std::endl;
+    std::cerr << N << std::endl
+    << A << " " << B << " " << C << std::endl;
 
-    //  Read Ai
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-        //  Debug
-        // std::cerr << A.at( i ) << " ";
+    //  Main
+    long long count = 0LL;
+    for( int k = 0; k <= K; k ++ ) {
+        for( int ka = 0; ka <= k; ka ++ ) {
+            for( int kb = 0; kb <= k - ka; kb ++ ) {
+                for( int kc = 0; kc <= k - ka - kb; kc ++ ) {
+                    count ++;
+                }
+            }
+        }
     }
-    // std::cerr << std::endl;
-
-    //  Read Bi
-    std::vector< int > B( N );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> B.at( i );
-        //  Debug
-        // std::cerr << B.at( i ) << " ";
-    }
-    // std::cerr << std::endl;
-
-    //  Sort A and B
-    std::sort( A.begin(), A.end() );
-    std::sort( B.begin(), B.end() );
-    long long inconvenience = 0LL;
-    for( int i = 0; i < N; i ++ ) {
-        inconvenience += ( long long )( A.at( i ) > B.at( i ) ) ? A.at( i ) - B.at( i ) : B.at( i ) - A.at( i );
-    }
-    std::cout << inconvenience << std::endl;
-
-    // Debug
-    // for( const auto& a : A ) {
-    //     std::cerr << a << " ";
-    // }
-    // std::cerr << std::endl;
-
-    // for( const auto& b : B ) {
-    //     std::cerr << b << " ";
-    // }
-    // std::cerr << std::endl;    
+    std::cerr << count << std::endl;
 
     //  Finalize
     //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
