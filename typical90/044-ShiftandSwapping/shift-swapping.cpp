@@ -7,6 +7,7 @@
 */
 
 // # Solution
+// - Impliment by the ring buffer
 
 #include <iostream>
 #include <vector>
