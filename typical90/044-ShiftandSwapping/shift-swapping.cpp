@@ -2,21 +2,79 @@
     044 - Shift and Swapping（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_ar
         Author: Keitaro Naruse
-        Date:   2021-12-10
+        Date:   2021-12-11
         MIT License
 */
 
 // # Solution
 
 #include <iostream>
-#include <algorithm>
+#include <vector>
+#include <utility>
 
 int main()
 {
-    //  Display result
+    //  Read N and Q
+    int N = 0, Q = 0;
+    std::cin >> N >> Q;
+    //  Debug
+    // std::cerr << N << " " << Q << std::endl;
+
+    //  Read Ai
+    std::vector< int > A( N );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> A.at( i );
+        //  Debug
+        // std::cerr << A.at( i ) << " ";
+    }
+    //  Debug
+    // std::cerr << std::endl;
+
+    //  Read Tj, Xj, Yj
+    std::vector< int > T( Q ), X( Q ), Y( Q );
+    for( int j = 0; j < Q; j ++ ) {
+        std::cin >> T.at( j ) >> X.at( j ) >> Y.at( j );
+        //  Debug
+        // std::cerr << T.at( j ) << " " << X.at( j ) << " " << Y.at( j ) << std::endl;
+    }
+
+    //  Main
+    int offset = 0;
+
+
+    for( int j = 0; j < Q; j ++ ) {
+        //  Debug
+        // for( int i = 0; i < N; i ++  ) {
+        //     std::cerr << A.at( ( i + offset ) % N ) << " ";
+        // }
+        // std::cerr << std::endl;
+        if( T.at( j ) == 1 ) {
+            //  Swap
+            std::swap( 
+                A.at( ( X.at( j ) - 1 + offset ) % N ), 
+                A.at( ( Y.at( j ) - 1 + offset ) % N ) 
+            );
+        }
+        else if( T.at( j ) == 2 ) {
+            //  Shift
+            if( offset == 0 ) {
+                offset = N - 1;
+            }
+            else {
+                offset --;
+            }
+        }
+        else if( T.at( j ) == 3 ) {
+            //  Display
+            std::cout << A.at( ( X.at( j ) - 1 + offset ) % N ) << std::endl;
+        }
+        else {
+            std::cerr << "This should not be happend." << std::endl;
+        }
+    }
     
     //  Finalize
     //  Debug
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
