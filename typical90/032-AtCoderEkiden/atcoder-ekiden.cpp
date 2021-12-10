@@ -7,9 +7,11 @@
 */
 
 // # Solution
+// - Couting up all the combinations
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 int main()
 {
@@ -44,7 +46,19 @@ int main()
     }
 
     //  Main
-    
+    std::vector< int > assign( N );
+    for( int i = 0; i < N; i ++) {
+        assign.at( i ) = i;
+    }
+    do {
+        int time = 0;
+        for( int i = 0; i < N; i ++) {
+            time += A.at( i ).at( assign.at( i ) );
+        }
+        //  Debug
+        std::cerr << time << std::endl;
+    } while( std::next_permutation( assign.begin(), assign.end() ) );
+
     //  Finalize
     //  Debug
     std::cerr << "Normally terminated." << std::endl;
