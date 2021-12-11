@@ -19,30 +19,55 @@
 
 int main()
 {
-    //  Read N and Q
-    // int N = 0, Q = 0;
-    // std::cin >> N >> Q;
+    const int M = 46;
+    //  Read N
+    int N = 0;
+    std::cin >> N;
     //  Debug
-    // std::cerr << N << " " << Q << std::endl;
+    std::cerr << N << std::endl;
 
-    //  Read Ai
-    // std::vector< int > A( N );
-    // for( int i = 0; i < N; i ++ ) {
-    //     std::cin >> A.at( i );
-        //  Debug
-        // std::cerr << A.at( i ) << " ";
-    // }
+    //  Read Ai and make ai
+    std::vector< int > A( N ), a( N );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> A.at( i );
+        a.at( i ) = A.at( i ) % M;
+        // Debug
+        std::cerr << a.at( i ) << " ";
+    }
     //  Debug
-    // std::cerr << std::endl;
+    std::cerr << std::endl;
+
+    //  Read Bi and make bi
+    std::vector< int > B( N ), b( N );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> B.at( i );
+        b.at( i ) = B.at( i ) % M; 
+        // Debug
+        std::cerr << b.at( i ) << " ";
+    }
+    //  Debug
+    std::cerr << std::endl;
+
+    //  Read Ci and make ci
+    std::vector< int > C( N ), c( N );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> C.at( i );
+        c.at( i ) = C.at( i  ) % M;
+        //  Debug
+        std::cerr << c.at( i ) << " ";
+    }
+    //  Debug
+    std::cerr << std::endl;
 
     //  Main
-    const int M = 46;
-    //  ( i + j + k ) % M == 0
+    //  
     int count = 0;
     for( int i = 0; i < M; i ++ ) {
         for( int j = 0; j < M; j ++ ) {
             for( int k = 0; k < M; k ++ ) {
-                count ++ ;
+                if( ( i + j + k ) % M == 0 ) {
+                    count ++ ;
+                }
             }
         }
     }

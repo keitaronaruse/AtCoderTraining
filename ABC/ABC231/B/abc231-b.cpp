@@ -1,29 +1,42 @@
 /*
-    ABC231 Problem B
+    ABC231 Problem B - Election
+        https://atcoder.jp/contests/abc231/tasks/abc231_b
         Author: Keitaro Naruse
         Date:   2021-12-11
         MIT License
 */
 
 #include <iostream>
-#include <vector>
+#include <string>
+#include <map>
+
 
 int main()
 {
     //  Read N
     int N = 0;
     std::cin >> N;
-    //  Read Ai
-    std::vector< int > A( N );
+
+    //  Read Si and store in map
+    std::map< std::string, int > votes;
     for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-        //  Debug
-        std::cout << A.at( i ) << " ";
+        std::string name;
+        std::cin >> name;
+        votes[ name ] ++;
     }
-    //  Debug
-    std::cout << std::endl;
+    //  Find max vote
+    int max_vote = 0;
+    std::string max_name;
+    for( const auto& v : votes ) {
+        if( v.second > max_vote ) {
+            max_vote = v.second;
+            max_name = v.first;
+        }
+    }
+    //  Display result
+    std::cout << max_name << std::endl;
     
     //  Debug
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }

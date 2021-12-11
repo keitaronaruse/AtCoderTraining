@@ -1,5 +1,6 @@
 /*
-    ABC231 Problem A
+    ABC231 Problem A - Water Pressure
+        https://atcoder.jp/contests/abc231/tasks/abc231_a        
         Author: Keitaro Naruse
         Date:   2021-12-11
         MIT License
@@ -10,20 +11,14 @@
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
-    //  Read Ai
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-        //  Debug
-        std::cout << A.at( i ) << " ";
-    }
+    //  Read D
+    int D = 0;
+    std::cin >> D;
+
+    //  Display result
+    std::cout << (double)D / 100.0 << std::endl;
+
     //  Debug
-    std::cout << std::endl;
-    
-    //  Debug
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
