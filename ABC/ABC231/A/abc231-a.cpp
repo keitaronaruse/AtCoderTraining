@@ -6,6 +6,9 @@
         MIT License
 */
 
+// # Solution
+// - Use real numbers for representing results
+
 #include <iostream>
 #include <vector>
 
@@ -16,7 +19,7 @@ int main()
     std::cin >> D;
 
     //  Display result
-    std::cout << (double)D / 100.0 << std::endl;
+    std::cout << ( double ) D / 100.0 << std::endl;
 
     //  Debug
     // std::cerr << "Normally terminated." << std::endl;

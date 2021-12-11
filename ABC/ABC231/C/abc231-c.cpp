@@ -6,12 +6,14 @@
         MIT License
 */
 
+// # Solution
+// - Sort give numbers
+// - Find a given query by binary search
+// - The sum equals to the number of the numbers above the queries
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
-// # Solution
-// - binary search
 
 int main()
 {
@@ -36,7 +38,6 @@ int main()
     int x = 0;
     for( int j = 0; j < Q; j ++ ) {
         std::cin >> x;
-        
         auto it = std::lower_bound( A.begin(), A.end(), x );
         std::cout << A.end() - it << std::endl;
     }

@@ -6,10 +6,12 @@
         MIT License
 */
 
+// # Solution
+// - Use name as key and the number of votes as value
+
 #include <iostream>
 #include <string>
 #include <map>
-
 
 int main()
 {
