@@ -29,17 +29,20 @@ public:
         std::stack< int > to_visit_stack;
 
         //  Main
-        // visited.at( s ) = true;
+        visited.at( s ) = true;
         to_visit_stack.push( s );
+
         while( !to_visit_stack.empty() ) {
             int v = to_visit_stack.top();
             to_visit_stack.pop();
+            
             if( v == g ) {
                 return( true );
             }
+
             for( int u : adjacent_nodes.at( v ) ) {
-                if( !visited.at( u ) ) {
-                    visited.at( u ) = true;
+                if( !visited.at( v ) ) {
+                    visited.at( v ) = true;
                     to_visit_stack.push( u );
                 }
             }
@@ -116,7 +119,7 @@ int main()
         int a = A - 1, b = B - 1;
         if( g.is_connect_dfs( a, b ) ) {
             //  Debug
-            // std::cerr << "Connected: " << a + 1 << " " << b + 1 << std::endl;
+            std::cerr << "False by connectivity" << std::endl;
             isYes = false;
             break;
         }
@@ -124,6 +127,8 @@ int main()
         degrees.at( a ) ++;
         degrees.at( b ) ++;
         if( ( degrees.at( a ) > 2 ) || ( degrees.at( b ) > 2 ) ) {
+            //  Debug
+            std::cerr << "False by degree" << std::endl;
             isYes = false;
             break;
         }
