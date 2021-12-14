@@ -37,9 +37,9 @@ public:
             if( v == g ) {
                 return( true );
             }
-            if( !visited.at( v ) ) {
-                visited.at( v ) = true;
-                for( int u : adjacent_nodes.at( v ) ) {
+            for( int u : adjacent_nodes.at( v ) ) {
+                if( !visited.at( u ) ) {
+                    visited.at( u ) = true;
                     to_visit_stack.push( u );
                 }
             }
@@ -54,22 +54,17 @@ public:
         visited = std::vector< bool > ( size, false );
         std::queue< int > to_visit_queue;
 
-        //  Initial boundary check
-        // if( s == g ) {
-        //     return( true );
-        // }
-
         //  Main
         visited.at( s ) = true;
         to_visit_queue.push( s );
         while( !to_visit_queue.empty() ) {
             int v = to_visit_queue.front();
             to_visit_queue.pop();
+            if( v == g ) {
+                return( true );
+            }
             for( int u : adjacent_nodes.at( v ) ) {
-                if( u == g ) {
-                    return( true );
-                }
-                else if( !visited.at( u ) ) {
+                if( !visited.at( u ) ) {
                     visited.at( u ) = true;
                     to_visit_queue.push( u );
                 }
@@ -120,6 +115,8 @@ int main()
         std::cin >> A >> B;
         int a = A - 1, b = B - 1;
         if( g.is_connect_dfs( a, b ) ) {
+            //  Debug
+            // std::cerr << "Connected: " << a + 1 << " " << b + 1 << std::endl;
             isYes = false;
             break;
         }

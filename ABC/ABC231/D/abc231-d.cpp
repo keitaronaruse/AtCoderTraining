@@ -50,11 +50,16 @@ public:
             to_visit_stack.pop();
             for( int u : adjacent_nodes.at( v ) ) {
                 if( u == g ) {
+                    //  What should we do in 
+                    // Unvisited and goal?
                     return( true );
                 }
                 else if( !visited.at( u ) ) {
                     visited.at( u ) = true;
                     to_visit_stack.push( u );
+                }
+                else if( visited.at( u ) ) {
+                    //  What should we do?
                 }
             }
         }
