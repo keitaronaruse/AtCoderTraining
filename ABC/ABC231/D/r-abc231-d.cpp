@@ -29,7 +29,9 @@ public:
         if( parent.at( x ) == x ) {
             return( x );
         }
-        return( root( parent.at( x ) ) );
+        else {
+            return( parent.at( x ) = root( parent.at( x ) ) );
+        }
     }
 
     void unite( int x, int y ) {
@@ -45,9 +47,7 @@ public:
     }
 
     bool same( int x, int y ) {
-        int root_x = root( x );
-        int root_y = root( y );
-        return( root_x == root_y );
+        return( root( x ) == root( y ) );
     }
 private:
     std::vector< int > parent;
