@@ -1,8 +1,8 @@
 /*
-    046 - I Love 46（★3）
-        https://atcoder.jp/contests/typical90/tasks/typical90_at
+    048 - I will not drop out（★3）
+        https://atcoder.jp/contests/typical90/tasks/typical90_av
         Author: Keitaro Naruse
-        Date:   2021-12-11, 2021-12-14
+        Date:   2021-12-14
         MIT License
 */
 
