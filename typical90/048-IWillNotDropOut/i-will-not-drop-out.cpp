@@ -8,9 +8,11 @@
 
 // # Solution
 // - Read Ai and Bi, calculate Ci = Ai - Bi
-// - Put ( Bi, Ci ) to S in the ascending order of Bi
-// - Pick and remove the last ( Bk, Ck ) from S,
-//   - if (Ck != 0) Bk = Ck; Ck = 0 
+// - Constraints: Ci can be taken after Bi is done
+// - Put Bi and Ci to S and sort S in the descending order
+// - Pick the first K numbers from S, which satisfies the problem constraints 
+//   because Bi > Ci always
+// - Proof: Bi > Ai/2 => 2Bi > Ai => Bi > Ai - Bi => Bi > Ci
 
 #include <iostream>
 #include <vector>
