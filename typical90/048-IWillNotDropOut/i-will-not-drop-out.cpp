@@ -7,10 +7,10 @@
 */
 
 // # Solution
-// - Read Ai and Bi, and calculate Ci = Ai - Bi 
-// - Put Bi to S
-// - Pick and remove the largers one from S
-// - If it is Bj, put Cj to S
+// - Read Ai and Bi, calculate Ci = Ai - Bi
+// - Put ( Bi, Ci ) to S in the ascending order of Bi
+// - Pick and remove the last ( Bk, Ck ) from S,
+//   - if (Ck != 0) Bk = Ck; Ck = 0 
 
 #include <iostream>
 #include <vector>
