@@ -16,6 +16,28 @@
 #include <vector>
 #include <algorithm>
 
+//  Very large prime
+const long long large_prime = 1000000007LL;
+
+/*
+    mod_combination()
+        returns modulo by the large prime
+        
+*/
+long long mod_combination( int n, int k )
+{
+    long long c = 1LL;
+
+    for( int i = n - k + 1; i <= n; i ++ ) {
+        c *= ( long long ) i;
+        c %= large_prime;
+    }
+    for( int j = 1; j <= k; j ++ ) {
+        c /= ( long long ) j;
+    }
+    return( c );
+}
+
 int main()
 {
     //  Read N and K
@@ -31,22 +53,26 @@ int main()
         if( k == 0 ) {
             //  All 1s, only a singlepattern
             patterns ++ ;
+            patterns %= large_prime;
             std::cerr << "All 1s pattern: 1"  << std::endl;
         }
         else {
             if( k < i ) {
-                patterns ++ ;
-                std::cerr << "Put " << k << "-Ls among " << i + 1 << " 1-slots"  << std::endl;
+                patterns += mod_combination( i + 1, k );
+                patterns %= large_prime;
+                std::cerr << "Put " << k << "-Ls among " << i + 1 << " 1-slots"  << " " 
+                << mod_combination( i + 1, k ) << std::endl;
             }
             else {
-                patterns ++ ;
-                std::cerr << "Put " << i << "-1s among " << k + 1 << " L-slots"  << std::endl;
+                patterns += mod_combination( k + 1, i ) ;
+                patterns %= large_prime;
+                std::cerr << "Put " << i << "-1s among " << k + 1 << " L-slots"  << " "
+                << mod_combination( k + 1, i ) << std::endl;
             }
         }
     }
     //  Output result
-    const long long large_prime = 1000000007LL;
-    std::cout << patterns % large_prime << std::endl;
+    std::cout << patterns << std::endl;
     
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
