@@ -1,13 +1,13 @@
 /*
-    ABC231 Problem A - Water Pressure
-        https://atcoder.jp/contests/abc231/tasks/abc231_a        
+    ABC232 Problem D
+        https://atcoder.jp/contests/abc232
         Author: Keitaro Naruse
-        Date:   2021-12-11
+        Date:   2021-12-19
         MIT License
 */
 
 // # Solution
-// - Use real numbers for representing results
+// - 
 
 #include <iostream>
 

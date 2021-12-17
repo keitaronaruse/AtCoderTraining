@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 //  Very large prime
@@ -26,23 +27,22 @@ const long long large_prime = 1000000007LL;
     mod_combination()
         returns modulo by the large prime      
 */
-int mod_combination( int n, int k )
+long long mod_combination( const std::vector< long long >& mod_factorial, int n, int k )
 {
-    int c = 1;
+    long long mod_combination = 0LL;
+    
+    //  Boundary
+    if( ( k == 0 ) || ( k == n ) ) {
+        return(mod_combination)
+    }
 
     //  (n, k) == (n, n-k)
     if( k > n - k ) {
         k = n - k;
     }
 
-    // if( ( k == 0 ) || ( k == n ) ) {
-    //     c = ;
-    // }
-    // else if () {
-    //     ;
-    // }
-
-    return( c );
+    //  
+    return( mod_combination );
 }
 
 int main()
@@ -52,7 +52,15 @@ int main()
     std::cin >> N >> L;
     // std::cerr << N << " " << L << std::endl;
 
-    std::vector< std::vector< int > > combination( N, std::vector<int>( N / 2 + 1 ) );
+    std::vector< long long > mod_factorial( N, 0LL );
+    mod_factorial.at( 0 ) = 1LL;
+    for( int i = 1; i < N; i ++ ) {
+        mod_factorial.at( i ) 
+        = mod_factorial.at( i - 1 ) * ( long long )( i + 1 ) % large_prime;
+        if( i % 1000 == 0 ) {
+            std::cerr << mod_factorial.at( i )  << std::endl;
+        }
+    }
 
     //  Finalize
     std::cerr << "Normally terminated." << std::endl;
