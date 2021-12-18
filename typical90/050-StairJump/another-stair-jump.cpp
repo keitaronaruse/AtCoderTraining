@@ -25,20 +25,16 @@ int main()
     // std::cerr << N << " " << L << std::endl;
 
     //  Main
-    std::vector< long long > dp( N + 1, 0 );
+    std::vector< long long > dp( N, 0 );
 
     //  Initialize DP
-    dp.at( 0 ) = 1L;
-    for( int i = 1; i <= N; i ++ ) {
-        if( i < L ) {
-            dp.at( i ) = dp.at( i - 1 );
-        }
-        else {
-            dp.at( i ) = ( dp.at( i - 1 ) + dp.at( i - L ) ) % Large_Prime;
-        }
+    dp.at( 0 ) = 1;
+    for( int i = 1; i < L; i ++ ) {
+        dp.at( i ) = dp.at( i - 1 );
     }
+
     //  Display the result
-    std::cout << dp.at( N ) << std::endl;
+    std::cout << count << std::endl;
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
