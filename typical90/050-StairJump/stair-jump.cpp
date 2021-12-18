@@ -67,9 +67,9 @@ void make_factorial_tables( int N )
     Mod_Inv_Factorial.at( 0 ) =  mod_inv( 1LL, Large_Prime );
     for( int i = 1; i < N; i ++ ) {
         Mod_Factorial.at( i ) 
-        = Mod_Factorial.at( i - 1 ) * ( long long ) ( i + 1 ) % Large_Prime;
+        = ( Mod_Factorial.at( i - 1 ) * ( long long ) ( i + 1 ) ) % Large_Prime;
         Mod_Inv_Factorial.at( i ) 
-        = Mod_Inv_Factorial.at( i - 1 ) * mod_inv( i + 1, Large_Prime ) % Large_Prime;
+        = ( Mod_Inv_Factorial.at( i - 1 ) * mod_inv( i + 1, Large_Prime ) ) % Large_Prime;
     }
 }
 
@@ -92,9 +92,14 @@ long long mod_combination( int n, int k )
     }
 
     //  Combination number
+    // c = Mod_Factorial.at( n - 1 );
+    // c = ( c * Mod_Inv_Factorial.at( k - 1 ) ) % Large_Prime;
+    // c = ( c * Mod_Inv_Factorial.at( n - k - 1) ) % Large_Prime;
     c = Mod_Factorial.at( n - 1 );
-    c = ( c * Mod_Inv_Factorial.at( k - 1 ) ) % Large_Prime;
-    c = ( c * Mod_Inv_Factorial.at( n - k - 1) ) % Large_Prime;
+    c *= Mod_Inv_Factorial.at( k - 1 );
+    c %= Large_Prime;
+    c *= Mod_Inv_Factorial.at( n - k - 1); 
+    c %= Large_Prime;
     
     return( c );
 }
@@ -106,12 +111,39 @@ int main()
     int N = 0, L = 0; 
     std::cin >> N >> L;
     // std::cerr << N << " " << L << std::endl;
+
     //  Make a modulo factorial table and a modulo inverse factorial table  
     make_factorial_tables( N );
 
     //  Main
-    long long count = 0LL;
+    //  Boundary condition: 
+    //  Staring with no Ls and all 1s -> only a single pattern
+    long long count = 1LL;
+
+    //  Maximum number of Ls
+    int K = N / L;
+    for( int k = 1; k <= K; k ++ ) {
+        int num_Ls = k;
+        int num_Ones = N - k * L;
+
+        // std::cerr << "1s: " << num_Ones << " Ls: " << num_Ls << ", "; 
+        if( num_Ls > num_Ones ) {
+            //  Put 1s among L+1 slots
+            // std::cerr << mod_combination( num_Ls + 1, num_Ones ) << std::endl;
+            // count = ( count + mod_combination( num_Ls + 1, num_Ones ) ) % Large_Prime;
+            count += mod_combination( num_Ls + 1, num_Ones );
+            count %= Large_Prime;
+        }
+        else {
+            //  Put Ls among 1s + 1 slots
+            // std::cerr << mod_combination( num_Ones + 1, num_Ls ) << std::endl;
+            // count = ( count + mod_combination( num_Ones + 1, num_Ls ) ) % Large_Prime;
+            count += mod_combination( num_Ones + 1, num_Ls );
+            count %= Large_Prime;
+        }
+    }
     
+    //  Display the result
     std::cout << count << std::endl;
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
