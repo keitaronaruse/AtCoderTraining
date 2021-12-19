@@ -51,9 +51,9 @@ int main()
     //  Calculate the initial inconvenience
     long long SumInconvenie = 0LL;
     std::vector< int > InConvenie( N - 1, 0 );
-    for( int k = 0; k < N - 1; k ++ ) {
-        InConvenie.at( k ) = inconvenie( E.at( k ), E.at( k + 1) );
-        SumInconvenie += ( long long ) InConvenie.at( k ) ;
+    for( int i = 0; i < N - 1; i ++ ) {
+        InConvenie.at( i ) = inconvenie( E.at( i ), E.at( i + 1 ) );
+        SumInconvenie += ( long long ) InConvenie.at( i ) ;
     }
     //  Debug
     for( int i = 0; i < N; i ++ ) {
@@ -62,20 +62,34 @@ int main()
     std::cerr << std::endl;
     std::cerr << SumInconvenie << std::endl;
 
+    //  Main
     for( int j = 0; j < Q; j ++ ) {
-        for( int i = 0; i < N; i ++ ) {
-            //  Debug
-            std::cerr << E.at( i ) << " ";
+        for( int i = L.at( j ) - 1; i <= R.at( j ) - 1; i ++ ) {
+            //  Update the elevation Ei
+            E.at( i ) += V.at( j );
+            //  Update the inconvenience InConveniek
+            if( ( i == L.at( j ) - 1 ) && ( i - 1 >= 0 ) ) {
+                //  Head boundary case: Consider the previous one of the first element
+                SumInconvenie -=  (long long )InConvenie.at( i - 1 ) ;
+                InConvenie.at( i - 1 ) = inconvenie( E.at( i - 1 ), E.at( i ) );
+            }
+            else if( ( i == R.at( j ) - 1 ) && ( i + 1 < N ) ) {
+                //  Tail boundary case: Consider the next one of the last element
+                SumInconvenie -= ( long long ) InConvenie.at( i ) ;
+                InConvenie.at( i ) = inconvenie( E.at( i ), E.at( i + 1 ) );
+            }
+            else {
+                //  Regular cases
+                SumInconvenie -= ( long long ) InConvenie.at( i ) ;
+                InConvenie.at( i ) = inconvenie( E.at( i ), E.at( i + 1 ) );
+            }
         }
-        //  Debug
-        std::cerr << std::endl;
-        std::cerr << SumInconvenie << std::endl;
     }
 
     //  Display results
     std::cout << SumInconvenie << std::endl;
     
     //  Finalize
-    std::cerr << "Normally terminated." << std::endl;
+    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
