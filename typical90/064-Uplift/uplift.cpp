@@ -7,6 +7,7 @@
 */
 
 // # Solution
+
 #include <iostream>
 #include <vector>
 
@@ -56,38 +57,51 @@ int main()
         SumInconvenie += ( long long ) InConvenie.at( i ) ;
     }
     //  Debug
-    for( int i = 0; i < N; i ++ ) {
-        std::cerr << E.at( i ) << " ";
-    }
-    std::cerr << std::endl;
-    std::cerr << SumInconvenie << std::endl;
+    // for( int i = 0; i < N; i ++ ) {
+    //     std::cerr << E.at( i ) << " ";
+    // }
+    // std::cerr << std::endl;
+    // for( int i = 0; i < N - 1; i ++ ) {
+    //     std::cerr << InConvenie.at( i ) << " ";
+    // }
+    // std::cerr << ": " << SumInconvenie << std::endl;
 
     //  Main
     for( int j = 0; j < Q; j ++ ) {
+        //  Update the elevation Ei
         for( int i = L.at( j ) - 1; i <= R.at( j ) - 1; i ++ ) {
-            //  Update the elevation Ei
             E.at( i ) += V.at( j );
-            //  Update the inconvenience InConveniek
+        }
+
+        //  Update inconveniek
+        for( int i = L.at( j ) - 1; i <= R.at( j ) - 1; i ++ ) {
             if( ( i == L.at( j ) - 1 ) && ( i - 1 >= 0 ) ) {
-                //  Head boundary case: Consider the previous one of the first element
-                SumInconvenie -=  (long long )InConvenie.at( i - 1 ) ;
+                //  Head and the previous exists
+                SumInconvenie -= ( long long ) InConvenie.at( i - 1 ) ;
                 InConvenie.at( i - 1 ) = inconvenie( E.at( i - 1 ), E.at( i ) );
+                SumInconvenie += ( long long ) InConvenie.at( i - 1 ) ;
             }
-            else if( ( i == R.at( j ) - 1 ) && ( i + 1 < N ) ) {
-                //  Tail boundary case: Consider the next one of the last element
+            if( i + 1 < N ) {
+                //  If the next exsits
                 SumInconvenie -= ( long long ) InConvenie.at( i ) ;
                 InConvenie.at( i ) = inconvenie( E.at( i ), E.at( i + 1 ) );
-            }
-            else {
-                //  Regular cases
-                SumInconvenie -= ( long long ) InConvenie.at( i ) ;
-                InConvenie.at( i ) = inconvenie( E.at( i ), E.at( i + 1 ) );
+                SumInconvenie += ( long long ) InConvenie.at( i ) ;
             }
         }
-    }
 
-    //  Display results
-    std::cout << SumInconvenie << std::endl;
+        //  Debug
+        // for( int i = 0; i < N; i ++ ) {
+        //     std::cerr << E.at( i ) << " ";
+        // }
+        // std::cerr << std::endl;
+        // for( int i = 0; i < N - 1; i ++ ) {
+        //     std::cerr << InConvenie.at( i ) << " ";
+        // }
+        // std::cerr << ": " << SumInconvenie << std::endl;
+
+        //  Display result
+        std::cout << SumInconvenie << std::endl;
+    }
     
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
