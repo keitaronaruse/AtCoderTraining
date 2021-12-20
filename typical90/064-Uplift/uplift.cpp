@@ -41,11 +41,11 @@ int main()
     for( int i = 0; i < N; i ++ ) {
         std::cerr << E.at( i ) << " ";
     }
-    std::cerr << ": " << SumInconvenience << std::endl;
+    std::cerr << std::endl;
     for( int i = 0; i < N - 1; i ++ ) {
         std::cerr << B.at( i ) << " ";
     }
-    std::cerr << ": " << SumInconvenience << std::endl;
+    std::cerr << std::endl;
 
     //  Main
     for( int j = 0; j < Q; j ++ ) {
@@ -54,7 +54,8 @@ int main()
         std::cin >> L >> R >> V;
         L --; 
         R --;
-        std::cerr << L << " " << R << " " << V << " ";
+        //  Debug
+        // std::cerr << L << " " << R << " " << V << std::endl;
         //  The changes of the inconveniences apper at ( L-1, L ) and ( R, R+1 )
         if( L - 1 >= 0 ) {
             SumInconvenience -= my_abs( B.at( L - 1 ) );
@@ -62,13 +63,21 @@ int main()
         if( R + 1 < N ) {
             SumInconvenience -= my_abs( B.at( R ) );
         }
-        std::cerr << std::endl;
         
         //  Update the elevation Ei
         for( int i = L; i <= R; i ++ ) {
             E.at( i ) += V;
         }
-        for( int i = L; i < R; i ++ ) {
+        //  Update the difference of the elevation
+        int b =  L - 1, e = R;
+
+        if( b < 0 ) {
+            b = 0;
+        }
+        if( e > N - 2 ) {
+            e = N - 2;
+        }
+        for( int i = b; i <= e; i ++ ) {
             B.at( i ) = E.at( i ) - E.at( i + 1 );
         }
 
@@ -86,11 +95,11 @@ int main()
         for( int i = 0; i < N; i ++ ) {
             std::cerr << E.at( i ) << " ";
         }
-        std::cerr << ": " << SumInconvenience << std::endl;
+        std::cerr << std::endl;
         for( int i = 0; i < N - 1; i ++ ) {
             std::cerr << B.at( i ) << " ";
         }
-        std::cerr << ": " << SumInconvenience << std::endl;
+        std::cerr << std::endl;
     }
     
     //  Finalize
