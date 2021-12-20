@@ -10,15 +10,16 @@
 // - 
 
 #include <iostream>
+#include <string>
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read S
+    std::string S;
+    std::cin >> S;
 
     //  Display result
-    std::cout << std::endl;
+    std::cout << ( S.at( 0 ) -'0' ) * ( S.at( 2 ) -'0' ) << std::endl;
     
     //  Debug
     // std::cerr << "Normally terminated." << std::endl;
