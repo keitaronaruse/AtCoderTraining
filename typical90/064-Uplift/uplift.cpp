@@ -2,30 +2,18 @@
     064 - Uplift（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_bl
         Author: Keitaro Naruse
-        Date:   2021-12-19
+        Date:   2021-12-19, 2021-12-20
         MIT License
 */
 
 // # Solution
-// - The Uplift does no chage the incovenience in the middle points. 
-// - The inconvenience between Li - 1 and Li, and 
-// - The inconvenience between Ri and Ri + 1
-// - B_L  = E_{ L - 1 } - E_L 
-// - B_L' = E_{ L - 1}  - ( E_L + V_j ) = B_L - V_j
-// - B_R  = E_R - E_{ R + 1 }
-// - B_R' = E_R + V_j - E_{ R + 1 } - E_{ R + 1 }  = B_R + V_j
-
 
 #include <iostream>
 #include <vector>
 
-/*
-    inconv()
-        returns the inconvenience of the arguments
-*/
-int inconvenie( int a, int b )
+long long my_abs( long long a )
 {
-    return( ( a > b )? a - b : b - a ); 
+    return( ( a > 0 )? a : -a );
 }
 
 int main()
@@ -35,61 +23,74 @@ int main()
     int N = 0, Q = 0;
     std::cin >> N >> Q;
     
-    //  Read Ai and make Ei
-    std::vector< int > A( N, 0 ), E( N, 0 );
+    //  Read Ai and put to Ei
+    std::vector< long long > E( N, 0 );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-        E.at( i ) = A.at( i );
+        std::cin >> E.at( i );
     }
+    //  Calculate Bi, the difference of Ei
     //  Calculate the initial inconvenience
     long long SumInconvenience = 0LL;
+    std::vector< long long > B( N - 1, 0 );
     for( int i = 0; i < N - 1; i ++ ) {
-        SumInconvenience += ( long long ) inconvenie( E.at( i ), E.at( i + 1 ) );
+        B.at( i ) = E.at( i ) - E.at( i + 1 );
+        SumInconvenience += my_abs( B.at( i ) );
     }
 
+    //  Debug
+    for( int i = 0; i < N; i ++ ) {
+        std::cerr << E.at( i ) << " ";
+    }
+    std::cerr << ": " << SumInconvenience << std::endl;
+    for( int i = 0; i < N - 1; i ++ ) {
+        std::cerr << B.at( i ) << " ";
+    }
+    std::cerr << ": " << SumInconvenience << std::endl;
+
     //  Main
-    std::vector< int > L( Q, 0 ), R( Q, 0 ), V( Q, 0 );
     for( int j = 0; j < Q; j ++ ) {
+        int L = 0, R = 0, V = 0;
         //  Read Lj, Rj, Vj
-        std::cin >> L.at( j ) >> R.at( j ) >> V.at( j );
-
-        //  Changes of the inconveniences apper at (L-1, L) and (R, R+1)
-        
-        //  L = 1
-        //  E1'=E1 + V, E2'=E2+V, E1'-E2'=E1-E2
-        //  L = 2
-        //  E1'=E1, E_2'=E2+V, E_1'-E2' = E1-E2-V
-        
-        //  R = N
-        //  EN-1'=EN-1+V, EN'=EN+V, EN-1'-EN'=EN-1-EN 
-        //  R = N-1
-        //  EN-1'=EN-1+V, EN'=EN, EN-1'-EN'=EN-1-EN+V 
-        
-        if( L.at( j ) - 2 >=  0) {
-            SumInconvenience 
-            -= ( long long ) inconvenie( E.at( L.at( j ) - 2 ), E.at( L.at( j ) - 1 ) );
+        std::cin >> L >> R >> V;
+        L --; 
+        R --;
+        std::cerr << L << " " << R << " " << V << " ";
+        //  The changes of the inconveniences apper at ( L-1, L ) and ( R, R+1 )
+        if( L - 1 >= 0 ) {
+            SumInconvenience -= my_abs( B.at( L - 1 ) );
         }
-        if( R.at( j ) < N ) {
-            SumInconvenience 
-            -= ( long long ) inconvenie( E.at( R.at( j ) - 1 ), E.at( R.at( j ) ) );
+        if( R + 1 < N ) {
+            SumInconvenience -= my_abs( B.at( R ) );
         }
-
+        std::cerr << std::endl;
+        
         //  Update the elevation Ei
-        for( int i = L.at( j ) - 1; i <= R.at( j ) - 1; i ++ ) {
-            E.at( i ) += V.at( j );
+        for( int i = L; i <= R; i ++ ) {
+            E.at( i ) += V;
+        }
+        for( int i = L; i < R; i ++ ) {
+            B.at( i ) = E.at( i ) - E.at( i + 1 );
         }
 
-        if( L.at( j ) - 2 >=  0) {
-            SumInconvenience 
-            += ( long long ) inconvenie( E.at( L.at( j ) - 2 ), E.at( L.at( j ) - 1 ) );
+        //  Changes of the inconveniences apper at ( L-1, L ) and ( R, R+1 )
+        if( L - 1 >= 0 ) {
+            SumInconvenience += my_abs( B.at( L - 1 ) );
         }
-        if( R.at( j ) < N ) {
-            SumInconvenience 
-            += ( long long ) inconvenie( E.at( R.at( j ) - 1 ), E.at( R.at( j ) ) );
+        if( R + 1 < N ) {
+            SumInconvenience += my_abs( B.at( R ) );
         }
-
+        
         //  Display result
-        std::cout << SumInconvenience << std::endl;
+        // std::cout << SumInconvenience << std::endl;
+        //  Debug
+        for( int i = 0; i < N; i ++ ) {
+            std::cerr << E.at( i ) << " ";
+        }
+        std::cerr << ": " << SumInconvenience << std::endl;
+        for( int i = 0; i < N - 1; i ++ ) {
+            std::cerr << B.at( i ) << " ";
+        }
+        std::cerr << ": " << SumInconvenience << std::endl;
     }
     
     //  Finalize
