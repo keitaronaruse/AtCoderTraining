@@ -1,13 +1,13 @@
 /*
-    ABC232 Problem C
-        https://atcoder.jp/contests/abc232
+    ABC232 Problem C - Graph Isomorphism
+        https://atcoder.jp/contests/abc232/tasks/abc232_c
         Author: Keitaro Naruse
         Date:   2021-12-19
         MIT License
 */
 
 // # Solution
-// - 
+// - Try all the permutation of i and j
 
 #include <iostream>
 #include <vector>

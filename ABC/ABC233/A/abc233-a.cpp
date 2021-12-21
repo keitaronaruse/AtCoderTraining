@@ -1,13 +1,13 @@
 /*
-    ABC232 Problem A - QQ solver
-        https://atcoder.jp/contests/abc232/tasks/abc232_a
+    ABC233 Problem A
+        https://atcoder.jp/contests/abc233
         Author: Keitaro Naruse
-        Date:   2021-12-19
+        Date:   2021-12-25
         MIT License
 */
 
 // # Solution
-// - Read as a string and convert to interger by the ascii code 
+// - 
 
 #include <iostream>
 #include <string>
