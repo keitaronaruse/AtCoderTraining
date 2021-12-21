@@ -7,6 +7,11 @@
 */
 
 // # Solution
+// - Store Bi = A(i) - A(i+1)
+// - The sum of inconvenience changes at the two points of B(L-1) and B(R) 
+//  - B(L-1) -= V, R(R) += V
+// - Before update: Sum -= B(L-1), Sum -= B(R)
+// - After update:  Sum += B(L-1), Sum -+ B(R)
 
 #include <iostream>
 #include <vector>
@@ -37,16 +42,6 @@ int main()
         SumInconvenience += my_abs( B.at( i ) );
     }
 
-    //  Debug
-    for( int i = 0; i < N; i ++ ) {
-        std::cerr << E.at( i ) << " ";
-    }
-    std::cerr << std::endl;
-    for( int i = 0; i < N - 1; i ++ ) {
-        std::cerr << B.at( i ) << " ";
-    }
-    std::cerr << std::endl;
-
     //  Main
     for( int j = 0; j < Q; j ++ ) {
         int L = 0, R = 0, V = 0;
@@ -56,50 +51,32 @@ int main()
         R --;
         //  Debug
         // std::cerr << L << " " << R << " " << V << std::endl;
-        //  The changes of the inconveniences apper at ( L-1, L ) and ( R, R+1 )
+
+        //  Main
+        //  The changes of the inconveniences apper at B[L-1] and B[R]
         if( L - 1 >= 0 ) {
             SumInconvenience -= my_abs( B.at( L - 1 ) );
-        }
-        if( R + 1 < N ) {
-            SumInconvenience -= my_abs( B.at( R ) );
-        }
-        
-        //  Update the elevation Ei
-        for( int i = L; i <= R; i ++ ) {
-            E.at( i ) += V;
-        }
-        //  Update the difference of the elevation
-        int b =  L - 1, e = R;
-
-        if( b < 0 ) {
-            b = 0;
-        }
-        if( e > N - 2 ) {
-            e = N - 2;
-        }
-        for( int i = b; i <= e; i ++ ) {
-            B.at( i ) = E.at( i ) - E.at( i + 1 );
-        }
-
-        //  Changes of the inconveniences apper at ( L-1, L ) and ( R, R+1 )
-        if( L - 1 >= 0 ) {
+            B.at( L - 1 ) -= V;
             SumInconvenience += my_abs( B.at( L - 1 ) );
         }
         if( R + 1 < N ) {
+            SumInconvenience -= my_abs( B.at( R ) );
+            B.at( R ) += V;
             SumInconvenience += my_abs( B.at( R ) );
         }
         
         //  Display result
-        // std::cout << SumInconvenience << std::endl;
+        std::cout << SumInconvenience << std::endl;
+
         //  Debug
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << E.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-        for( int i = 0; i < N - 1; i ++ ) {
-            std::cerr << B.at( i ) << " ";
-        }
-        std::cerr << std::endl;
+        // for( int i = 0; i < N; i ++ ) {
+        //     std::cerr << E.at( i ) << " ";
+        // }
+        // std::cerr << std::endl;
+        // for( int i = 0; i < N - 1; i ++ ) {
+        //     std::cerr << B.at( i ) << " ";
+        // }
+        // std::cerr << ": " << SumInconvenience << std::endl;
     }
     
     //  Finalize
