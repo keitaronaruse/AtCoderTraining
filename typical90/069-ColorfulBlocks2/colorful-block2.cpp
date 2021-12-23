@@ -2,7 +2,7 @@
     069 - Colorful Blocks 2（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_bq
         Author: Keitaro Naruse
-        Date:   2021-12-21 
+        Date:   2021-12-21, 2021-12-23 
         MIT License
 */
 
