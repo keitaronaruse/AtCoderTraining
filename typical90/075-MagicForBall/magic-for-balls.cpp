@@ -7,54 +7,50 @@
 */
 
 // # Solution
+// - Factorize x and find the number of factors m
+// - Count the number of divions by 2 
 
 #include <iostream>
-#include <cmath>
 #include <vector>
-
-// # Solution
-// - Factorize x
+#include <cmath>
 
 int main()
 {
     //  Read N
     long long N = 0LL;
     std::cin >> N;
-    double n = ( double ) N;
-    double m = std::sqrt( n );
-    int M = ( int ) m;
-    // std::cerr << M << std::endl;
 
     //  Main
-    bool isPrime = true;
-    std::vector< int > factors;
-    while ( M > 1 ) {
-        if( N % M == 0 ) {
-            // std::cerr << "(" << N << "," << M << ")";
-            factors.push_back( M );
-            N /= M;
-            isPrime = false;
+    std::vector< long long > factors;
+
+    const long long M = ( long long ) std::sqrt( ( double ) N );
+    long long m = 2;
+    while( m <= M ) {
+        if( N % m == 0LL ) {
+            factors.push_back( m );
+            N /= m;
         }
         else {
-            M --;
+            m ++ ;
         }
     }
-    if( N != 1 ) {
+    if( N != 1) {
         factors.push_back( N );
     }
-
-    //  
-    if( isPrime ) {
-        std::cerr << N << " is prime" << std::endl;
-    }
-    else {
-        for( auto p : factors ) {
-            std::cerr << p << std::endl;
-        }
-    }
+    //  Debug
+    // for( auto p : factors ) {
+    //     std::cerr << p << " ";
+    // }
+    // std::cerr << std::endl;
 
     //  Display result
-    // std::cout << std::endl;
+    int count = 0;
+    int n = factors.size() - 1;
+    while( n != 0 ) {
+        n /= 2;
+        count ++;
+    }
+    std::cout << count << std::endl;
 
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
