@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 int main()
 {
@@ -23,15 +22,11 @@ int main()
     //  Main
     std::vector< long long > factors;
 
-    const long long M = ( long long ) std::sqrt( ( double ) N );
     long long m = 2;
-    while( m <= M ) {
-        if( N % m == 0LL ) {
+    for( long long m = 2LL; m * m <= N; m ++ ) {
+        while( N % m == 0LL ) {
             factors.push_back( m );
             N /= m;
-        }
-        else {
-            m ++ ;
         }
     }
     if( N != 1) {
