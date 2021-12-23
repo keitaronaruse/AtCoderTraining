@@ -1,13 +1,13 @@
 /*
-    ABC232 Problem B
-        https://atcoder.jp/contests/abc232
+    ABC232 Problem B - Caesar Cipher
+        https://atcoder.jp/contests/abc232/tasks/abc232_b
         Author: Keitaro Naruse
         Date:   2021-12-19
         MIT License
 */
 
 // # Solution
-// - 
+// - Try all the offest of 26 characters
 
 #include <iostream>
 #include <string>
