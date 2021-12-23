@@ -23,24 +23,35 @@ int main()
     double n = ( double ) N;
     double m = std::sqrt( n );
     int M = ( int ) m;
-    std::cerr << M << std::endl;
+    // std::cerr << M << std::endl;
 
     //  Main
+    bool isPrime = true;
     std::vector< int > factors;
-    while ( M > 1  ) {
+    while ( M > 1 ) {
         if( N % M == 0 ) {
-            std::cerr << "(" << N << "," << M << ")";
+            // std::cerr << "(" << N << "," << M << ")";
             factors.push_back( M );
             N /= M;
+            isPrime = false;
         }
         else {
             M --;
         }
     }
-    std::cerr << std::endl;
-    // while() {
-    //     ;
-    // }
+    if( N != 1 ) {
+        factors.push_back( N );
+    }
+
+    //  
+    if( isPrime ) {
+        std::cerr << N << " is prime" << std::endl;
+    }
+    else {
+        for( auto p : factors ) {
+            std::cerr << p << std::endl;
+        }
+    }
 
     //  Display result
     // std::cout << std::endl;
