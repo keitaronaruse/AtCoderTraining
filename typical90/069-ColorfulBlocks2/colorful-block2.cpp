@@ -7,16 +7,14 @@
 */
 
 // # Solution
+// - Answer = K * (K-1) * (K-2)^{N-2}
+// - (K-2)^n, represent n as bit and make a table
 
 #include <iostream>
 #include <vector>
 #include <bitset>
 
 // # Solution
-// - k = 0
-// - k = 1
-// - k = 63 
-
 
 int main()
 {
@@ -40,20 +38,33 @@ int main()
         cases %= Large_Prime;
     }
     else if( N > 2LL ) {
+        cases *= ( K - 1 );
+        cases %= Large_Prime;
+
         std::bitset< Max_Bit > b( N - 2 );
-        std::cerr << b << std::endl;
+        //  Debug
+        // std::cerr << b << std::endl;
 
         std::vector< unsigned long long > patterns( Max_Bit, 0LL );
         patterns.at( 0 ) = K - 2LL;
         for( int i = 1; i < Max_Bit; i ++ ) {
-            patterns.at( i ) = patterns.at( i - 1 ) * ( K - 2LL );
+            patterns.at( i ) = patterns.at( i - 1 ) * patterns.at( i - 1 );
             patterns.at( i ) %= Large_Prime;
         }
         //  Debug
+        // for( int i = 0; i < Max_Bit; i ++ ) {
+        //     std::cerr << patterns.at( i ) << " ";
+        // }
+        // std::cerr << std::endl;
+
+        //  Main
         for( int i = 0; i < Max_Bit; i ++ ) {
-            std::cerr << patterns.at( i ) << " ";
+            if( b[i] ) {
+                cases *= patterns.at( i );
+                cases %= Large_Prime;
+            }
         }
-        std::cerr << std::endl;
+
     }
 
     //  Display result
