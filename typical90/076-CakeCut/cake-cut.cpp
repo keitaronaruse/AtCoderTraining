@@ -13,74 +13,69 @@
 
 #include <iostream>
 #include <vector>
-#include <string>
+#include <algorithm>
 
 int main()
 {
+    //  Constant
+    const long long M = 10LL;
+
     //  Read N
     int N = 0;
     std::cin >> N;
-    //  Debug
-    // std::cerr << N << std::endl;
 
-    //  Read Ai and culculate the sum of them
-    long long sum = 0LL;
+    //  Read Ai
     std::vector< long long > A( N );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
-        sum += A.at( i );
         //  Debug
-        std::cerr << A.at( i ) << " ";
+        // std::cerr << A.at( i ) << " ";
     }
     //  Debug
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
 
-    //  Preprocess
-    //  Mask a values larger than the tenth of the sum
-    const long long sum_tenth = sum / 10LL;
-    for( int i = 0; i < N; i ++ ) {
-        if( A.at( i ) > sum_tenth ) {
-            A.at( i ) = 0LL;
-        }
-        //  Debug
-        std::cerr << A.at( i ) << " ";
-    }
-    //  Debug
-    std::cerr << std::endl;
 
-    //  Make a partial sum table 
-    std::vector< long long > sum_table( N, 0LL );
-    //  Float over case
-    sum = 0LL;
+    //  Make Bi, the cumulative sum
+    std::vector< long long > B( 2 * N, 0LL );
+    B.at( 0 ) = A.at( 0 );
+    for( int i = 1; i < N; i ++ ) {
+        B.at( i ) = B.at( i - 1 ) + A.at( i ); 
+    }
     for( int i = 0; i < N; i ++ ) {
-        if( A.at( i ) == 0LL ) {
-            sum = 0LL;
-        }
-        else {
-            sum += A.at( i );
-            sum_table.at( i ) = sum;
-        }
+        B.at( i + N ) = B.at( i - 1 + N ) + A.at( i ); 
+    }
+    for( int i = 0; i < 2 * N; i ++ ) {
         //  Debug
-        std::cerr << sum_table.at( i ) << " ";
+        // std::cerr << B.at( i ) << " ";
     }
     //  Debug
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
+    
+    //  Solution check
+    long long sum = B.at( N - 1 );
+    if( sum % M != 0LL ) {
+        std::cout << "No" << std::endl;
+        return( 0 );
+    }
+    long long sum_tenth = B.at( N - 1 ) / M;
 
     //  Main
-    int isYes = false;
-    for( int i = 0; i <= N; i ++ ) {
-        ;
+    bool isYes = false;
+    for( int L = 0; L < N; L ++ ) {
+        long long BR = B.at( L ) + sum_tenth;
+        if( *std::lower_bound( B.begin(), B.end(), BR ) == BR ) {
+            isYes = true;
+            break;
+        }
     }
 
     //  Display result
-    std::string result;
     if( isYes ) {
-        result = "Yes";
+        std::cout << "Yes" << std::endl;
     }
     else {
-        result = "No";
+        std::cout << "No" << std::endl;
     }
-    std::cout << result << std::endl;
     
     //  Finalize
     // std::cerr << "Normally terminated." << std::endl;
