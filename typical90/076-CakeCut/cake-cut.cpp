@@ -7,6 +7,9 @@
 */
 
 // # Solution
+// - Read Ai and culculate the sum of Ai
+// - if Ai > sum/10 Ai = 0
+// - blocks are separated by 0
 
 #include <iostream>
 #include <vector>
@@ -18,7 +21,7 @@ int main()
     int N = 0;
     std::cin >> N;
     //  Debug
-    std::cerr << N << std::endl;
+    // std::cerr << N << std::endl;
 
     //  Read Ai and culculate the sum of them
     long long sum = 0LL;
@@ -27,10 +30,10 @@ int main()
         std::cin >> A.at( i );
         sum += A.at( i );
         //  Debug
-        std::cerr << A.at( i ) << " ";
+        // std::cerr << A.at( i ) << " ";
     }
     //  Debug
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
 
     //  Preprocess
     const long long sum_tenth = sum / 10LL;
@@ -39,13 +42,33 @@ int main()
             A.at( i ) = 0LL;
         }
         //  Debug
-        std::cerr << A.at( i ) << " ";
+        // std::cerr << A.at( i ) << " ";
     }
     //  Debug
-    std::cerr << std::endl;
+    // std::cerr << std::endl;
 
     //  Main
-    int isYes = true;
+    int isYes = false;
+    for( int i = 0; i <= N; i ++ ) {
+        if( A.at( i % N ) != 0LL  ) {
+            sum = 0LL;
+            for( int j = i; j <= N ; j ++ ) {
+                if( A.at( j % N ) != 0LL ) {
+                    sum += A.at( j % N );
+                    if( sum == sum_tenth ) {
+                        isYes = true;
+                        break;
+                    }
+                    else if( sum > sum_tenth ) {
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+    }
 
     //  Display result
     std::string result;
