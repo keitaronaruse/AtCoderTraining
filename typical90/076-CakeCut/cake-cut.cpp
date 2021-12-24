@@ -30,44 +30,46 @@ int main()
         std::cin >> A.at( i );
         sum += A.at( i );
         //  Debug
-        // std::cerr << A.at( i ) << " ";
+        std::cerr << A.at( i ) << " ";
     }
     //  Debug
-    // std::cerr << std::endl;
+    std::cerr << std::endl;
 
     //  Preprocess
+    //  Mask a values larger than the tenth of the sum
     const long long sum_tenth = sum / 10LL;
     for( int i = 0; i < N; i ++ ) {
         if( A.at( i ) > sum_tenth ) {
             A.at( i ) = 0LL;
         }
         //  Debug
-        // std::cerr << A.at( i ) << " ";
+        std::cerr << A.at( i ) << " ";
     }
     //  Debug
-    // std::cerr << std::endl;
+    std::cerr << std::endl;
+
+    //  Make a partial sum table 
+    std::vector< long long > sum_table( N, 0LL );
+    //  Float over case
+    sum = 0LL;
+    for( int i = 0; i < N; i ++ ) {
+        if( A.at( i ) == 0LL ) {
+            sum = 0LL;
+        }
+        else {
+            sum += A.at( i );
+            sum_table.at( i ) = sum;
+        }
+        //  Debug
+        std::cerr << sum_table.at( i ) << " ";
+    }
+    //  Debug
+    std::cerr << std::endl;
 
     //  Main
     int isYes = false;
     for( int i = 0; i <= N; i ++ ) {
-        if( A.at( i % N ) != 0LL  ) {
-            sum = 0LL;
-            for( int j = i; j <= N ; j ++ ) {
-                if( A.at( j % N ) != 0LL ) {
-                    sum += A.at( j % N );
-                    if( sum == sum_tenth ) {
-                        isYes = true;
-                        break;
-                    }
-                    else if( sum > sum_tenth ) {
-                        break;
-                    }
-                }
-                else {
-                    break;
-                }
-            }
-        }
+        ;
     }
 
     //  Display result
