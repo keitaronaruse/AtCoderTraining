@@ -7,21 +7,20 @@
 */
 
 // # Solution
+// - Represent a number as string
+// - Count up the number * the length of string
 
 #include <iostream>
-#include <vector>
 #include <string>
 
 //  Debug switch
-const bool Debug = true;
+const bool Debug = false;
 
 //  Very large prime number
 const long long Large_Prime = 1000000007LL;
 
 int main()
 {
-    //  Constant
-
     //  Read L and R
     long long L = 0LL, R = 0LL;
     std::cin >> L >> R;
@@ -32,11 +31,15 @@ int main()
     //  Main
     long long count = 0LL;
     for( long long i = L; i <= R; i ++ ) {
+        //  Max 10^18 => 19 characters
         std::string digits = std::to_string( i );
         if( Debug ) {
             std::cerr << digits << std::endl;
         }
+        count += ( ( i % Large_Prime ) * ( long long ) digits.size()  % Large_Prime );
+        count %= Large_Prime;
     }
+
     //  Display result
     std::cout << count << std::endl;
     
