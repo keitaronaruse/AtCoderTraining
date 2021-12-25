@@ -1,6 +1,6 @@
 /*
-    ABC233 Problem A
-        https://atcoder.jp/contests/abc233
+    ABC233 Problem A - 10yen Stamp
+        https://atcoder.jp/contests/abc233/tasks/abc233_a
         Author: Keitaro Naruse
         Date:   2021-12-25
         MIT License
@@ -14,14 +14,26 @@
 
 int main()
 {
-    //  Read S
-    std::string S;
-    std::cin >> S;
+    const int M = 10;
+
+    //  Read X and Y
+    int X = 0, Y = 0;
+    std::cin >> X >> Y;
 
     //  Display result
-    std::cout << std::endl;
+    int num = 0;
+    if( X >= Y ) {
+        num = 0;
+    }
+    else {
+        if( ( Y - X ) % M == 0 ) {
+            num = ( Y - X ) / M;
+        }
+        else {
+            num = ( Y - X ) / M + 1;
+        }
+    }
+    std::cout << num << std::endl;
     
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }

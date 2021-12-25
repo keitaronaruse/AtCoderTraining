@@ -10,7 +10,7 @@
 // - 
 
 #include <iostream>
-#include <string>
+#include <vector>
 
 int main()
 {
@@ -21,7 +21,5 @@ int main()
     //  Display result
     std::cout << std::endl;
     
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
     return( 0 );
 }
