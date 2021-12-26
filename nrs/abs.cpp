@@ -1,0 +1,32 @@
+/*
+    nrs::abs()
+        returns the absolute value of the arugument, implmented by template
+        Author: Keitaro Naruse
+        Date:   2021-12-26
+        MIT License
+*/
+
+namespace nrs {
+    template < class T >
+    T abs( T a )
+    {
+        return( ( a > 0 )? a : -a );
+    }
+}
+
+//  Test driver
+#include <iostream>
+
+int main()
+{
+    int i = -1000000000;
+    std::cout << "integer: "<< i << ", nrs::abs: " << nrs::abs( i ) << std::endl;
+
+    long l = -1000000000;
+    std::cout << "long: "<< l << ", nrs::abs: " << nrs::abs( l ) << std::endl;
+
+    long long  ll = -1000000000000000000;
+    std::cout << "long long: "<< ll << ", nrs::abs: " << nrs::abs( ll ) << std::endl;
+
+    return( 0 ); 
+}
