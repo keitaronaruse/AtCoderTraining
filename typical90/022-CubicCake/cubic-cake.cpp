@@ -2,7 +2,7 @@
     022 - Cubic Cake（★2） 
         https://atcoder.jp/contests/typical90/tasks/typical90_v
         Author: Keitaro Naruse
-        Date:   2021-11-27
+        Date:   2021-11-27, 2021-12-28
         MIT License
 */
 
