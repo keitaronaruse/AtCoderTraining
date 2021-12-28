@@ -11,26 +11,25 @@
 //  - Find the number of cuts by the unit cube
 
 #include <iostream>
+#include <algorithm>
 
-/*
-    gcd()
-        returns the greatest common divider
-*/
-long long gcd( long long a, long long b )
-{
-    long long dividend = a;
-    long long divisor = b;
-    long long residue = a % b;
+const bool Debug = true;
 
-    while( residue != 0 ) {
-        dividend = divisor;
-        divisor = residue;
-        residue = dividend % divisor;
-        //  Debug
-        // std::cerr << residue << std::endl;
+namespace nrs {
+    long long gcd( long long a, long long b )
+    {
+        long long dividend = ( a > b )? a : b;
+        long long divisor  = ( a > b )? b : a;
+        long long residue = dividend % divisor;
+
+        while( residue != 0 ) {
+            dividend = divisor;
+            divisor = residue;
+            residue = dividend % divisor;
+        }
+
+        return( divisor );
     }
-
-    return( divisor );
 }
 
 /*
