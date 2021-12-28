@@ -2,7 +2,7 @@
     024 - Select +／- One（★2） 
         https://atcoder.jp/contests/typical90/tasks/typical90_x
         Author: Keitaro Naruse
-        Date:   2021-11-27
+        Date:   2021-11-27, 2021-12-28
         MIT License
 */
 
@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <vector>
+
+const bool Debug = false;
 
 /*
     L1_norm()
@@ -35,33 +37,39 @@ int main()
     //  Read N and K
     int N = 0, K = 0;
     std::cin >> N >> K;
-    //  Debug
-    // std::cerr << N << " " << K << std::endl;
+    if( Debug ) {
+        std::cerr << N << " " << K << std::endl;
+    }
 
-    //  Read A
-    std::vector<int> A( N );
-    for( int i = 0; i != N; i ++ ) {
+    //  Read Ai
+    std::vector< int > A( N );
+    for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
-        //  Debug
-        // std::cerr << A.at( i ) << " ";
+        if( Debug ) {
+            std::cerr << A.at( i ) << " ";
+        }
     }
-    //  Debug
-    // std::cerr << std::endl;
+    if( Debug ) {
+        std::cerr << std::endl;
+    }
 
-    //  Read B
+    //  Read Bi
     std::vector<int> B( N );
-    for( int i = 0; i != N; i ++ ) {
+    for( int i = 0; i < N; i ++ ) {
         std::cin >> B.at( i );
-        //  Debug
-        // std::cerr << B.at( i ) << " ";
+        if( Debug ) {
+            std::cerr << B.at( i ) << " ";
+        }
     }
-    //  Debug
-    // std::cerr << std::endl;
+    if( Debug ) {
+        std::cerr << std::endl;
+    }
     
     //  Main
     int d = L1_norm( A, B );
-    //  Debug
-    // std::cerr << d << std::endl;
+    if( Debug ) {
+        std::cerr << d << std::endl;
+    }
 
     //  Check if K == d + 2k, which is K >= d and (K - d) % 2  == 0
     //  Judge and display result
@@ -73,7 +81,9 @@ int main()
     }
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
+
     return( 0 );
 }
