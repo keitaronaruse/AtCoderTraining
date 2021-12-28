@@ -2,7 +2,7 @@
     027 - Sign Up Requests （★2） 
         https://atcoder.jp/contests/typical90/tasks/typical90_x
         Author: Keitaro Naruse
-        Date:   2021-11-27
+        Date:   2021-11-27, 2021-12-29
         MIT License
 */
 
@@ -14,34 +14,39 @@
 #include <set>
 #include <string>
 
+const bool Debug = false;
+
 int main()
 {
     //  Initialize
     //  Read N
     int N = 0;
     std::cin >> N;
-    //  Debug
-    // std::cerr << N << std::endl;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
 
     //  Main
     //  Read Si and store it in set
-    std::set< std::string > D;
-    for( int i = 0; i != N; i ++ ) {
+    std::set< std::string > user_list;
+    for( int i = 0; i < N; i ++ ) {
         std::string account;
         std::cin >> account;
-        //  Debug
-        // std::cerr << account << std::endl;
+        if( Debug ) {
+            std::cerr << account << std::endl;
+        }
 
         //  Investigateif account is new in D 
-        if( D.count( account ) == 0 ) {
+        if( user_list.count( account ) == 0 ) {
             std::cout << i + 1 << std::endl;
         }
         //  Insert it in the set
-        D.insert( account );
+        user_list.insert( account );
     }
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
