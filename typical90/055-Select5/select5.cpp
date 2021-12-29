@@ -59,12 +59,11 @@ long long greedy( int N, int P, int Q, const std::vector< int >& R )
     dp()
         returns the solution by the dynamic programming
         DP table
-                      n = 1, n = 2, ..., n = N 10^2
-        Residue = 0   cases
-        Residue = 1   cases
-        ...
-        Residue < P-1 cases
-        10^9 too long to apply DP, we need a sparce table
+              n = 5
+        R_0   Q
+        R_1   Q
+        ...   Q
+        R_N-1 Q
 
 */
 
