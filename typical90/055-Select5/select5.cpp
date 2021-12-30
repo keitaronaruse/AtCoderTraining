@@ -86,29 +86,6 @@ long long greedy( int N, int P, int Q, const std::vector< int >& R )
     return( count );
 }
 
-/*
-    tree()
-        returns the solution by the tree search
-*/
-long long tree()
-{
-    long long count = 0LL;
-
-    const int N = 7;
-    const int P = 8;
-    const int Q = 5;
-
-    std::vector< int > R( N );
-    std::vector< int > inv_R( N );
-    for( int i = 0; i < N; i ++ ) {
-        R.at( i ) = i + 1;
-        inv_R.at( i ) = nrs::mod_inv( R.at( i ), P );
-        std::cerr << R.at( i ) << " " << inv_R.at( i ) << " " << std::endl;
-    }
-
-    return( count );
-}
-
 int main()
 {
     //  Read N, P, Q
