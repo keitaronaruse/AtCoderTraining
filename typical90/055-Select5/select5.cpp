@@ -21,6 +21,37 @@
 
 const bool Debug = false;
 
+namespace nrs {
+    template < class T >
+    T mod_inv( T a, T m ) 
+    {
+        T b = m, u = 1, v = 0;
+        while( b )  {
+            T t = a / b;
+
+            a -= t * b;
+            u -= t * v; 
+            
+            //  Swap a and b
+            t = a; 
+            a = b;
+            b = t;
+
+            //  Swap u and v
+            t = u; 
+            u = v;
+            v = t;
+        }
+
+        u %= m;
+        if( u < 0 ) {
+            u += m;
+        }
+
+        return( u );
+    }
+}
+
 /*
     greedy()
         returns the solution by the greedy 
@@ -56,16 +87,27 @@ long long greedy( int N, int P, int Q, const std::vector< int >& R )
 }
 
 /*
-    dp()
-        returns the solution by the dynamic programming
-        DP table
-              n = 5
-        R_0   Q
-        R_1   Q
-        ...   Q
-        R_N-1 Q
-
+    tree()
+        returns the solution by the tree search
 */
+long long tree()
+{
+    long long count = 0LL;
+
+    const int N = 7;
+    const int P = 8;
+    const int Q = 5;
+
+    std::vector< int > R( N );
+    std::vector< int > inv_R( N );
+    for( int i = 0; i < N; i ++ ) {
+        R.at( i ) = i + 1;
+        inv_R.at( i ) = nrs::mod_inv( R.at( i ), P );
+        std::cerr << R.at( i ) << " " << inv_R.at( i ) << " " << std::endl;
+    }
+
+    return( count );
+}
 
 int main()
 {
@@ -90,7 +132,8 @@ int main()
         std::cerr << std::endl;
     }
 
-    long long count = greedy( N, P, Q, R ); 
+    // long long count = greedy( N, P, Q, R ); 
+    long long count = tree();
 
     //  Display result
     std::cout << count << std::endl;
