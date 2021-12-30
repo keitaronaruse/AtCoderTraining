@@ -2,7 +2,7 @@
     078 - Easy Graph Problem（★2） 
         https://atcoder.jp/contests/typical90/tasks/typical90_bz
         Author: Keitaro Naruse
-        Date:   2021-12-02
+        Date:   2021-12-02, 2021-12-31
         MIT License
 */
 
