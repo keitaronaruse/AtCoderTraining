@@ -1,9 +1,9 @@
 /*
     make-test-cases.cpp
-    033 - Not Too Bright
-        https://atcoder.jp/contests/typical90/tasks/typical90_ag
+    055 - Select 5（★2）
+        https://atcoder.jp/contests/typical90/tasks/typical90_bc
         Author: Keitaro Naruse
-        Date:   2021-11-28, 2021-12-29
+        Date:   2021-11-30, 2021-12-30
         MIT License
 */
 
@@ -27,7 +27,7 @@ int main( int argc, char* argv[] )
         const int A = 0;
         std::cout << A << std::endl;
     }
-    //  Minimum case
+    //  Maximum case
     else if( argv[1][0] == '2' ) {
         const int N = 100, P = 1000000000, Q = 999999999;
         std::cout << N << " " << P << " " << Q << std::endl;

@@ -2,7 +2,7 @@
     055 - Select 5（★2）
         https://atcoder.jp/contests/typical90/tasks/typical90_bc
         Author: Keitaro Naruse
-        Date:   2021-11-30, 2021-12-29
+        Date:   2021-11-30, 2021-12-30
         MIT License
 */
 
@@ -13,44 +13,12 @@
 //     = (ki * P + Ri)*(kj * P + Rj) *...* (km * P + Rm)
 //     = (...)*P + Ri*Rj*...Rm
 //   - Ai*Aj*...*Am % P == Ri*Rj*...Rm % P
-// - Solution 1: Greedy
-// - Solution 2: DP base
+// - Solution: Greedy
 
 #include <iostream>
 #include <vector>
 
 const bool Debug = false;
-
-namespace nrs {
-    template < class T >
-    T mod_inv( T a, T m ) 
-    {
-        T b = m, u = 1, v = 0;
-        while( b )  {
-            T t = a / b;
-
-            a -= t * b;
-            u -= t * v; 
-            
-            //  Swap a and b
-            t = a; 
-            a = b;
-            b = t;
-
-            //  Swap u and v
-            t = u; 
-            u = v;
-            v = t;
-        }
-
-        u %= m;
-        if( u < 0 ) {
-            u += m;
-        }
-
-        return( u );
-    }
-}
 
 /*
     greedy()
@@ -63,16 +31,14 @@ long long greedy( int N, int P, int Q, const std::vector< int >& R )
     //  Make all the cases of picking up 5 out of N
     for( int i = 0; i < N; i ++ ) {
         for( int j = i + 1; j < N; j ++ ) {
+            long long r12 = ( long long ) R.at( i) * ( long long ) R.at( j ) % P;
             for( int k = j + 1; k < N; k ++ ) {
+                long long r123 = r12 * ( long long ) R.at( k ) % P;
                 for( int l = k + 1; l < N; l ++ ) {
+                    long long r1234 = r123 * ( long long ) R.at( l ) % P;
                     for( int m = l + 1; m < N; m ++) {
-                        long long r = ( long long ) R.at( i );
-                        int index[] = { j, k, l, m };
-                        for( int n = 0; n < 4; n ++ ) {
-                            r *= ( long long ) R.at( index[ n ] );
-                            r %= ( long long ) P;
-                        }
-                        if( r == ( long long ) Q ) {
+                        long long r12345 = r1234 * ( long long ) R.at( m ) % P;
+                        if( r12345 == ( long long ) Q ) {
                             count ++;
                         }
                         if( Debug ) {
@@ -109,8 +75,7 @@ int main()
         std::cerr << std::endl;
     }
 
-    // long long count = greedy( N, P, Q, R ); 
-    long long count = tree();
+    long long count = greedy( N, P, Q, R ); 
 
     //  Display result
     std::cout << count << std::endl;
