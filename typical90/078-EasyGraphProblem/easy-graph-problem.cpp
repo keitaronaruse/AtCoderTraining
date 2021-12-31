@@ -7,61 +7,83 @@
 */
 
 // # Solution
-// - For each node, store adjacent nodes in list
-// - Store all of the nodes in vector
+// - Store adjacent nodes of all of the given nodes as an unordered graph
 
 #include <iostream>
 #include <vector>
-#include <list>
+#include <set>
+
+namespace nrs {
+    class adj_graph {
+        public:
+            adj_graph() : n( 0 ) {
+                adj_nodes = std::vector< std::set< int > >();
+            };
+            adj_graph( int N ) : n( N ) {
+                adj_nodes = std::vector< std::set< int > >( N );
+            };
+            adj_graph( const adj_graph& r ) : n( r.n ) {
+                adj_nodes = r.adj_nodes;
+            }
+            void add_edge( int b, int e ) {
+                adj_nodes.at( b ).insert( e );
+            }
+            bool has_edge( int b, int e ) {
+                return( ( bool ) adj_nodes.at( b ).count( e ) );
+            }
+        public:
+            int n;
+            std::vector< std::set< int > > adj_nodes;
+    };
+}
+
+const bool Debug = false;
 
 int main()
 {
-    //  Read N, M
+    //  Read N and M
     int N = 0, M = 0;
     std::cin >> N >> M;
-    //  Debug
-    // std::cerr << N << " " << M << std::endl;
+    if( Debug ) {
+        std::cerr << N << " " << M << std::endl;
+    }
 
     //  Read ai and bi
-    std::vector< std::list< int > > adjacent_nodes( N + 1 );
-    for( int i = 0; i != M; i ++ ) {
+    nrs::adj_graph g( N );
+    for( int i = 0; i < M; i ++ ) {
         int a = 0, b = 0;
         std::cin >> a >> b;
-        //  Debug
-        // std::cerr << a << " " << b << std::endl;
+        if( Debug ) {
+            std::cerr << a << " " << b << std::endl;
+        }
+        a --;
+        b --;
         //  Since a bidirectional edge is given, add an adjacent node to the both nodes
-        adjacent_nodes.at( a ). push_back( b );
-        adjacent_nodes.at( b ). push_back( a );
+        g.add_edge( a, b );
+        g.add_edge( b, a );
     }
     
     //  Main
     int num_satisfied_nodes = 0;
-    for( int i = 1; i != N + 1; i ++ ) {
+    for( int i = 0; i < N; i ++ ) {
         int num_smaller_nodes = 0;
-        for( const auto& adj_node : adjacent_nodes.at( i ) ) {
-            if( adj_node < i ) {
-                num_smaller_nodes ++;
-            }
+        std::set< int >::iterator b = g.adj_nodes.at( i ).begin();
+        std::set< int >::iterator e = g.adj_nodes.at( i ).lower_bound( i );
+        while( b != e ) {
+            b ++;
+            num_smaller_nodes ++;
         }
         if( num_smaller_nodes == 1 ) {
             num_satisfied_nodes ++;
-        }
+        } 
     }
-    //  Debug
-    //  Display the adjacent nodes of all of the nodes
-    // for( size_t i = 1; i != N + 1; i ++ ) {
-    //     std::cerr << i << ": ";
-    //     for( const auto& adj_node : adjacent_nodes.at( i ) ) {
-    //         std::cerr << adj_node << " ";
-    //     }
-    //     std::cerr << std::endl;
-    // }
 
     //  Display result
     std::cout << num_satisfied_nodes << std::endl;
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }

@@ -37,7 +37,7 @@ int main( int argc, char* argv[] )
         std::cout << N << " " << M << std::endl;
         
         for( int i = 0; i < M; i ++ ) {
-            const int a = ( i + 1 ) % N, b = ( i + 2 ) % N;
+            const int a = i % N + 1, b = ( i + 1 ) % N + 1;
             std::cout << a << " " << b << std::endl;
         }
     }
@@ -53,19 +53,25 @@ int main( int argc, char* argv[] )
         const long long edges = ( long long ) N * ( long long )( N - 1 ) / 2LL;
         //  Small graph, full connection
         if( edges < 100000LL ) {
-            const int M = ( long long ) edges;
+            const int M = ( int ) edges;
+            std::cout << N << " " << M << std::endl;
+            
             for( int i = 0; i < N; i ++ ) {
                 for( int j = i + 1; j < N; j ++ ) {
-                    std::cout << i << " " << j << std::endl;
+                    std::cout << i + 1 << " " << j + 1 << std::endl;
                 }
             }
         }
         //  Larage graph, random connection
         else {
             const int M = 100000;
+            std::cout << N << " " << M << std::endl;
+
             dist = std::uniform_int_distribution< int >( 1, N );
             for( int i = 0; i < M; i ++ ) {
-                std::cout << dist( engine ) << " " << dist( engine ) << std::endl;
+                int b = dist( engine );
+                int e = dist( engine );
+                std::cout << b << " " << e << std::endl;
             }
         }
     }
