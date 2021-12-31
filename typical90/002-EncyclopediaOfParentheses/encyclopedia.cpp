@@ -2,24 +2,29 @@
     002 - Encyclopedia of Parentheses（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_b
         Author: Keitaro Naruse
-        Date:   2021-12-02, 2021-12-05
+        Date:   2021-12-02, 2021-12-31
         MIT License
 */
 
 // # Solution
+// - Generate strings by the given rules
+// - std::set can store the strings in the dictionay order
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <set>
 
+const bool Debug = false;
+
 int main()
 {
     //  Read N
     int N = 0;
     std::cin >> N;
-    //  Debug
-    // std::cerr << N << std::endl;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
 
     //  Main
     //  Make right words
@@ -53,7 +58,8 @@ int main()
     }
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
