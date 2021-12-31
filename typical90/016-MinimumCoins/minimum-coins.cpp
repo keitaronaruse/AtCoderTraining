@@ -2,7 +2,7 @@
     016 - Minimum Coins（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_p
         Author: Keitaro Naruse
-        Date:   2021-12-06
+        Date:   2021-12-06, 2022-01-01
         MIT License
 */
 
@@ -15,6 +15,8 @@
 #include <vector>
 #include <algorithm>
 
+const bool Debug = false;
+
 int main()
 {
     //  The number of maximum coins
@@ -22,15 +24,16 @@ int main()
     //  Read N, A, B, C
     int N = 0, A = 0, B = 0, C = 0;
     std::cin >> N >> A >> B >> C;
-    //  Debug
-    // std::cerr << N << std::endl << A << " " << B << " " << C << std::endl;
+    if( Debug ) {
+        std::cerr << N << std::endl << A << " " << B << " " << C << std::endl;
+    }
     
     //  Main
     int minimum_coins = L;
     for( int i = 0; i <= L; i ++ ) {
         for( int j = 0; j <= L - i; j ++ ) {
-            long long K = ( ( long long ) N - i * (long long)A - j * B ) / C;
-            if( K >= 0 ) {
+            long long K = ( ( long long ) N - i * ( long long ) A - j * B ) / C;
+            if( K >= 0LL ) {
                 int k = ( int ) K;
                 if( i * A + j * B + k * C == N ) {
                     //  Solution
@@ -46,7 +49,8 @@ int main()
     }
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
