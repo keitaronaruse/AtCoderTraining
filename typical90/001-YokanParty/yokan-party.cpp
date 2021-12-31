@@ -37,29 +37,45 @@ namespace nrs {
 
 const bool Debug = true;
 
-bool is_possible( int score, const std::vector< int >& A )
+//  Problem
+int N, L, K;
+std::vector< int > A;
+
+bool is_possible( int score )
 {
-    bool okay = ( score > 10 );
-    return( okay );
+    std::vector< int > cut( K + 1, 0 );
+
+    int k = 0;
+    cut.at( k ) = 0;
+    for( int i = 0 ; i < N ; i ++ ) {
+        if( A.at( i ) - cut.at( k ) >= score ) {
+            cut.at( k + 1 ) = A.at( i );
+            k ++;
+            if( k >= K ) {
+                cut.at( k ) = L - A.at( i );
+                break;
+            }
+        }
+    }
+
+    return( cut.at( k ) >= score );
 }
 
 int main()
 {
     //  Initialize
     //  Read N and L
-    int N = 0, L = 0;
     std::cin >> N >> L;
     if( Debug ) {
         std::cerr << N << " " << L << std::endl;
     }
     //  Read K
-    int K = 0;
     std::cin >> K;
     if( Debug ) {
         std::cerr << K << std::endl;
     }
     //  Read Ai
-    std::vector< int > A( N );
+    A = std::vector< int > ( N );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
         if( Debug ) {
@@ -73,12 +89,12 @@ int main()
     //  Main
     int ok = L, ng = 0;
     while( nrs::abs( ok - ng ) > 1 ) {
-        int mid = ( ok + ng ) / 2;
-        if( is_possible( mid, A ) ) {
-            ok = mid;
+        int score = ( ok + ng ) / 2;
+        if( is_possible( score ) ) {
+            ok = score;
         }
         else {
-            ng = mid;
+            ng = score;
         }
     }
     std::cout << ok << std::endl;
