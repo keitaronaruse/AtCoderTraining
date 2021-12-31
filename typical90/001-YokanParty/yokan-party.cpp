@@ -12,7 +12,36 @@
 #include <iostream>
 #include <vector>
 
+namespace nrs {
+    template < class T >
+    T abs( T a )
+    {
+        return( ( a > 0 )? a : -a );
+    }
+
+    int binary_search( int ok, int ng, bool pred( int ) )
+    {
+        while( nrs::abs( ok - ng ) > 1 ) {
+            int mid = ( ok + ng ) / 2;
+            if( pred( mid ) ) {
+                ok = mid;
+            }
+            else {
+                ng = mid;
+            }
+        }
+
+        return( ok );
+    }
+}
+
 const bool Debug = true;
+
+bool is_possible( int score, const std::vector< int >& A )
+{
+    bool okay = ( score > 10 );
+    return( okay );
+}
 
 int main()
 {
@@ -42,7 +71,17 @@ int main()
     }
 
     //  Main
-    int b = 0, e = 0;
+    int ok = L, ng = 0;
+    while( nrs::abs( ok - ng ) > 1 ) {
+        int mid = ( ok + ng ) / 2;
+        if( is_possible( mid, A ) ) {
+            ok = mid;
+        }
+        else {
+            ng = mid;
+        }
+    }
+    std::cout << ok << std::endl;
 
     //  Finalize
     if( Debug ) {
