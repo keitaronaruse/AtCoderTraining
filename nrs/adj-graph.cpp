@@ -1,7 +1,6 @@
 /*
     nrs::adj_graph
         The class of a graph structure by adjacent nodes 
-        returns the absolute value of the arugument, implmented by template
         Author: Keitaro Naruse
         Date:   2021-12-31
         MIT License

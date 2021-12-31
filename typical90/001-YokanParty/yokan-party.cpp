@@ -2,11 +2,12 @@
     001 - Yokan Party（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_a
         Author: Keitaro Naruse
-        Date:   2021-12-29
+        Date:   2021-12-29, 2021-12-31
         MIT License
 */
 
 //  # Solution
+// - Binary search
 
 #include <iostream>
 #include <vector>
@@ -33,7 +34,7 @@ int main()
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
         if( Debug ) {
-            std::cerr << A.at( i ) << "" << std::endl;
+            std::cerr << A.at( i ) << " ";
         }
     }
     if( Debug ) {
@@ -41,6 +42,8 @@ int main()
     }
 
     //  Main
+    int b = 0, e = 0;
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
