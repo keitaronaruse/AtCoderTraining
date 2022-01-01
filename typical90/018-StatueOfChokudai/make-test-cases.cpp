@@ -65,6 +65,7 @@ int main( int argc, char* argv[] )
         
         dist = std::uniform_int_distribution< int >( 1, 1000 );
         const int Q = dist( engine );
+        std::cout << Q << std::endl;
 
         dist = std::uniform_int_distribution< int >( 0, T - 1 );
         for( int i = 0; i < Q; i ++ ) {

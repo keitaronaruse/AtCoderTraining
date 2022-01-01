@@ -2,12 +2,13 @@
     001 - Yokan Party（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_a
         Author: Keitaro Naruse
-        Date:   2021-12-29, 2021-12-31
+        Date:   2021-12-29, 2022-01-01
         MIT License
 */
 
 //  # Solution
-// - Binary search
+// - Binary search of the score of the minimum cutting length between 0 and L
+// - The nimimum cutting length is found by the greedy method 
 
 #include <iostream>
 #include <vector>
@@ -41,24 +42,26 @@ const bool Debug = true;
 int N, L, K;
 std::vector< int > A;
 
+/*
+    is_possible()
+        returns true if all of the pieces are longer than the given score
+*/
 bool is_possible( int score )
 {
-    std::vector< int > cut( K + 1, 0 );
-
-    int k = 0;
-    cut.at( k ) = 0;
+    int cut_num = 0;
+    int prev_cut_point = 0;
     for( int i = 0 ; i < N ; i ++ ) {
-        if( A.at( i ) - cut.at( k ) >= score ) {
-            cut.at( k + 1 ) = A.at( i );
-            k ++;
-            if( k >= K ) {
-                cut.at( k ) = L - A.at( i );
-                break;
+        if( A.at( i ) - prev_cut_point >= score ) {
+            prev_cut_point = A.at( i );
+            cut_num ++;
+            //  It has cut at K points
+            if( cut_num >= K ) {
+                return( ( L - prev_cut_point ) >= score );
             }
         }
     }
-
-    return( cut.at( k ) >= score );
+    //  It has not cut at K points -> false
+    return( false );
 }
 
 int main()
@@ -86,10 +89,10 @@ int main()
         std::cerr << std::endl;
     }
 
-    //  Main
-    int ok = L, ng = 0;
+    int ok = 0, ng = L;
+    int score = 0;
     while( nrs::abs( ok - ng ) > 1 ) {
-        int score = ( ok + ng ) / 2;
+        score = ( ok + ng ) / 2;
         if( is_possible( score ) ) {
             ok = score;
         }
