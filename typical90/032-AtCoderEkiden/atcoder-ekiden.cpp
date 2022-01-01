@@ -2,7 +2,7 @@
     032 - AtCoder Ekiden（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_af
         Author: Keitaro Naruse
-        Date:   2021-12-10
+        Date:   2021-12-10, 2022-01-01
         MIT License
 */
 
@@ -13,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 
+const bool Debug = false;
+
 int main()
 {
     //  Max cost
@@ -22,36 +24,46 @@ int main()
     //  Read N and Aij
     int N = 0;
     std::cin >> N;
-    //  Debug
-    // std::cerr << N << std::endl;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
     //  Read Aij
-    std::vector< std::vector<int> > A( N + 1, std::vector<int>( N + 1 ) );
-    for( int i = 1; i <= N; i ++ ) {
-        for( int j = 1; j <= N; j ++ ) {
+    std::vector< std::vector<int> > A( N, std::vector<int>( N, 0 ) );
+    for( int i = 0; i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
             std::cin >> A.at( i ).at( j );
-            //  Debug
-            // std::cerr << A.at( i ).at( j ) << " ";
+            if( Debug ) {
+                std::cerr << A.at( i ).at( j ) << " ";
+            }
         }
-        //  Debug
-        // std::cerr << std::endl;
+        if( Debug) {
+            std::cerr << std::endl;
+        }
     } 
 
     //  Read M and Xi Yi
     int M = 0;
     std::cin >> M;
-    //  Debug
-    // std::cerr << M << std::endl;
+    if( Debug ) {
+        std::cerr << M << std::endl;
+    }
     //  Read Xi, Yi
-    std::vector<int> X( M ), Y( M );
+    std::vector< std::vector< bool > > constraints( N, std::vector< bool >( N, true ) );
     for( int j = 0; j < M; j ++ ) {
-        std::cin >> X.at( j ) >> Y.at( j );
-        //  Debug
-        // std::cerr << X.at( j ) << " " << Y.at( j ) << std::endl;
+        int X = 0, Y = 0;
+        std::cin >> X >> Y;
+        if( Debug ) {
+            std::cerr << X << " " << Y << std::endl;
+        }
+        X --;
+        Y --;
+        constraints.at( X ).at( Y ) = false;
+        constraints.at( Y ).at( X ) = false;
     }
 
     //  Main
-    std::vector< int > assign( N + 1 );
-    for( int i = 1; i <= N; i ++) {
+    std::vector< int > assign( N );
+    for( int i = 0; i < N; i ++ ) {
         assign.at( i ) = i;
     }
 
@@ -59,31 +71,26 @@ int main()
     while( loop_flag ) {
         int time = 0;
         bool isSatisfied = true;
-        for( int i = 1; i < N; i ++ ) {
-            for( int j = 0; j < M; j ++ ) {
-                if( ( ( X.at( j ) == assign.at( i ) ) && ( Y.at( j ) == assign.at( i + 1 ) ) )
-                 || ( ( Y.at( j ) == assign.at( i ) ) && ( X.at( j ) == assign.at( i + 1 ) ) )
-                ) {
-                    isSatisfied = false;
-                    break;
-                }
-            }
+        for( int i = 0; i < N - 1; i ++ ) {
+            isSatisfied = constraints.at( assign.at( i ) ).at( assign.at( i + 1 ) );
             if( isSatisfied ) {
                 time += A.at( assign.at( i ) ).at( i );
             }
-        }
-        if( isSatisfied ) {
-            time += A.at( assign.at( N ) ).at( N );
-            if( time < min_time ) {
-                min_time = time;
+            else {
+                break;
             }
         }
-        //  Debug
-        // for( int i = 1; i <= N; i ++ ) {
-        //     std::cerr << assign.at( i ) << " ";
-        // }
-        // std::cerr << isSatisfied << " " << time << std::endl;
-        loop_flag = std::next_permutation( assign.begin() + 1, assign.end() );
+        if( isSatisfied ) {
+            time += A.at( assign.at( N - 1 ) ).at( N - 1 );
+            min_time = std::min( time, min_time ); 
+        }
+        if( Debug ) {
+            for( int i = 0; i < N; i ++ ) {
+                std::cerr << assign.at( i ) << " ";
+            }
+            std::cerr << isSatisfied << " " << time << std::endl;
+        }
+        loop_flag = std::next_permutation( assign.begin(), assign.end() );
     }
 
     //  Display result
@@ -93,7 +100,8 @@ int main()
     std::cout << min_time << std::endl;
     
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }

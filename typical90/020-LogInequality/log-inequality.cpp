@@ -2,7 +2,7 @@
     020 - Log Inequality（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_t
         Author: Keitaro Naruse
-        Date:   2021-12-09
+        Date:   2021-12-09, 2022-01-01
         MIT License
 */
 
@@ -11,13 +11,16 @@
 
 #include <iostream>
 
+const bool Debug = false;
+
 int main()
 {
     //  Read A, B, C
     long long A = 0LL, B = 0LL, C = 0LL, R = 1LL; 
     std::cin >> A >> B >> C;
-    //  Debug
-    // std::cerr << A << " " << B << " " << C << std::endl;
+    if( Debug ) {
+        std::cerr << A << " " << B << " " << C << std::endl;
+    }
 
     //  Main
     for( long long i = 1LL; i <= B; i ++ ) {
@@ -32,7 +35,8 @@ int main()
     }
 
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
