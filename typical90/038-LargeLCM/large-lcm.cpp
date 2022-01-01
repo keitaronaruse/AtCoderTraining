@@ -2,17 +2,43 @@
     038 - Large LCM
         https://atcoder.jp/contests/typical90/tasks/typical90_al
         Author: Keitaro Naruse
-        Date:   2021-12-10
+        Date:   2021-12-10, 2022-01-01
         MIT License
 */
 
 // # Solution
-//  - GCD by Euclid algorithm
-//  - A * B = GCD * LCM
-//  - LCM = (A / GCD) * B
+//  - Find GCD by the Euclid algorithm
+//  - Find LCM by the principle of A * B = GCD * LCM
 
 #include <iostream>
 #include <algorithm>
+
+const bool Debug = false;
+
+namespace nrs {
+    template < class T >
+    T gcd( T a, T b )
+    {
+        T dividend = ( a > b )? a : b;
+        T divisor  = ( a > b )? b : a;
+        T residue = dividend % divisor;
+
+        while( residue != 0 ) {
+            dividend = divisor;
+            divisor = residue;
+            residue = dividend % divisor;
+        }
+
+        return( divisor );
+    }
+
+    template < class T >
+    T lcm( T a, T b )
+    {
+        long long g = nrs::gcd( a, b );
+        return( std::max( a, b ) / g * std::min( a, b ) );  
+    }
+}
 
 int main()
 {
@@ -21,53 +47,41 @@ int main()
     //  Read A and B
     long long A = 0LL, B = 0LL;
     std::cin >> A >> B;
-    //  Debug
-    // std::cerr << A << " " << B << std::endl;
+    if( Debug ) {
+        std::cerr << A << " " << B << std::endl;
+    }
     
     //  Main
-    //  Find GCD
-    long long m = std::max( A, B ), n = std::min( A, B ), r = 0LL, gcd = 0LL, lcm = 0LL;
-    while( true ) {
-        if( ( r = m % n ) == 0LL ) {
-            gcd = n;
-            break;
-        }
-        else {
-            m = n;
-            n = r;
-        }
-    }
-    //  Debug
-    // std::cerr << gcd << std::endl;
-
     //  Find LCM
-    lcm = (A / gcd) * B;
-    //  Debug
-    // std::cerr << lcm << std::endl;
+    long long m_lcm = nrs::lcm( A, B );
+    if( Debug ) {
+        std::cerr << m_lcm << std::endl;
+    }
 
-    if( lcm > M ) {
-        lcm = 0LL;
+    if( m_lcm > M ) {
+        m_lcm = 0LL;
     }
-    else if( lcm <= 0LL ) {
-        lcm = 0LL;
+    else if( m_lcm <= 0LL ) {
+        m_lcm = 0LL;
     }
-    else if( lcm < A ) {
-        lcm = 0LL;
+    else if( m_lcm < A ) {
+        m_lcm = 0LL;
     }
-    else if( lcm < B ) {
-        lcm = 0LL;
+    else if( m_lcm < B ) {
+        m_lcm = 0LL;
     }
     
     //  Display result
-    if( lcm == 0LL ) {
+    if( m_lcm == 0LL ) {
         std::cout << "Large" << std::endl;
     }
     else {
-        std::cout << lcm << std::endl;
+        std::cout << m_lcm << std::endl;
     }
     
     //  Finalize
-    //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
