@@ -13,6 +13,8 @@
 #include <iostream>
 #include <vector>
 
+const bool Debug = false;
+
 namespace nrs {
     template < class T >
     T abs( T a )
@@ -35,8 +37,6 @@ namespace nrs {
         return( ok );
     }
 }
-
-const bool Debug = true;
 
 //  Problem
 int N, L, K;
@@ -89,18 +89,9 @@ int main()
         std::cerr << std::endl;
     }
 
+    //  Main
     int ok = 0, ng = L;
-    int score = 0;
-    while( nrs::abs( ok - ng ) > 1 ) {
-        score = ( ok + ng ) / 2;
-        if( is_possible( score ) ) {
-            ok = score;
-        }
-        else {
-            ng = score;
-        }
-    }
-    std::cout << ok << std::endl;
+    std::cout << nrs::binary_search( ok, ng, is_possible ) << std::endl;
 
     //  Finalize
     if( Debug ) {
