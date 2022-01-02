@@ -2,13 +2,13 @@
     048 - I will not drop out（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_av
         Author: Keitaro Naruse
-        Date:   2021-12-15
+        Date:   2021-12-15, 2022-01-02
         MIT License
 */
 
 // # Solution
 // - Read Ai and Bi, calculate Ci = Ai - Bi
-// - Constraints: Ci can be taken after Bi is done
+// - Constraints: Ci can be taken after Bi is done          
 // - Put Bi and Ci to S and sort S in the descending order
 // - Pick the first K numbers from S, which satisfies the problem constraints 
 //   because Bi > Ci always
@@ -17,6 +17,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
+const bool Debug = false;
 
 bool is_larger( int a, int b )
 {
@@ -28,7 +30,9 @@ int main()
     //  Read N and K
     int N = 0, K = 0; 
     std::cin >> N >> K;
-    // std::cerr << N << " " << K << std::endl;
+    if( Debug ) {
+        std::cerr << N << " " << K << std::endl;
+    }
 
     //  Read Ai and Bi, and make Ci
     std::vector< int > s( 2 * N, 0 );
@@ -38,7 +42,7 @@ int main()
         s.at( 2 * i ) = b; 
         s.at( 2 * i + 1) = a - b;
     }
-    std::sort( s.begin(), s.end(),  is_larger ); 
+    std::sort( s.begin(), s.end(), is_larger ); 
 
     //  Main
     long long sum = 0LL;
@@ -50,6 +54,8 @@ int main()
     std::cout << sum << std::endl;
     
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
