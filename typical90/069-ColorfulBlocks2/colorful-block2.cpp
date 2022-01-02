@@ -2,7 +2,7 @@
     069 - Colorful Blocks 2（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_bq
         Author: Keitaro Naruse
-        Date:   2021-12-21, 2021-12-23 
+        Date:   2021-12-21, 2022-01-02 
         MIT License
 */
 
@@ -14,7 +14,7 @@
 #include <vector>
 #include <bitset>
 
-// # Solution
+const bool Debug = false;
 
 int main()
 {
@@ -25,6 +25,9 @@ int main()
     //  Read N and K
     unsigned long long N = 0LL, K = 0LL;
     std::cin >> N >> K;
+    if( Debug ) {
+        std::cerr << N << " " << K << std::endl;
+    }
 
     //  Main
     unsigned long long cases = K % Large_Prime;
@@ -42,20 +45,18 @@ int main()
         cases %= Large_Prime;
 
         std::bitset< Max_Bit > b( N - 2 );
-        //  Debug
-        // std::cerr << b << std::endl;
-
         std::vector< unsigned long long > patterns( Max_Bit, 0LL );
         patterns.at( 0 ) = K - 2LL;
         for( int i = 1; i < Max_Bit; i ++ ) {
             patterns.at( i ) = patterns.at( i - 1 ) * patterns.at( i - 1 );
             patterns.at( i ) %= Large_Prime;
         }
-        //  Debug
-        // for( int i = 0; i < Max_Bit; i ++ ) {
-        //     std::cerr << patterns.at( i ) << " ";
-        // }
-        // std::cerr << std::endl;
+        if( Debug ) {
+            for( int i = 0; i < Max_Bit; i ++ ) {
+                std::cerr << patterns.at( i ) << " ";
+            }
+            std::cerr << std::endl;
+        }
 
         //  Main
         for( int i = 0; i < Max_Bit; i ++ ) {
@@ -64,13 +65,14 @@ int main()
                 cases %= Large_Prime;
             }
         }
-
     }
 
     //  Display result
     std::cout << cases << std::endl;
 
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
