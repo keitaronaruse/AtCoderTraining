@@ -2,7 +2,7 @@
     052 - Dice Product（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_az
         Author: Keitaro Naruse
-        Date:   2021-12-18
+        Date:   2021-12-18, 2022-01-02
         MIT License
 */
 
@@ -22,35 +22,39 @@
 //  Very large Prime
 const long long Large_Prime = 1000000007LL;
 
+const bool Debug = false;
+
 int main()
 {
     //  Initialize
     //  Constant
     const int M = 6;
+
     //  Read N
     int N = 0;
     std::cin >> N;
-    // std::cerr << N << std::endl;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
     
     //  Read Aij and make Si
     std::vector< std::vector< int > > A( N, std::vector< int >( M, 0 ) );
-    std::vector< long long > S( N, 0LL );
+    std::vector< int > S( N, 0LL );
 
     long long sum = 1LL;    
     for( int i = 0; i < N; i ++ ) {
         for( int j = 0; j < M; j ++) {
             std::cin >> A.at( i ).at( j );
-            S.at( i ) += ( long long ) A.at( i ).at( j );
-            // if( j < M - 1) {
-            //     std::cerr << A.at( i ).at( j ) << " + ";
-            // }
-            // else {
-            //     std::cerr << A.at( i ).at( j );
-            // }
+            S.at( i ) += A.at( i ).at( j );
+            if( Debug ) {
+                std::cerr << A.at( i ).at( j ) << " ";
+            }
         }
-        sum *= S.at( i );
+        if( Debug ) {
+            std::cerr << ": " << S.at( i ) << std::endl;
+        }
+        sum *= ( long long ) S.at( i );
         sum %= Large_Prime;
-        // std::cerr << " = " << S.at( i ) << std::endl;
     }
 
     //  Main
@@ -58,6 +62,8 @@ int main()
     std::cout << sum  << std::endl;
     
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
