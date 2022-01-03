@@ -68,11 +68,15 @@ int main( int argc, char* argv[] )
         std::cout << H << " " << W << std::endl;
 
         dist = std::uniform_int_distribution< int > ( 0, 100000 ); 
-        for( int i = 0; i < N; i ++ ) {
-            const int A = dist( engine );
-            std::cout << A << " ";
+        for( int i = 0; i < H; i ++ ) {
+            for( int j = 0; j < W; j ++ ) {
+                const int A = dist( engine );
+                std::cout << A << " ";
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
+
+        dist = std::uniform_int_distribution< int > ( 0, 100000 ); 
         for( int i = 0; i < H; i ++ ) {
             for( int j = 0; j < W; j ++ ) {
                 const int B = dist( engine );

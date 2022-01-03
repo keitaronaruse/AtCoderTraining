@@ -2,18 +2,20 @@
     076 - Cake Cut（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_bx
         Author: Keitaro Naruse
-        Date:   2021-12-23, 2021-12-24
+        Date:   2021-12-23, 2022-01-03
         MIT License
 */
 
 // # Solution
-// - Read Ai and culculate the sum of Ai
-// - if Ai > sum/10 Ai = 0
-// - blocks are separated by 0
+// - Read Ai and culculate Bi, the cumulative sum of Ai
+// - Because the cumulative sum is a sorted sequence, 
+// - we can find the sum / 10 by the binary search
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
+const bool Debug = false;
 
 int main()
 {
@@ -23,17 +25,21 @@ int main()
     //  Read N
     int N = 0;
     std::cin >> N;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
 
     //  Read Ai
-    std::vector< long long > A( N );
+    std::vector< int > A( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
-        //  Debug
-        // std::cerr << A.at( i ) << " ";
+        if( Debug ) {
+            std::cerr << A.at( i ) << " ";
+        }
     }
-    //  Debug
-    // std::cerr << std::endl;
-
+    if( Debug ) {
+        std::cerr << std::endl;
+    }
 
     //  Make Bi, the cumulative sum
     std::vector< long long > B( 2 * N, 0LL );
@@ -44,12 +50,12 @@ int main()
     for( int i = 0; i < N; i ++ ) {
         B.at( i + N ) = B.at( i - 1 + N ) + A.at( i ); 
     }
-    for( int i = 0; i < 2 * N; i ++ ) {
-        //  Debug
-        // std::cerr << B.at( i ) << " ";
+    if( Debug ) {
+        for( int i = 0; i < 2 * N; i ++ ) {
+            std::cerr << B.at( i ) << " ";
+        }
+        std::cerr << std::endl;
     }
-    //  Debug
-    // std::cerr << std::endl;
     
     //  Solution check
     long long sum = B.at( N - 1 );
@@ -78,6 +84,8 @@ int main()
     }
     
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }

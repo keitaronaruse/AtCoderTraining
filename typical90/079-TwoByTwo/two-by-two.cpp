@@ -2,7 +2,7 @@
     079 - Two by Two（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_ca
         Author: Keitaro Naruse
-        Date:   2021-12-24, 2021-12-25
+        Date:   2021-12-24, 2022-01-03
         MIT License
 */
 
@@ -14,22 +14,25 @@
 #include <iostream>
 #include <vector>
 
+namespace nrs {
+    template < class T >
+    T abs( T a )
+    {
+        return( ( a > 0 )? a : -a );
+    }
+}
+
 //  Debug switch
 const bool Debug = false;
 
-template < class T >
-T T_abs( T a )
-{
-    return( ( a > 0 )? a : -a );
-}
-
 int main()
 {
-    //  Constant
-
     //  Read H and W
     int H = 0, W = 0; 
     std::cin >> H >> W;
+    if( Debug ) {
+        std::cerr << H << " " << W << std::endl;
+    }
 
     //  Read Aij
     std::vector< std::vector< int > > A( H, std::vector< int >( W, 0 ) );
@@ -74,6 +77,15 @@ int main()
         }
     }
 
+    if( Debug ) {
+        for( int i = 0; i < H; i ++ ) {
+            for( int j = 0; j < W; j ++ ) {
+                std::cerr << D.at( i ).at( j ) << " ";
+            }
+            std::cerr << std::endl;
+        }
+    }
+
     //  Apply the operations to (i,j) to be Dij = 0
     long long count = 0;
     for( int i = 0; i < H - 1; i ++ ) {
@@ -85,18 +97,32 @@ int main()
                     D.at( i + h ).at( j + w ) -= diff;
                 }
             }
-            count += ( long long ) T_abs( diff );
+            count += ( long long ) nrs::abs( diff );
         }
     }
+    if( Debug ) {
+        for( int i = 0; i < H; i ++ ) {
+            for( int j = 0; j < W; j ++ ) {
+                std::cerr << D.at( i ).at( j ) << " ";
+            }
+            std::cerr << std::endl;
+        }
+    }
+
     //  Check if Dij are all zero
     bool isYes = true;
     for( int i = 0; i < H; i ++ ) {
-        for( int j = 0; j < W; j ++ ) {
-            if( D.at( i ).at( j ) != 0 ) {
-                isYes = false;
-                std::cout << "No" << std::endl;
-                return( 0 );
-            }
+        if( D.at( i ).at( W - 1 ) != 0 ) {
+            isYes = false;
+            std::cout << "No" << std::endl;
+            return( 0 );
+        }
+    }
+    for( int j = 0; j < W; j ++ ) {
+        if( D.at( H - 1 ).at( j ) != 0 ) {
+            isYes = false;
+            std::cout << "No" << std::endl;
+            return( 0 );
         }
     }
 
