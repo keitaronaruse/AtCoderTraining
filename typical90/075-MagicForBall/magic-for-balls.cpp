@@ -2,7 +2,7 @@
     075 - Magic For Balls（★3）
         https://atcoder.jp/contests/typical90/tasks/typical90_bw
         Author: Keitaro Naruse
-        Date:   2021-12-23, 2021-12-23 
+        Date:   2021-12-23, 2021-01-03 
         MIT License
 */
 
@@ -13,15 +13,19 @@
 #include <iostream>
 #include <vector>
 
+const bool Debug = false;
+
 int main()
 {
     //  Read N
     long long N = 0LL;
     std::cin >> N;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
 
     //  Main
     std::vector< long long > factors;
-
     long long m = 2;
     for( long long m = 2LL; m * m <= N; m ++ ) {
         while( N % m == 0LL ) {
@@ -29,14 +33,15 @@ int main()
             N /= m;
         }
     }
-    if( N != 1) {
+    if( N != 1 ) {
         factors.push_back( N );
     }
-    //  Debug
-    // for( auto p : factors ) {
-    //     std::cerr << p << " ";
-    // }
-    // std::cerr << std::endl;
+    if( Debug ) {
+        for( auto p : factors ) {
+            std::cerr << p << " ";
+        }
+        std::cerr << std::endl;
+    }
 
     //  Display result
     int count = 0;
@@ -48,6 +53,8 @@ int main()
     std::cout << count << std::endl;
 
     //  Finalize
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
