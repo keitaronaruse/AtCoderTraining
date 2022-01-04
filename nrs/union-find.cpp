@@ -45,7 +45,6 @@ namespace nrs {
     };
 }
 
-
 int main()
 {
     //  Initialize
