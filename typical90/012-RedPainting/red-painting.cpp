@@ -48,9 +48,10 @@ namespace nrs {
     };
 }
 
-const bool Debug = true;
+const bool Debug = false;
 int H = 0;
 int W = 0;
+int Q = 0;
 
 int id( int h, int w )
 {
@@ -65,7 +66,6 @@ int main()
         std::cerr << H << " " << W << std::endl;
     }
     //  Read Q
-    int Q = 0;
     std::cin >> Q;
     if( Debug ) {
         std::cerr << Q << std::endl;
@@ -93,6 +93,16 @@ int main()
 
             r --; c --;
             color.at( id( r, c ) ) = true;
+            for( int v = -1; v <= 1; v += 2 ) {
+                for( int u = -1; u <= 1; u += 2 ) {
+                    if( ( 0 <= ( r + v ) ) && ( ( r + v ) < H ) 
+                    && ( 0 <= ( c + u ) ) && ( ( c + u ) < W ) ) {
+                        if( color.at( id( r + v, c + u ) ) ) {
+                            uf.unite( id( r, c ), id( r + v, c + u ) );
+                        }
+                    }
+                }
+            }
         }
         else if( t == 2 ) {
             int ra = 0, ca = 0, rb = 0, cb = 0;
@@ -101,7 +111,8 @@ int main()
                 std::cerr << t << " " << ra << " " << ca << " " << rb << " " << cb << std::endl;
             }
             ra --; ca --; rb --; cb --;
-            if( color.at( id( ra, ca ) ) && color.at( id( rb, cb ) ) ) {
+            if( color.at( id( ra, ca ) ) && color.at( id( rb, cb ) ) 
+            && uf.same( id( ra, ca ), id( rb, cb ) ) ) {
                 std::cout << "Yes" << std::endl;
             }
             else {
@@ -110,9 +121,6 @@ int main()
         }
     }
     
-    //  Display result
-    std::cout << std::endl; 
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
