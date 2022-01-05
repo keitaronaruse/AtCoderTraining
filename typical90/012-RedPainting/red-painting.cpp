@@ -7,7 +7,8 @@
 */
 
 // # Solution
-// - Union Find
+// - When adding a node, make an edge if a node exists at either of four neighbors
+// - Connection is checked by Union Find
 
 #include <iostream>
 #include <vector>
@@ -94,12 +95,16 @@ int main()
             r --; c --;
             color.at( id( r, c ) ) = true;
             for( int v = -1; v <= 1; v += 2 ) {
-                for( int u = -1; u <= 1; u += 2 ) {
-                    if( ( 0 <= ( r + v ) ) && ( ( r + v ) < H ) 
-                    && ( 0 <= ( c + u ) ) && ( ( c + u ) < W ) ) {
-                        if( color.at( id( r + v, c + u ) ) ) {
-                            uf.unite( id( r, c ), id( r + v, c + u ) );
-                        }
+                if( ( 0 <= ( r + v ) ) && ( ( r + v ) < H ) ) {
+                    if( color.at( id( r + v, c ) ) ) {
+                        uf.unite( id( r, c ), id( r + v, c ) );
+                    }
+                }
+            }
+            for( int u = -1; u <= 1; u += 2 ) {
+                if( ( 0 <= ( c + u ) ) && ( ( c + u ) < W ) ) {
+                    if( color.at( id( r, c + u ) ) ) {
+                        uf.unite( id( r, c ), id( r, c + u ) );
                     }
                 }
             }
@@ -125,5 +130,6 @@ int main()
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
     }
+
     return( 0 );
 }
