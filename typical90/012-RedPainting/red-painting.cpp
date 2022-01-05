@@ -16,28 +16,37 @@
 namespace nrs {
     class union_find {
     public:
-        union_find( int n ) : parent( n ) {
+        union_find( int n ) : parent( n ), rank( n ) {
             for( int i = 0; i < n; i ++ ) {
                 parent.at( i ) = i;
+                rank.at( i ) = 0;
             }
         }
         int root( int x ) {
-            if( parent.at( x ) != x ) {
-                do {
-                    x = parent.at( x );
-                } while( parent.at( x ) != x );
+            if( parent.at( x ) == x ) {
+                return( x );
             }
-            return( x );
+            else {
+                return( parent.at( x ) = root( parent.at( x ) ) );
+            }
         }
         void unite( int x, int y ) {
-            int root_x = root( x );
-            int root_y = root( y );
-            if( root_x == root_y) {
+            x = root( x );
+            y = root( y );
+            if( x == y) {
                 //  Do nothing
                 return;
             }
             else {
-                parent.at( root_y ) = root_x;
+                if( rank.at( x ) < rank.at( y ) ) {
+                    parent.at( x ) = y;
+                }
+                else {
+                    parent.at( y ) = x;
+                    if( rank.at( x ) == rank.at( y ) ) {
+                        rank.at( x ) ++;
+                    }
+                }
             }
         }
 
@@ -46,6 +55,7 @@ namespace nrs {
         }
     private:
         std::vector< int > parent;
+        std::vector< int > rank;
     };
 }
 
