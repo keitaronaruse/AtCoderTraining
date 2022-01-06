@@ -153,8 +153,8 @@ int main()
     }
 
     //  Main
-    int length = 0, b = 0, e = -1;
-    length = g.length_dfs( b, e );
+    int b = 0, e = -1;
+    g.length_dfs( b, e );
     if( Debug ) {
         for( auto v : g.length ) {
             std::cerr << v << " ";
@@ -173,8 +173,8 @@ int main()
     }
 
     int count = 0;
-    for( int i = 0; i < N; i ++ ) {
-        if( even > odd ) {
+    if( even > odd ) {
+        for( int i = 0; i < N; i ++ ) {
             if( g.length.at( i ) % 2 == 0 ) {
                 std::cout << i + 1 << " ";
                 count ++;
@@ -183,7 +183,9 @@ int main()
                 }
             }
         }
-        else {
+    }
+    else {
+        for( int i = 0; i < N; i ++ ) {
             if( g.length.at( i ) % 2 == 1 ) {
                 std::cout << i + 1 << " ";
                 count ++;
@@ -194,7 +196,6 @@ int main()
         }
     }
     std::cout << std::endl;
-
 
     //  Finalize
     if( Debug ) {
