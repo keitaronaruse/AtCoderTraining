@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
         const int N = 1;
         std::cout << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
-            const int lx = 0, ly = 0, rx = 0, ry = 0;
+            const int lx = 0, ly = 0, rx = 1, ry = 1;
             std::cout << lx << " " << ly << " " << rx << " " << ry << std::endl;
         }        
     }

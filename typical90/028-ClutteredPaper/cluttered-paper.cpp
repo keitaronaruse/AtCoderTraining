@@ -2,11 +2,12 @@
     028 - Cluttered Paper（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_ab
         Author: Keitaro Naruse
-        Date:   2022-01-06
+        Date:   2022-01-06, 2022-01-07
         MIT License
 */
 
 // # Solution
+// - Caliculate by IMOS method
 
 #include <iostream>
 #include <vector>
@@ -48,11 +49,11 @@ int main()
         // }
     }
     if( Debug ) {
-        for( int y = 0; y < 6; y ++ ) {
-            for( int x = 0; x < 6; x ++) {
-                std::cerr << ply.at( y ).at( x ) << " ";
+        for( int y = 0; y < 4; y ++ ) {
+            for( int x = 0; x < X + 2; x ++) {
+                std::cout << ply.at( y ).at( x ) << " ";
             }
-            std::cerr << std::endl;
+            std::cout << std::endl;
         }
     }
     //  Update imos
@@ -67,9 +68,19 @@ int main()
         }
     }
 
+    if( Debug ) {
+        for( int y = 1; y < 2; y ++ ) {
+            for( int x = 1; x < X + 1; x ++) {
+                std::cout << ply.at( y ).at( x ) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    //  Find the result
     std::vector< int > A( N + 1, 0 );
-    for( int y = 1; y < Y + 2; y ++ ) {
-        for( int x = 1; x < X + 2; x ++ ) {
+    for( int y = 1; y < Y + 1; y ++ ) {
+        for( int x = 1; x < X + 1; x ++ ) {
             A.at( ply.at( y ).at( x ) ) ++;
         }
     }
