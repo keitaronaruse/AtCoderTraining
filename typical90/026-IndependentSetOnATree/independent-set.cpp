@@ -127,6 +127,60 @@ namespace nrs {
     };
 }
 
+class color_tree : public nrs::adj_graph
+{
+    public:
+        std::vector< int > even, odd;
+
+        color_tree( int N ) : adj_graph( N ) {
+            even = std::vector< int >( N );
+        }
+            /*
+                length_dfs()
+                    returns a path length from b to e by the depth first search
+                    if e == -1, stores the farset node from b in e and returns the diameter
+            */
+            int length_dfs( int b, int& e ) {
+                std::stack< int > s;
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
+                int max_node = e;
+                
+                s.push( b );
+                while( !s.empty() ) {
+                    int v = s.top(); s.pop();
+                    //  Mode of finding a path length from b to the farest node e
+                    if( e == -1 ) {
+                        if( max_length < length.at( v ) ) {
+                            max_length = length.at( v );
+                            max_node = v;
+                        }
+                    }
+                    //  Mode of finding a path length from b to e
+                    else {
+                        if( v == e ) {
+                            break;
+                        }
+                    }
+                    //  Common procedure
+                    for( auto u : adj_nodes.at( v ) ) {
+                        if( length.at( u ) == -1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                        else if( length.at( u ) > length.at( v ) + 1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                    }
+                }
+                if( e == -1 ) {
+                    e = max_node;
+                }
+                return( length.at( e ) );
+            }
+};
+
 const bool Debug = true;
 
 int main()
@@ -140,6 +194,7 @@ int main()
 
     //  Make a graph instance
     nrs::adj_graph g( N );
+    color_tree t( N );
     
     //  Read A and B
     for( int i = 0; i < N - 1; i ++ ) {
