@@ -10,12 +10,14 @@
 
 #include <iostream>
 #include <vector>
-#include <stack>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
+    //  Constants
+    const int X = 1000, Y = 1000;
+
     //  Read N
     int N = 0;
     std::cin >> N;
@@ -23,58 +25,31 @@ int main()
         std::cerr << N << std::endl;
     }
 
-    //  Make a graph instance
-    color_tree t( N );
-    
-    //  Read A and B
-    for( int i = 0; i < N - 1; i ++ ) {
-        int A = 0, B = 0;
-        std::cin >> A >> B;
-        if( Debug ) {
-            std::cerr << A << " " << B << std::endl;
-        }
-        A --; B --;
-        t.add_edge( A, B ); 
-        t.add_edge( B, A );
-    }
-
     //  Main
-    int b = 0;
-    if( Debug ) {
-        std::cerr << "Before DFS" << std::endl;
-    }
-    t.color_dfs( b );
-    if( Debug ) {
-        std::cerr << "After DFS" << std::endl;
-    }
-    
-    if( Debug ) {
-        for( auto v : t.length ) {
-            std::cerr << v << " ";
+    std::vector< std::vector< int > > ply( X + 1, std::vector< int >( Y + 1, 0 ) );
+
+    //  Read lx, ly and rx, ry
+    for( int i = 0; i < N; i ++ ) {
+        int lx = 0, ly = 0, rx = 0, ry = 0;
+        std::cin >> lx >> ly >> rx >> ry;
+        if( Debug ) {
+            std::cerr << lx << " " << ly << " " << rx << " " << ry << std::endl;
         }
-        std::cerr << std::endl;
-        for( auto v : t.even ) {
-            std::cerr << v << " ";
+        for( int x = lx; x <= rx; x ++ ) {
+            for( int y = ly; y <= ly; y ++ ) {
+                ply.at( x ).at( y ) ++;
+            }
         }
-        std::cerr << std::endl;
-        for( auto v : t.odd ) {
-            std::cerr << v << " ";
-        }
-        std::cerr << std::endl;
     }
 
-    //  Display results
-    if( t.even.size() > t.odd.size() ) {
-        for( int i = 0; i < N / 2; i ++ ) {
-            std::cout << t.even.at( i ) + 1 << " ";
+    std::vector< int > A( N + 1, 0 );
+    for( int x = 0; x <= X; x ++ ) {
+        for( int y = 0; y <= Y; y ++ ) {
+            A.at( ply.at( x ).at( y ) ) ++;
         }
-        std::cout << std::endl;
     }
-    else {
-        for( int i = 0; i < N / 2; i ++ ) {
-            std::cout << t.odd.at( i ) + 1 << " ";
-        }
-        std::cout << std::endl;
+    for( int i = 0; i < N; i ++ ) {
+        std::cout << A.at( i + 1 ) << std::endl;
     }
 
     //  Finalize
