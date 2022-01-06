@@ -127,7 +127,7 @@ namespace nrs {
     };
 }
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -162,41 +162,28 @@ int main()
         std::cerr << std::endl;
     }
 
-    int even = 0, odd = 0;
+    std::vector< int > even, odd;
     for( int i = 0; i < N; i ++ ) {
         if ( g.length.at( i ) % 2 == 0 ) {
-            even ++;
+            even.push_back( i );
         }
         else {
-            odd ++;
+            odd.push_back( i );
         }
     }
 
-    int count = 0;
-    if( even > odd ) {
-        for( int i = 0; i < N; i ++ ) {
-            if( g.length.at( i ) % 2 == 0 ) {
-                std::cout << i + 1 << " ";
-                count ++;
-                if( count >= N / 2 ) {
-                    break;
-                }
-            }
+    if( even.size() > odd.size() ) {
+        for( int i = 0; i < N / 2; i ++ ) {
+            std::cout << even.at( i ) + 1 << " ";
         }
+        std::cout << std::endl;
     }
     else {
-        for( int i = 0; i < N; i ++ ) {
-            if( g.length.at( i ) % 2 == 1 ) {
-                std::cout << i + 1 << " ";
-                count ++;
-                if( count >= N / 2 ) {
-                    break;
-                }
-            }
+        for( int i = 0; i < N / 2; i ++ ) {
+            std::cout << odd.at( i ) + 1 << " ";
         }
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
