@@ -32,76 +32,34 @@ namespace nrs {
             bool has_edge( int b, int e ) {
                 return( ( bool ) adj_nodes.at( b ).count( e ) );
             }
-            int length_dfs( int b, int e ) {
+            /*
+                length_dfs()
+                    returns a path length from b to e by the depth first search
+                    if e == -1, stores the farset node from b in e and returns the diameter
+            */
+            int length_dfs( int b, int& e ) {
                 std::stack< int > s;
-                std::vector< int > length( n, -1 );
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
+                int max_node = e;
                 
-                length.at( b ) = 0;
                 s.push( b );
                 while( !s.empty() ) {
-                    int v = s.top();
-                    s.pop();
-                    if( v == e ) {
-                        break;
-                    }
-                    else {
-                        for( auto u : adj_nodes.at( v ) ) {
-                            if( length.at( u ) == -1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
-                            else if( length.at( u ) > length.at( v ) + 1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
+                    int v = s.top(); s.pop();
+                    //  Mode of finding a path length from b to the farest node e
+                    if( e == -1 ) {
+                        if( max_length < length.at( v ) ) {
+                            max_length = length.at( v );
+                            max_node = v;
                         }
                     }
-                }
-                return( length.at( e ) );
-            }
-            int length_bfs( int b, int e ) {
-                std::queue< int > s;
-                std::vector< int > length( n, -1 );
-                
-                length.at( b ) = 0;
-                s.push( b );
-                while( !s.empty() ) {
-                    int v = s.front();
-                    s.pop();
-                    if( v == e ) {
-                        break;
-                    }
+                    //  Mode of finding a path length from b to e
                     else {
-                        for( auto u : adj_nodes.at( v ) ) {
-                            if( length.at( u ) == -1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
-                            else if( length.at( u ) > length.at( v ) + 1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
+                        if( v == e ) {
+                            break;
                         }
                     }
-                }
-                return( length.at( e ) );
-            }
-            int find_longest_path_from_bfs( int b, int& e ) {
-                std::queue< int > s;
-                std::vector< int > length( n, -1 );
-                int max_length = -1;
-
-                max_length = length.at( b ) = 0;
-                e = b;
-                s.push( b );
-                while( !s.empty() ) {
-                    int v = s.front();
-                    s.pop();
-                    if( max_length < length.at( v ) ) {
-                        max_length = length.at( v );
-                        e = v;
-                    }
-
+                    //  Common procedure
                     for( auto u : adj_nodes.at( v ) ) {
                         if( length.at( u ) == -1 ) {
                             length.at( u ) = length.at( v ) + 1;
@@ -113,11 +71,59 @@ namespace nrs {
                         }
                     }
                 }
+                if( e == -1 ) {
+                    e = max_node;
+                }
+                return( length.at( e ) );
+            }
+            /*
+                length_bfs()
+                    returns a path length from b to e by the breadth first search
+                    if e == -1, stores the farset node from b in e and returns the diameter
+            */
+            int length_bfs( int b, int& e ) {
+                std::queue< int > s;
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
+                int max_node = e;
+                
+                s.push( b );
+                while( !s.empty() ) {
+                    int v = s.front(); s.pop();
+                    //  Mode of finding a path length from b to the farest node e
+                    if( e == -1 ) {
+                        if( max_length < length.at( v ) ) {
+                            max_length = length.at( v );
+                            max_node = v;
+                        }
+                    }
+                    //  Mode of finding a path length from b to e
+                    else {
+                        if( v == e ) {
+                            break;
+                        }
+                    }
+                    //  Common procedure
+                    for( auto u : adj_nodes.at( v ) ) {
+                        if( length.at( u ) == -1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                        else if( length.at( u ) > length.at( v ) + 1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                    }
+                }
+                if( e == -1 ) {
+                    e = max_node;
+                }
                 return( length.at( e ) );
             }
         public:
             int n;
             std::vector< std::set< int > > adj_nodes;
+            std::vector< int > length;
     };
 }
 
@@ -147,7 +153,49 @@ int main()
     }
 
     //  Main
-    g.    
+    int length = 0, b = 0, e = -1;
+    length = g.length_dfs( b, e );
+    if( Debug ) {
+        for( auto v : g.length ) {
+            std::cerr << v << " ";
+        }
+        std::cerr << std::endl;
+    }
+
+    int even = 0, odd = 0;
+    for( int i = 0; i < N; i ++ ) {
+        if ( g.length.at( i ) % 2 == 0 ) {
+            even ++;
+        }
+        else {
+            odd ++;
+        }
+    }
+
+    int count = 0;
+    for( int i = 0; i < N; i ++ ) {
+        if( even > odd ) {
+            if( g.length.at( i ) % 2 == 0 ) {
+                std::cout << i + 1 << " ";
+                count ++;
+                if( count >= N / 2 ) {
+                    break;
+                }
+            }
+        }
+        else {
+            if( g.length.at( i ) % 2 == 1 ) {
+                std::cout << i + 1 << " ";
+                count ++;
+                if( count >= N / 2 ) {
+                    break;
+                }
+            }
+        }
+    }
+    std::cout << std::endl;
+
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
