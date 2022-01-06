@@ -2,7 +2,7 @@
     nrs::adj_graph
         The class of a graph structure by adjacent nodes 
         Author: Keitaro Naruse
-        Date:   2021-12-31
+        Date:   2021-12-31, 2022-01-05
         MIT License
 */
 
@@ -30,36 +30,57 @@ namespace nrs {
             bool has_edge( int b, int e ) {
                 return( ( bool ) adj_nodes.at( b ).count( e ) );
             }
+            /*
+                length_dfs()
+                    returns a path length from b to e by the depth first search
+                    if e == -1, finds the farset node from b and returns the diameter
+            */
             int length_dfs( int b, int e ) {
                 std::stack< int > s;
-                std::vector< int > length( n, -1 );
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
+                int max_node = -1;
                 
-                length.at( b ) = 0;
                 s.push( b );
                 while( !s.empty() ) {
-                    int v = s.top();
-                    s.pop();
-                    if( v == e ) {
-                        break;
+                    int v = s.top(); s.pop();
+
+                    }
+                    if( e == -1 ) {
+                        if( max_length < length.at( v ) ) {
+                            max_length = length.at( v );
+                            max_node = v;
                     }
                     else {
-                        for( auto u : adj_nodes.at( v ) ) {
-                            if( length.at( u ) == -1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
-                            else if( length.at( u ) > length.at( v ) + 1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
+                        if( v == e ) {
+                            break;
+                        }
+                    }
+                    for( auto u : adj_nodes.at( v ) ) {
+                        if( length.at( u ) == -1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                        else if( length.at( u ) > length.at( v ) + 1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
                         }
                     }
                 }
+                if( e == -1 ) {
+                    e = max_node;
+                }
                 return( length.at( e ) );
             }
+            /*
+                length_bfs()
+                    returns a path length from b to e
+                    if e == -1, finds the farset node and returns the diameter
+            */
             int length_bfs( int b, int e ) {
                 std::queue< int > s;
-                std::vector< int > length( n, -1 );
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
                 
                 length.at( b ) = 0;
                 s.push( b );
@@ -69,16 +90,14 @@ namespace nrs {
                     if( v == e ) {
                         break;
                     }
-                    else {
-                        for( auto u : adj_nodes.at( v ) ) {
-                            if( length.at( u ) == -1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
-                            else if( length.at( u ) > length.at( v ) + 1 ) {
-                                length.at( u ) = length.at( v ) + 1;
-                                s.push( u );
-                            }
+                    for( auto u : adj_nodes.at( v ) ) {
+                        if( length.at( u ) == -1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
+                        }
+                        else if( length.at( u ) > length.at( v ) + 1 ) {
+                            length.at( u ) = length.at( v ) + 1;
+                            s.push( u );
                         }
                     }
                 }
@@ -86,10 +105,9 @@ namespace nrs {
             }
             int find_longest_path_from_bfs( int b, int& e ) {
                 std::queue< int > s;
-                std::vector< int > length( n, -1 );
-                int max_length = -1;
-
-                max_length = length.at( b ) = 0;
+                length = std::vector< int >( n, -1 );
+                int max_length = length.at( b ) = 0;
+                
                 e = b;
                 s.push( b );
                 while( !s.empty() ) {
@@ -116,6 +134,7 @@ namespace nrs {
         public:
             int n;
             std::vector< std::set< int > > adj_nodes;
+            std::vector< int > length;
     };
 }
 
