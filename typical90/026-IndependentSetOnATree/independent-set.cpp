@@ -2,7 +2,7 @@
     026 - Independent Set on a Tree（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_z
         Author: Keitaro Naruse
-        Date:   2022-01-05
+        Date:   2022-01-05, 2022-01-06
         MIT License
 */
 
@@ -22,7 +22,7 @@ public:
     std::vector< int > even, odd;
 public:
     color_tree( int N ) : n( N ) {
-        adj_nodes = std::vector< std::vector< int > >( N );
+        adj_nodes = std::vector< std::vector< int > >( n );
     }
     void add_edge( int b, int e ) {
         adj_nodes.at( b ).push_back( e );
@@ -82,7 +82,13 @@ int main()
 
     //  Main
     int b = 0;
+    if( Debug ) {
+        std::cerr << "Before DFS" << std::endl;
+    }
     t.color_dfs( b );
+    if( Debug ) {
+        std::cerr << "After DFS" << std::endl;
+    }
     
     if( Debug ) {
         for( auto v : t.length ) {
