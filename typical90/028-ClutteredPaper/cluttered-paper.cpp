@@ -49,28 +49,28 @@ int main()
         // }
     }
     if( Debug ) {
-        for( int y = 0; y < 4; y ++ ) {
-            for( int x = 0; x < X + 2; x ++) {
+        for( int y = 0; y < Y + 2; y ++ ) {
+            for( int x = 0; x < Y + 2; x ++) {
                 std::cout << ply.at( y ).at( x ) << " ";
             }
             std::cout << std::endl;
         }
     }
     //  Update imos
-    for( int y = 0; y < Y; y ++ ) {
-        for( int x = 0; x < X; x ++) {
-            ply.at( y + 1 ).at( x + 2 ) += ply.at( y + 1 ).at( x + 1 );
+    for( int y = 1; y <= Y; y ++ ) {
+        for( int x = 1; x <= X; x ++) {
+            ply.at( y ).at( x + 1 ) += ply.at( y ).at( x );
         }
     }
-    for( int x = 0; x < X; x ++ ) {
-        for( int y = 0; y < Y; y ++) {
-            ply.at( y + 2 ).at( x + 1 ) += ply.at( y + 1 ).at( x + 1 );
+    for( int x = 1; x <= X; x ++ ) {
+        for( int y = 1; y <= Y; y ++) {
+            ply.at( y + 1 ).at( x ) += ply.at( y ).at( x );
         }
     }
 
     if( Debug ) {
-        for( int y = 1; y < 2; y ++ ) {
-            for( int x = 1; x < X + 1; x ++) {
+        for( int y = 1; y < Y + 2; y ++ ) {
+            for( int x = 1; x < X + 2; x ++) {
                 std::cout << ply.at( y ).at( x ) << " ";
             }
             std::cout << std::endl;
