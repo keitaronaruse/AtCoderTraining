@@ -1,48 +1,53 @@
 /*
-    ABC234 Problem C
-        https://atcoder.jp/contests/abc234
+    ABC234 Problem C - Happy New Year!
+        https://atcoder.jp/contests/abc234/tasks/abc234_c
         Author: Keitaro Naruse
         Date:   2022-01-08
         MIT License
 */
 
 // # Solution
-// - 
+// - Consider a two-digit value of 0 and 2 as a a bit string
+// - Replace 1 in the bit string as 2
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <bitset>
+#include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read K
+    long long K = 0LL;
+    std::cin >> K;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << K << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Read S
-    std::string S;
-    std::cin >> S;
+
+    //  Main
+    const int B = 64; 
+    std::bitset< B > b( K );
+    std::string S = b.to_string();
     if( Debug ) {
         std::cerr << S << std::endl;
     }
 
+    std::string::iterator it = std::find( S.begin(), S.end(), '1' );
+    std::string T = std::string( it, S.end() );
+    if( Debug ) {
+        std::cerr << T << std::endl;
+    }
+    for( it = T.begin(); it < T.end(); it ++ ) {
+        if( *it == '1' ) {
+            *it = '2';
+        }
+    }
+    
     //  Display result
-    std::cout << std::endl;
+    std::cout << T << std::endl;
 
     //  Finalize
     if( Debug ) {

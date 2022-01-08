@@ -1,48 +1,34 @@
 /*
-    ABC234 Problem A
-        https://atcoder.jp/contests/abc234
+    ABC234 Problem A - Weird Function
+        https://atcoder.jp/contests/abc234/tasks/abc234_a
         Author: Keitaro Naruse
         Date:   2022-01-08
         MIT License
 */
 
 // # Solution
-// - 
+// - Define f(t)
 
 #include <iostream>
-#include <string>
-#include <vector>
 
-const bool Debug = true;
+const bool Debug = false;
+
+int f( int x )
+{
+    return( x * x + 2 * x + 3 );
+}
 
 int main()
 {
     //  Read N
-    int N = 0;
-    std::cin >> N;
+    int t = 0;
+    std::cin >> t;
     if( Debug ) {
-        std::cerr << N << std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Read S
-    std::string S;
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
+        std::cerr << t << std::endl;
     }
 
     //  Display result
-    std::cout << std::endl;
+    std::cout << f( f( f( t ) + t ) + f( f( t ) ) ) << std::endl;
 
     //  Finalize
     if( Debug ) {

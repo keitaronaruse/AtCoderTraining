@@ -1,6 +1,6 @@
 /*
-    ABC234 Problem C
-        https://atcoder.jp/contests/abc234
+    ABC234 Problem D - Prefix K-th Max
+        https://atcoder.jp/contests/abc234/tasks/abc234_d
         Author: Keitaro Naruse
         Date:   2022-01-08
         MIT License
@@ -10,39 +10,59 @@
 // - 
 
 #include <iostream>
-#include <string>
 #include <vector>
+#include <list>
+#include <algorithm>
+#include <functional>
 
 const bool Debug = true;
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read N and K
+    int N = 0, K = 0;
+    std::cin >> N >> K;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << N << " " << K << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
+    //  Read Pi
+    std::vector< int > P( N, 0 );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+        std::cin >> P.at( i );
     }
     if( Debug ) {
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
+            std::cerr << P.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
-    //  Read S
-    std::string S;
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
-    }
 
-    //  Display result
-    std::cout << std::endl;
+    //  Main
+    //  Take the first K
+    std::sort( P.begin(), P.begin() + K, std::greater< int >{} );
+    std::list< int > H( P.begin(), P.begin() + K  );
+    if( Debug ) {
+        for( auto h : H ) {
+            std::cerr << h << " ";
+        }
+        std::cerr << std::endl;
+    }
+    std::cout << *( H.end() -- ) << std::endl;
+
+    for( int i = 1; i < N - K ; i ++ ) {
+        for( std::list< int >::iterator it = H.begin(); it != H.end(); it ++ ) {
+            if( *it < P.at( K + i ) ) {
+                it = H.insert( it, P.at( K + i ) );
+                H.pop_back();
+            }
+        }
+        if( Debug ) {
+            for( auto h : H ) {
+                std::cerr << h << " ";
+            }
+            std::cerr << std::endl;
+        } 
+    }
 
     //  Finalize
     if( Debug ) {
