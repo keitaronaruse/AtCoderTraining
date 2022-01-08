@@ -43,35 +43,40 @@ int main()
     std::vector< int > C( N );
     //  A counter of the number and the appearance time 
     std::map< int, int > counter;
-    int tail = 0;
-    for( int head = 0; head < N; head ++ ) {
-        //  Add the value to the counter
-        if( Debug ) {
-            std::cerr << "Add: " << A.at( tail ) << std::endl;
-        }
-        counter[ A.at( tail ) ] ++;
-        if( tail < N - 1 ) {
+    int head = 0, tail = 0;
+    while( head < N ) {
+        //  Updarte the counter for the tail
+        while( ( tail < N )  && ( counter.size() <= K ) ) {
+            counter[ A.at( tail ) ] ++;
             tail ++;
         }
-        //  When it is out of the interval
-        if( counter.size() >= K ) {
-            //  Update Ci
-            C.at( head ) = tail;
-            if( Debug ) {
-                std::cerr << "Erase: " << A.at( head ) << std::endl;
+        while( tail < N ) {
+            bool before_flag = ( counter.size() == K );
+            counter[ A.at( tail ) ] ++;
+            bool after_flag = ( counter.size() == K + 1 );
+
+            if( before_flag && after_flag ) {
+                break;
             }
-            //  Decrease the head element and erase it if necesarry 
-            counter[ A.at( head ) ] --;
-            if( counter[ A.at( head ) ] == 0 ) {
-                counter.erase( A.at( head ) );
+            else {
+                tail ++;
             }
         }
 
+        //  Update interval
+        C.at( head ) = tail - 1;
+        //  Update the counter for the head
+        counter[ A.at( head ) ] --;
         if( Debug ) {
-            for( auto c: counter ) {
-                std::cerr << head << ": " << c.first << ", " << c.second << std::endl;
+            for( auto c : counter ) {
+                std::cerr << "( " << c.first << ", " << c.second << " ) ";
             }
+            std::cerr << std::endl;
         }
+        if( counter[ A.at( head ) ] == 0 ) {
+            counter.erase( A.at( head ) );
+        }
+        head ++;
     }
     
     if( Debug ) {
