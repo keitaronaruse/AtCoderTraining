@@ -1,9 +1,8 @@
 /*
-    ABC230 Problem B
-    B - Triple Metre
+    ABC230 Problem B - Triple Metre
         https://atcoder.jp/contests/abc230/tasks/abc230_b
         Author: Keitaro Naruse
-        Date:   2021-12-03
+        Date:   2021-12-03, 2022-01-09
         MIT License
 */
 
@@ -15,6 +14,8 @@
 
 #include <iostream>
 #include <string>
+
+const bool Debug = false;
 
 int main()
 {
@@ -76,6 +77,8 @@ int main()
     }
 
     //  Debug
-    // std::cerr << "Normally terminated." << std::endl;
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }
     return( 0 );
 }
