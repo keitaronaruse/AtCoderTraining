@@ -19,7 +19,7 @@
 #include <vector>
 #include <queue>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -56,7 +56,27 @@ int main()
         }
         std::cerr << std::endl;
     }
-    ;
+    //  Display the result
+    std::cout << Q.top() << std::endl;
+    for( int i = 0; i < N - K; i ++ ) {
+        if( Q.top() < P.at( K + i ) ) {
+            Q.pop();
+            Q.push( P.at( K + i ) );
+        }
+        
+        //  Display the result
+        std::cout << Q.top() << std::endl;
+        if( Debug ) {
+            std::priority_queue< int, std::vector< int >, std::greater< int > > R = Q;
+            while( !R.empty() ) {
+                int r = R.top(); 
+                std::cerr << r << " ";
+                R.pop(); 
+            }
+            std::cerr << std::endl;
+        }
+    }
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
