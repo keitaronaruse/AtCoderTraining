@@ -2,18 +2,22 @@
     ABC234 Problem D - Prefix K-th Max
         https://atcoder.jp/contests/abc234/tasks/abc234_d
         Author: Keitaro Naruse
-        Date:   2022-01-08
+        Date:   2022-01-08, 2022-01-09
         MIT License
 */
 
-// # Solution
-// - 
+// # Solution: Introduce the priority queue for reducing the computation time
+// - Principle
+//   - Store the largerst K elements in Q and output x,the minimum in Q
+//   - Add a new element of Pi to Q, erase an element out of Q if x < Pi
+//   - Do nothing otherwise (x >= Pi)
+//   - Maintain K elements elements, and the target is always at the minimum in Q  
+// - Implementation
+//   - Introduce the priority queue in the ascending order 
 
 #include <iostream>
 #include <vector>
-#include <list>
-#include <algorithm>
-#include <functional>
+#include <queue>
 
 const bool Debug = true;
 
@@ -38,32 +42,21 @@ int main()
     }
 
     //  Main
-    //  Take the first K
-    std::sort( P.begin(), P.begin() + K, std::greater< int >{} );
-    std::list< int > H( P.begin(), P.begin() + K  );
+    //  Take the first K elements out of P and store them in the priority queue
+    std::priority_queue< int, std::vector< int >, std::greater< int > > Q;
+    for( int i = 0; i < K; i ++ ) {
+        Q.push( P.at( i ) );
+    }
     if( Debug ) {
-        for( auto h : H ) {
-            std::cerr << h << " ";
+        std::priority_queue< int, std::vector< int >, std::greater< int > > R = Q;
+        while( !R.empty() ) {
+            int r = R.top(); 
+            std::cerr << r << " ";
+            R.pop(); 
         }
         std::cerr << std::endl;
     }
-    std::cout << *( H.end() -- ) << std::endl;
-
-    for( int i = 1; i < N - K ; i ++ ) {
-        for( std::list< int >::iterator it = H.begin(); it != H.end(); it ++ ) {
-            if( *it < P.at( K + i ) ) {
-                it = H.insert( it, P.at( K + i ) );
-                H.pop_back();
-            }
-        }
-        if( Debug ) {
-            for( auto h : H ) {
-                std::cerr << h << " ";
-            }
-            std::cerr << std::endl;
-        } 
-    }
-
+    ;
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
