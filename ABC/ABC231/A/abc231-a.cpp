@@ -18,6 +18,9 @@ int main()
     //  Read D
     int D = 0;
     std::cin >> D;
+    if( Debug ) {
+        std::cerr << D << std::endl;
+    }
 
     //  Display result
     std::cout << ( double ) D / 100.0 << std::endl;
