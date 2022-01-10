@@ -7,13 +7,18 @@
 */
 
 // # Solution
+// - Suppose a punch is made at x 
+// - ( Li, Ri ) if Ri < x, the wall is broken 
+// - ( Lj, Rj ) if Lj < x + D, the wall is broken
+// - ( Lj, Rj ) if Lj >= x + D, the wall is not broken
+// - Make a new punch at Rj
 
 #include <iostream>
 #include <vector>
 #include <utility>
 #include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -47,25 +52,30 @@ int main()
         }
     }
     //  Main
-    int head = 0;
     int count = 1;
     //  Ri
-    int punch = LR.at( head ).second;
-    while( head < N ) {
+    int i = 0;
+    int punch = LR.at( i ).second;
+    while( i < N ) {
         //  Li
-        if( LR.at( head ).first <= punch + D ) {
-            std::cerr << "Head: " << head << std::endl;
-            // Broken walls
-            head ++;
+        if( Debug ) {
+            std::cerr 
+            << "Punch at: " << punch << " "
+            << "to : " << punch + D - 1 << " "
+            << "i: " << i << " " 
+            << "L: " << LR.at( i ).first << std::endl;
+        }
+        if( LR.at( i ).first < punch + D ) {
+            // A wall has been already broken
+            i ++;
         }
         else {
-            std::cerr << "Punch" << std::endl;
-            punch = LR.at( head ).second;
+            //  A wall has not been broken
+            //  A new punch should be made 
+            punch = LR.at( i ).second;
             count ++;
         }
     }
-    //  if LR.at( head ) > punch
-    //  or head == N
 
     //  Display result
     std::cout << count << std::endl;
