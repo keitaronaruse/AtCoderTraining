@@ -1,6 +1,5 @@
 /*
-    ABC230 Problem C, After contest has finished
-    C - X drawing
+    ABC230 Problem C - X drawing
         https://atcoder.jp/contests/abc230/tasks/abc230_c
         Author: Keitaro Naruse
         Date:   2021-12-03, 2022-01-09

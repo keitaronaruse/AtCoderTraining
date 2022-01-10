@@ -20,7 +20,7 @@ int f( int x )
 
 int main()
 {
-    //  Read N
+    //  Read t
     int t = 0;
     std::cin >> t;
     if( Debug ) {
