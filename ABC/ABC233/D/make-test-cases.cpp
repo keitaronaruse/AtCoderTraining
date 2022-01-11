@@ -62,7 +62,7 @@ int main( int argc, char* argv[] )
         }
         std::cout << std::endl;
     }
-
+    
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
