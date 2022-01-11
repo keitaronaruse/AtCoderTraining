@@ -7,15 +7,17 @@
 */
 
 // # Solution
-// - Ci = A1 + A2 + ... + Ai
-// - Ci - Cj = (A1 + A2 + ... + Ai) - (A1 + A2 + ... + Aj)
-//           = Aj+1 + Aj+2 + ... Ai
-
+// - Si = A1 + A2 + ... + Ai
+// - Condition: Si - Sj == K ( i > j )
+// - Modified condition: Sj == Si - K
+// - Counter: Sj and appearance counts by map
+// - Count up: counts of Si - K 
 
 #include <iostream>
 #include <vector>
+#include <map>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -26,6 +28,7 @@ int main()
     if( Debug ) {
         std::cerr << N << " " << K << std::endl;
     }
+
     //  Read Ai and make Bi
     std::vector< int > A( N, 0 );
     for( int i = 0; i < N; i ++ ) {
@@ -40,40 +43,42 @@ int main()
     }
 
     //  Main
-    //  Make a cumulative sum to i
-    //  Boundary: C.at( 0 ) = 0
-    //  C.at( 1 ) = A.at( 0 ) + C.at( 0 ) = A.at( 0 )
-    std::vector< long long > C( N + 1, 0LL );
+    //  Make the cumulative sums
+    std::vector< long long > S( N + 1, 0LL );
     for( int i = 0; i < N; i ++ ) {
-        C.at( i + 1 ) = C.at( i ) + ( long long ) B.at( i );
+        S.at( i + 1 ) = S.at( i ) + ( long long ) A.at( i );
     }
     if( Debug ) {
-        std::cerr << "C: ";
+        std::cerr << "S: ";
         for( int i = 0; i <= N; i ++ ) {
-            std::cerr << C.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Make Count 
-    long long count = 0LL;
-    std::vector< int > D( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        for( int j = i + 1; j <= N; j ++ ) {
-            if( C.at( j ) - C.at( i ) == K ) {
-                D.at( i ) ++;
-                count ++;
-            }
-        }
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << D.at( i ) << " ";
+            std::cerr << S.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
 
+    //  Register to a counter of the cumulative sums
+    std::map< long long, long long > C;
+    if( Debug ) {
+        std::cerr << "C: ";
+        for( auto c : C ) {
+            std::cerr << "( " << c.first << ", " << c.second << " ) ";
+        }
+        std::cerr << std::endl;
+    }
+
+    //  Count the matched case by the counter
+    //  C[ S.at( i ) ] == C[ S.at( j ) - K ]
+    long long count = 0LL;
+    for( int i = 0; i < N; i ++ ) {
+        C[ S.at( i ) ] ++;
+        count += C[ S.at( i + 1 ) - K ];
+    } 
+
     //  Display result
     std::cout << count << std::endl;
-    
+
+    if( Debug ) {
+        std::cerr << "Normally terminated." << std::endl;
+    }    
     return( 0 );
 }
