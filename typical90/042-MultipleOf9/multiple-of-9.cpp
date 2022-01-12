@@ -45,15 +45,26 @@ int main()
     std::vector< long long > dp( K + 1, 0LL );
     dp.at( 0 ) = 1;
     for( int k = 1; k < K + 1; k ++ ) {
-        //  1 + (k - 1)
-        dp.at( k ) = dp.at( k - 1 ) + 1;
+        const int R = 9;
+        int J = std::min( k + 1, R );
+        for( int j = 1; j < J; j ++ ) {
+            dp.at( k ) += dp.at( k - j );
+            dp.at( k ) %= Large_Prime;
+        }
     }
     if( Debug ) {
         for( int k = 0; k < K + 1; k ++ ) {
-            std::cerr << k << " ";
+            std::cerr << dp.at( k ) << " ";
         }
         std::cerr << std::endl;
     }
+    //  Display result
+    long long result = 0LL;
+
+    if( K % 9 == 0 ) {
+        result = dp.at( K );
+    }
+    std::cout << result << std::endl;
 
     //  Finalize
     if( Debug ) {
