@@ -168,48 +168,33 @@ namespace nrs {
     };
 }
 
-int hw2id( int h, int w, int W )
-{
-    return( h * W + w );
-}
-
-void id2hw( int id, int& h, int& w, int W )
-{
-    w = id % W;
-    h = ( id - w )  / W;
-}
-
 const bool Debug = true;
 
 //  Test driver
 int main()
 {
     //  An example of a graph
-    //   012345
-    //  0.#..#.
-    //  1......
-    //  2.#..#.
-    const int H = 3;
-    const int W = 6;
-    const int N = hw2id( H - 1, W - 1, W ) + 1;
+    //   0  #  2  3  #  5
+    //   6  7  8  9 10 11
+    //  12  # 14 15  # 17
+    const int N = 18;
     
     //  Make a graph instance
     nrs::adj_graph g( N );
-    g.add_u_edge( hw2id( 0, 0, W ), hw2id( 1, 0, W ) ); 
-    g.add_u_edge( hw2id( 1, 0, W ), hw2id( 2, 0, W ) ); 
-    g.add_u_edge( hw2id( 1, 0, W ), hw2id( 1, 1, W ) ); 
-    g.add_u_edge( hw2id( 1, 1, W ), hw2id( 1, 2, W ) );
-    g.add_u_edge( hw2id( 1, 2, W ), hw2id( 0, 2, W ) ); 
-    g.add_u_edge( hw2id( 1, 2, W ), hw2id( 2, 2, W ) );
-    g.add_u_edge( hw2id( 0, 2, W ), hw2id( 0, 3, W ) ); 
-    g.add_u_edge( hw2id( 1, 2, W ), hw2id( 1, 3, W ) );
-    g.add_u_edge( hw2id( 2, 2, W ), hw2id( 2, 3, W ) ); 
-    g.add_u_edge( hw2id( 0, 3, W ), hw2id( 1, 3, W ) ); 
-    g.add_u_edge( hw2id( 2, 3, W ), hw2id( 1, 3, W ) ); 
-    g.add_u_edge( hw2id( 1, 3, W ), hw2id( 1, 4, W ) ); 
-    g.add_u_edge( hw2id( 1, 4, W ), hw2id( 1, 5, W ) ); 
-    g.add_u_edge( hw2id( 1, 5, W ), hw2id( 0, 5, W ) ); 
-    g.add_u_edge( hw2id( 1, 5, W ), hw2id( 2, 5, W ) ); 
+    g.add_u_edge(  0,  6 ); 
+    g.add_u_edge(  2,  3 ); 
+    g.add_u_edge(  2,  8 ); 
+    g.add_u_edge(  3,  9 ); 
+    g.add_u_edge(  5, 11 ); 
+    g.add_u_edge(  6,  7 ); 
+    g.add_u_edge(  6, 12 ); 
+    g.add_u_edge(  7,  8 ); 
+    g.add_u_edge(  8,  9 ); 
+    g.add_u_edge(  8, 14 ); 
+    g.add_u_edge(  9, 10 ); 
+    g.add_u_edge(  9, 15 ); 
+    g.add_u_edge( 10, 11 ); 
+    g.add_u_edge( 11, 17 ); 
     
     //  Test edges
     if( Debug ) {
@@ -230,77 +215,70 @@ int main()
     length = std::vector< int > ( N, -1 );
     std::queue< int > q;
     //  BFS: Initial node
-    b = hw2id( 0, 0, W ); e = hw2id( 2, 5, W ); 
+    b = 0; e = 15; 
     length.at( b ) = 0;
     q.push( b );
     //  BFS: Main
     std::cerr << "BFS: ";
     while( !q.empty() ) {
         int v = g.next_node_bfs( q, length );
-        id2hw( v, b, e, W );
-        std::cerr << "( " << b << ", " << e << " )" << " ";
+        if( Debug ) {
+            std::cerr << v << " ";
+        }
     }
-    std::cerr << std::endl;
-    for( auto d : length ) {
-        std::cerr << d << " ";
+    if( Debug ) {
+        std::cerr << std::endl;
     }
-    std::cerr << std::endl;
+    if( Debug ) {
+        for( auto d : length ) {
+            std::cerr << d << " ";
+        }
+        std::cerr << std::endl;
+    }
+    // BFS: 0 6 7 12 8 2 9 14 3 10 15 11 5 17
+    //   0  #  2  3  #  5
+    //   6  7  8  9 10 11
+    //  12  # 14 15  # 17
 
-//  0 -1  4  5 -1  7
-//  1  2  3  4  5  6
-//  2 -1  4  5 -1  7 
-
+    //  Length
+    //  0 -1  4  5 -1  7 
+    //  1  2  3  4  5  6 
+    //  2 -1  4  5 -1  7 
+    
     //  DFS
     //  DFS: Setup
-    // std::vector< int > length( N, -1 );
-    // std::stack< int > s;
+    length = std::vector< int > ( N, -1 );
+    std::stack< int > s;
     //  DFS: Initial node
-    // int b = 0; 
-    // length.at( b ) = 0;
-    // s.push( b );
+    b = 0; 
+    length.at( b ) = 0;
+    s.push( b );
     //  DFS: Main
-    // std::cerr << "DFS: ";
-    // while( !s.empty() ) {
-    //     int v = g.next_node_dfs( s, length );
-    //     std::cerr << v << " ";
-    // }
-    // std::cerr << std::endl;
+    std::cerr << "DFS: ";
+    while( !s.empty() ) {
+        int v = g.next_node_dfs( s, length );
+        if( Debug ) {
+            std::cerr << v << " ";
+        }
+    }
+    if( Debug ) {
+        std::cerr << std::endl;
+    }
+    if( Debug ) {
+        for( auto d : length ) {
+            std::cerr << d << " ";
+        }
+        std::cerr << std::endl;
+    }
+    // DFS: 0 6 12 7 8 14 9 15 10 11 17 5 3 2 
+    //   0  #  2  3  #  5
+    //   6  7  8  9 10 11
+    //  12  # 14 15  # 17
+
+    //  Length
+    // 0 -1  4  5 -1 7 
+    // 1  2  3  4  5 6 
+    // 2 -1 4   5 -1 7 
     
-    
-    //  Variables
-    // int length = 0, b = 0, e = 0;
-    
-    //  Find a path lenght from b to e by DFS
-    // b = 0; e = 0; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-    // b = 0; e = 1; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-    // b = 0; e = 2; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-
-    //  Find a path lenght from b to e by BFS
-    // b = 0; e = 0; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-    // b = 0; e = 1; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-    // b = 0; e = 2; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Length from " << b << " to " << e << " is " << length << std::endl; 
-
-    //  Find the farest node and its path lenght by DFS
-    // b = 0; e = -1; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-    // b = 1; e = -1; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-    // b = 2; e = -1; length = g.length_dfs( b, e );
-    // std::cerr << "DFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-
-    //  Find the farest node and its path lenght by BFS
-    // b = 0; e = -1; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-    // b = 1; e = -1; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-    // b = 2; e = -1; length = g.length_bfs( b, e );
-    // std::cerr << "BFS: Farest node from " << b << " is " << e << " with a lenght of  " << length << std::endl; 
-
     return( 0 );
 }
