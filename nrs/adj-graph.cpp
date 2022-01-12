@@ -49,90 +49,12 @@ namespace nrs {
                     != adj_nodes.at( e ).end() )
                 );
             }
-            /*
-                length_dfs()
-                    returns a path length from b to e by the depth first search
-                    if e == -1, stores the farset node from b in e and returns the diameter
-            */
-            int length_dfs( int b, int& e ) {
-                std::stack< int > s;
-                length = std::vector< int >( n, -1 );
-                int max_length = length.at( b ) = 0;
-                int max_node = e;
-                
-                s.push( b );
-                while( !s.empty() ) {
-                    int v = s.top(); s.pop();
-                    //  Mode of finding a path length from b to the farest node e
-                    if( e == -1 ) {
-                        if( max_length < length.at( v ) ) {
-                            max_length = length.at( v );
-                            max_node = v;
-                        }
-                    }
-                    //  Mode of finding a path length from b to e
-                    else {
-                        if( v == e ) {
-                            break;
-                        }
-                    }
-                    //  Common procedure
-                    for( auto u : adj_nodes.at( v ) ) {
-                        if( length.at( u ) == -1 ) {
-                            length.at( u ) = length.at( v ) + 1;
-                            s.push( u );
-                        }
-                    }
-                }
-                if( e == -1 ) {
-                    e = max_node;
-                }
-                return( length.at( e ) );
-            }
-            /*
-                length_bfs()
-                    returns a path length from b to e by the breadth first search
-                    if e == -1, stores the farset node from b in e and returns the diameter
-            */
-            int length_bfs( int b, int& e ) {
-                std::queue< int > s;
-                length = std::vector< int >( n, -1 );
-                int max_length = length.at( b ) = 0;
-                int max_node = e;
-                
-                s.push( b );
-                while( !s.empty() ) {
-                    int v = s.front(); s.pop();
-                    //  Mode of finding a path length from b to the farest node e
-                    if( e == -1 ) {
-                        if( max_length < length.at( v ) ) {
-                            max_length = length.at( v );
-                            max_node = v;
-                        }
-                    }
-                    //  Mode of finding a path length from b to e
-                    else {
-                        if( v == e ) {
-                            break;
-                        }
-                    }
-                    //  Common procedure
-                    for( auto u : adj_nodes.at( v ) ) {
-                        if( length.at( u ) == -1 ) {
-                            length.at( u ) = length.at( v ) + 1;
-                            s.push( u );
-                        }
-                    }
-                }
-                if( e == -1 ) {
-                    e = max_node;
-                }
-                return( length.at( e ) );
-            }
-            /*
-                next_node_dfs()
-                    returns the next node of DFS from the give stack and length
-            */
+            /**
+             * @brief find the next node from the given stack by DFS
+             * @param[in] s: working stack for DFS
+             * @param[in] length: distance from a source node
+             * @return v: the found next node
+             */
             int next_node_dfs( std::stack< int >& s, std::vector< int >& length ) {
                 int v = s.top(); 
                 s.pop();
@@ -149,10 +71,12 @@ namespace nrs {
                 }
                 return( v );
             }
-            /*
-                next_node_bfs()
-                    returns the next node of BFS from the give queue and length
-            */
+            /**
+             * @brief find the next node from the stack by BFS
+             * @param[in] s: working queue for BFS
+             * @param[in] length: distance from a source node
+             * @return v: the found next node
+             */
             int next_node_bfs( std::queue< int >& s, std::vector< int >& length ) {
                 int v = s.front(); 
                 s.pop();
