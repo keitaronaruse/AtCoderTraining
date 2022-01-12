@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <stack>
 #include <queue>
+#include <utility>
 
 namespace nrs {
     class adj_graph {
@@ -202,7 +203,27 @@ int main()
     //  Length
     // 0 -1  4  5 -1 7 
     // 1  2  3  4  5 6 
-    // 2 -1 4   5 -1 7 
+    // 2 -1  4  5 -1 7 
+
     
+    auto comp = []( const std::pair< int, int >& a, const std::pair< int, int >& b) { 
+        return( a.second > b.second ); 
+    }; 
+    std::priority_queue< 
+        std::pair< int, int >, 
+        std::vector< std::pair< int, int > >, 
+        decltype( comp )
+    > pq( comp );
+
+    pq.push( std::make_pair( 1, 1 ) ); 
+    pq.push( std::make_pair( 2, 2 ) ); 
+    pq.push( std::make_pair( 3, 3 ) ); 
+    while( !pq.empty() ) {
+        std::pair< int, int > v = pq.top();
+        std::cerr << v.second << " ";
+        pq.pop();
+    }
+    std::cerr << std::endl;
+
     return( 0 );
 }
