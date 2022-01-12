@@ -204,7 +204,6 @@ int main()
     // 0 -1  4  5 -1 7 
     // 1  2  3  4  5 6 
     // 2 -1  4  5 -1 7 
-
     
     auto comp = []( const std::pair< int, int >& a, const std::pair< int, int >& b) { 
         return( a.second > b.second ); 
