@@ -205,21 +205,31 @@ int main()
     // 1  2  3  4  5 6 
     // 2 -1  4  5 -1 7 
     
-    auto comp = []( const std::pair< int, int >& a, const std::pair< int, int >& b) { 
-        return( a.second > b.second ); 
+    //  Dijkstra
+    //  Dijkstra: Setup
+    length = std::vector< int > ( N, -1 );
+    auto comp = [ & length ]( int a, int b ) { 
+        return( length.at( a ) > length.at( b ) ); 
     }; 
     std::priority_queue< 
-        std::pair< int, int >, 
-        std::vector< std::pair< int, int > >, 
-        decltype( comp )
+        int, 
+        std::vector< int >, 
+        decltype( comp ) 
     > pq( comp );
 
-    pq.push( std::make_pair( 1, 1 ) ); 
-    pq.push( std::make_pair( 2, 2 ) ); 
-    pq.push( std::make_pair( 3, 3 ) ); 
+    //  Dijkstra: Initial node
+    b = 0; 
+    length.at( b ) = 0;
+    pq.push( b );
+    for( int v : g.adj_nodes.at( b ) ) {
+        length.at( v ) = length.at( b ) + 1 ;
+        pq.push( v );
+    }
+
     while( !pq.empty() ) {
-        std::pair< int, int > v = pq.top();
-        std::cerr << v.second << " ";
+        int v = pq.top();
+        g.adj_nodes.at( v );
+        std::cerr << "( " << v << ", " << length.at( v ) << " )" << " ";
         pq.pop();
     }
     std::cerr << std::endl;
