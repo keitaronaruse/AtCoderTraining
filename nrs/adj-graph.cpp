@@ -90,6 +90,29 @@ namespace nrs {
                 }
                 return( v );
             }
+            /**
+             * @brief find the next node from the given priority que by Dijkkstra's algorithm
+             * @param[in] pq: working priority que stack for Dijkstra's algorithm
+             * @param[in] length: distance from a source node
+             * @return v: the found next node
+             */
+            template < class T, class Container, class Compare >
+            int next_node_dijkstra( std::priority_queue< T, Container, Compare >& pq, std::vector< int >& length ) {
+                int v = pq.top(); 
+                pq.pop();
+                //  Common procedure
+                for( auto u : adj_nodes.at( v ) ) {
+                    if( length.at( u ) == -1 ) {
+                        length.at( u ) = length.at( v ) + 1;
+                        pq.push( u );
+                    }
+                    else if( length.at( u ) > length.at( v ) + 1 ) {
+                        length.at( u ) = length.at( v ) + 1;
+                        pq.push( u );
+                    }
+                }
+                return( v );
+            }
     };
 }
 
@@ -225,7 +248,7 @@ int main()
         length.at( v ) = length.at( b ) + 1 ;
         pq.push( v );
     }
-
+    int v = g.next_node_dijkstra( pq, length );
     while( !pq.empty() ) {
         int v = pq.top();
         g.adj_nodes.at( v );
