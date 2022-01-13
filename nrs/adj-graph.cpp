@@ -108,7 +108,6 @@ namespace nrs {
                     }
                     else if( length.at( u ) > length.at( v ) + 1 ) {
                         length.at( u ) = length.at( v ) + 1;
-                        pq.push( u );
                     }
                 }
                 return( v );
@@ -244,18 +243,32 @@ int main()
     b = 0; 
     length.at( b ) = 0;
     pq.push( b );
-    for( int v : g.adj_nodes.at( b ) ) {
-        length.at( v ) = length.at( b ) + 1 ;
-        pq.push( v );
-    }
-    int v = g.next_node_dijkstra( pq, length );
+    //  Dijkstra's algorithm: Main
+    std::cerr << "Dijkstra's algorithm: ";
     while( !pq.empty() ) {
-        int v = pq.top();
-        g.adj_nodes.at( v );
-        std::cerr << "( " << v << ", " << length.at( v ) << " )" << " ";
-        pq.pop();
+        int v = g.next_node_dijkstra( pq, length );
+        if( Debug ) {
+            std::cerr << v << " ";
+        }
     }
-    std::cerr << std::endl;
+    if( Debug ) {
+        std::cerr << std::endl;
+    }
+    if( Debug ) {
+        for( auto d : length ) {
+            std::cerr << d << " ";
+        }
+        std::cerr << std::endl;
+    }
+    //  Dijkstra's algorithm
+    //  0 6 7 12 8 2 9 14 10 3 15 11 5 17 
+    //   0  #  2  3  #  5
+    //   6  7  8  9 10 11
+    //  12  # 14 15  # 17
 
+    //  Length
+    //  0 -1  4  5 -1  7
+    //  1  2  3  4  5  6 
+    //  2 -1  4  5 -1  7 
     return( 0 );
 }
