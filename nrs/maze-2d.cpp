@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <deque>
 #include <queue>
 #include <stack>
 #include <utility>
@@ -28,6 +29,7 @@ namespace nrs {
                 std::vector< std::pair< int, value_type > >,
                 std::greater< std::pair< int, value_type > >
             > pq;
+            std::deque< value_type > dq;
         public:
             maze_2d() : height( 0 ), width( 0 ), 
                 maze( std::vector< std::string >( height, std::string( "" ) ) ),
