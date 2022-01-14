@@ -1,6 +1,6 @@
 /**
 * @file maze-2d.cpp
-* @brief maze 2d
+* @brief class of maze 2d and its test driver
 * @author Keitaro Naruse
 * @date 2021-01-13, 2021-01-14
 * @copyright MIT License
@@ -13,26 +13,40 @@
 namespace nrs {
     class maze_2d {
         public:
-            typedef std::vector< std::string > value_type; 
             int h, w;
-            value_type s;
+            std::vector< std::string > s;
+            std::vector< std::vector< int > > length;
         public:
-            maze_2d() : h( 0 ), w( 0 ), s( value_type ( h, std::string("") ) ) {
+            maze_2d() : h( 0 ), w( 0 ), 
+                s( std::vector< std::string >( h, std::string("") ) ),
+                length( h, std::vector< int >( w, -1 ) ) {
             }
-            maze_2d( int H, int W ) : h( H ), w( W ), s( value_type ( h, std::string( w, '.' ) ) ) {
+            maze_2d( int H, int W ) : h( H ), w( W ), 
+                s( std::vector< std::string >( h, std::string( w, '.' ) ) ),
+                length( h, std::vector< int >( w, -1 ) ) {
             }
-            maze_2d( const value_type& S ) : h( S.size() ), w( S.at( 0 ).size() ), s( S ) {
+            maze_2d( const std::vector< std::string >& S ) : h( S.size() ), w( S.at( 0 ).size() ),
+                s( S ), 
+                length( h, std::vector< int >( w, -1 ) ) {
             }
-            friend std::ostream& operator<< ( std::ostream& os, const maze_2d& m ) {
-                os << m.h << " " << m.w << std::endl;
-                for( int h = 0; h < m.h; h ++ ) {
-                    for( int w = 0; w < m.s.at( h ).size(); w ++ ) {
-                        os << m.s.at( h ).at( w );
+            std::ostream& print_maze( std::ostream& os ) {
+                for( int i = 0; i < h; i ++ ) {
+                    for( int j = 0; j < w; j ++ ) {
+                        os << s.at( i ).at( j );
                     }
                     os << std::endl;
                 }
+                return( os );
             }
-
+            std::ostream& print_length( std::ostream& os ) {
+                for( int i = 0; i < h; i ++ ) {
+                    for( int j = 0; j < w; j ++ ) {
+                        os << length.at( i ).at( j ) << " ";
+                    }
+                    os << std::endl;
+                }
+                return( os );
+            }
     };
 }
 
@@ -53,10 +67,14 @@ int main()
     nrs::maze_2d m4( S );
 
     if( Debug ) {
-        std::cerr << m1;
-        std::cerr << m2;
-        std::cerr << m3;
-        std::cerr << m4;
+        m1.print_maze( std::cerr );
+        m1.print_length( std::cerr );
+        m2.print_maze( std::cerr );
+        m2.print_length( std::cerr );
+        m3.print_maze( std::cerr );
+        m3.print_length( std::cerr );
+        m4.print_maze( std::cerr );
+        m4.print_length( std::cerr );
     }
 
     if( Debug ) {
