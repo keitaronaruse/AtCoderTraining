@@ -14,14 +14,24 @@
 #include <utility>
 
 namespace nrs {
+    struct comp {
+        bool operator ()(const T& x, const T& y) const {
+            return( x > y );
+        };
+    };
+
     class maze_2d {
+        typedef std::pair< int, int > value_type;
         public:
             int height, width;
             std::vector< std::string > maze;
             std::vector< std::vector< int > > length;
+            std::queue< value_type > q;
+            std::stack< value_type > s;
+            std::priority_queue< value_type > pq;
         public:
             maze_2d() : height( 0 ), width( 0 ), 
-                maze( std::vector< std::string >( height, std::string("") ) ),
+                maze( std::vector< std::string >( height, std::string( "" ) ) ),
                 length( height, std::vector< int >( width, -1 ) ) {
             }
             maze_2d( int h, int w ) : height( h ), width( w ), 
@@ -53,7 +63,7 @@ namespace nrs {
                 }
                 return( os );
             }
-            std::pair< int, int > next_node_4_queue( std::queue< std::pair< int, int > >& q ) {
+            std::pair< int, int > next_node_4_queue( ) {
                 std::pair< int, int > v = q.front(); 
                 int h = v.first, w = v.second; 
                 q.pop();
@@ -76,7 +86,7 @@ namespace nrs {
                 }
                 return( v );
             }
-            std::pair< int, int > next_node_4_stack( std::stack< std::pair< int, int > >& s ) {
+            std::pair< int, int > next_node_4_stack() {
                 std::pair< int, int > v = s.top(); 
                 int h = v.first, w = v.second; 
                 s.pop();
@@ -122,13 +132,12 @@ int main()
     int h = 0, w = 0;
     m.length.at( h ).at( w ) = 0;
 
-    const int mode = 1;
+    const int mode = 0;
     if( mode == 0 ) {
         //  BFS: Breadth first search, queue 
-        std::queue< std::pair< int, int > > q;
-        q.push( std::make_pair( h, w ) );
-        while( !q.empty() ) {
-            std::pair< int, int > v = m.next_node_4_queue( q );
+        m.q.push( std::make_pair( h, w ) );
+        while( !m.q.empty() ) {
+            std::pair< int, int > v = m.next_node_4_queue( );
             if( Debug ) {
                 std::cerr << "( " << v.first << ", " << v.second << " )" << " ";
             }
@@ -150,10 +159,9 @@ int main()
     //  -1  4  5 -1  7  8  9 10 
     else if( mode == 1 ) {
         //  DFS: Depth first search 
-        std::stack< std::pair< int, int > > s;
-        s.push( std::make_pair( h, w ) );
-        while( !s.empty() ) {
-            std::pair< int, int > v = m.next_node_4_stack( s );
+        m.s.push( std::make_pair( h, w ) );
+        while( !m.s.empty() ) {
+            std::pair< int, int > v = m.next_node_4_stack( );
             if( Debug ) {
                 std::cerr << "( " << v.first << ", " << v.second << " )" << " ";
             }
@@ -173,6 +181,18 @@ int main()
     //  1 -1 -1  4  5  6  7  8 
     //  8  7  6  5  6 -1  8 -1 
     // -1  8  7 -1 11 10  9 10 
+    else if( mode == 2 ) {
+        // auto comp = [ &length ]( std::pair< int, int >& a, std::pair< int, int >& b ) {
+        //     return( length[]);
+        // }
+        // //  Dijkstra's algorithm: priority queue 
+        // std::priority_queue< 
+        //     std::pair< int, int >, 
+        //     std::vector< std::pair< int, int > >, 
+        //     decltype()
+        // > pq();
+        
+    }
     if( Debug ) {
         m.print_length( std::cerr );
     }
