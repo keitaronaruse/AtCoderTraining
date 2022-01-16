@@ -1,5 +1,5 @@
 /*
-    ABC235 Problem A
+    ABC235 Problem A - Rotate
         https://atcoder.jp/contests/abc235/tasks/abc235_a
         Author: Keitaro Naruse
         Date:   2022-01-15
@@ -7,39 +7,31 @@
 */
 
 // # Solution
-// - 
+// - Read a 3-digit number and decompose it to each of the digits
+// - Calculate the value
 
 #include <iostream>
-#include <vector>
 #include <string>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read ABC
+    int ABC = 0;
+    std::cin >> ABC;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << ABC << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
-    }
+    int a = ABC / 100;
+    ABC %= 100;  
+
+    int b = ABC / 10;
+    ABC %= 10;
+
+    int c = ABC;
+    
+    std::cout << 100 * a + 10 * b + c + 100 * b + 10 * c + a + 100 * c + 10 * a + b << std::endl;
 
     //  Finalize
     if( Debug ) {

@@ -1,5 +1,5 @@
 /*
-    ABC235 Problem B
+    ABC235 Problem B - Climbing Takahashi
         https://atcoder.jp/contests/abc235/tasks/abc235_b
         Author: Keitaro Naruse
         Date:   2022-01-15
@@ -7,13 +7,12 @@
 */
 
 // # Solution
-// - 
+// - Move until thecondition is not satisfied
 
 #include <iostream>
 #include <vector>
-#include <string>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -23,24 +22,29 @@ int main()
     if( Debug ) {
         std::cerr << N << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
+    //  Read Hi
+    std::vector< int > H( N, 0 );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+        std::cin >> H.at( i );
     }
     if( Debug ) {
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
+            std::cerr << H.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
-    }
 
+    //  Main
+    int pos = 0;
+    while( H.at( pos ) < H.at( pos + 1 ) ) {
+        pos ++;
+        if( pos >= N - 1 ) {
+            break;
+        }
+    }
+    //  Display the result
+    std::cout << H.at( pos ) << std::endl;
+    
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

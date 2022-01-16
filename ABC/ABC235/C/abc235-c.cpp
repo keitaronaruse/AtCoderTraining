@@ -11,17 +11,17 @@
 
 #include <iostream>
 #include <vector>
-#include <string>
+#include <map>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read N and Q
+    int N = 0, Q = 0;
+    std::cin >> N >> Q;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << N << " " << Q << std::endl;
     }
     //  Read Ai
     std::vector< int > A( N, 0 );
@@ -34,11 +34,33 @@ int main()
         }
         std::cerr << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
+    std::vector< int > X( Q, 0 ), K( Q, 0 );
+    for( int j = 0; j < Q; j ++ ) {
+        std::cin >> X.at( j ) >> K.at( j );
+    }
     if( Debug ) {
-        std::cerr << S << std::endl;
+        for( int j = 0; j < Q; j ++ ) {
+            std::cerr << X.at( j ) << " " << K.at( j ) << std::endl;
+        }
+        std::cerr << std::endl;
+    }
+    
+    //  Preprocess
+    //  Make line counter
+    std::map< int, std::vector<int> > counter;
+    for( int i = 0; i < N; i ++ ) {
+        counter[ A.at( i ) ].push_back( i + 1 );
+    }
+    //  Main
+    for( int j = 0; j < Q; j ++) {
+        int index = -1;
+        auto it = counter.find( X.at( j ) );
+        if( it != counter.end() ) {
+            if( counter[ X.at( j ) ].size() >= K.at( j ) ) {
+                index = counter[ X.at( j ) ].at( K.at( j ) - 1 );
+            }
+        }
+        std::cout << index  << std::endl;
     }
 
     //  Finalize

@@ -6,40 +6,66 @@
         MIT License
 */
 
-// # Solution
-// - 
+// # Solution: Inverse operation of mutiple and rotate
+// - N / A % == 0
+// - rotate N 
+// - 1 (*5) 5 (*5) 25 (rot) 52 (*5) 260 (!rot) X602
+// - 260 cannot be ratated to 602 due to the constraints ( 0!= mod 10 )
+// - a = 5, N = 602
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <queue>
+#include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
-    //  Read N
-    int N = 0;
-    std::cin >> N;
+    //  Read A and N
+    int A = 0, N = 0;
+    std::cin >> A >> N;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << A << " " << N << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
+
+    std::vector< int > dp( 10 * N + 1, -1 );
+    dp.at( N ) = 0;
+    //  Main
+    std::queue< int > q;
+    q.push( N );
+    while( !q.empty() ) {
+        int n = q.front();
+        q.pop();
+        //  Multiple Divide
+        if( n % A == 0 ) {
+            int m = n / A;
+            if( dp.at( m ) == -1 ) {
+                dp.at( m ) = dp.at( n ) + 1;
+                q.push( m );                ;
+            } 
         }
-        std::cerr << std::endl;
+        //  Rotate
+        // if( n > 10 && n % 10 != 0 ) {
+        if( n > 10 ) {
+            const std::string s = std::to_string( n );
+            std::string t = s;
+            // if( s.size() > 1 ) {
+                for( int i = 0; i < s.size(); i ++ ) {
+                    t.at( i ) = s.at( ( i + 1 ) % s.size() );
+                }
+                int m = std::stoi( t );
+                if( m % 10 != 0) {
+                    if( dp.at( m ) == -1 ) {
+                        dp.at( m ) = dp.at( n ) + 1;
+                        q.push( m );
+                    }
+                }
+            // }
+        }
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
-    }
+    std::cout << dp.at( 1 ) << std::endl;
 
     //  Finalize
     if( Debug ) {
