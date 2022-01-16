@@ -2,7 +2,7 @@
     ABC235 Problem D
         https://atcoder.jp/contests/abc235/tasks/abc235_d
         Author: Keitaro Naruse
-        Date:   2022-01-15
+        Date:   2022-01-15, 2022-01-16
         MIT License
 */
 
@@ -29,43 +29,54 @@ int main()
     if( Debug ) {
         std::cerr << A << " " << N << std::endl;
     }
+   
+    //  Make depth table
+    const int M = 1000000;
+    std::vector< int > depth( M + 1, -1 );
 
-    std::vector< int > dp( 10 * N + 1, -1 );
-    dp.at( N ) = 0;
+    //  Start value
     //  Main
     std::queue< int > q;
-    q.push( N );
+    int n = 1;
+    depth.at( n ) = 0;
+    q.push( n );
     while( !q.empty() ) {
-        int n = q.front();
+        n = q.front();
         q.pop();
-        //  Multiple Divide
-        if( n % A == 0 ) {
-            int m = n / A;
-            if( dp.at( m ) == -1 ) {
-                dp.at( m ) = dp.at( n ) + 1;
-                q.push( m );                ;
+        long long nA = ( long long ) n * ( long long ) A;
+        //  Multiple
+        if( nA <= ( long long ) M ) {
+            int m = n * A;
+            if( depth.at( m ) == -1 ) {
+                depth.at( m ) = depth.at( n ) + 1;
+                // Anwer check
+                if( m == N ) {
+                    break;
+                }
+                else {
+                    q.push( m );
+                }
             } 
         }
         //  Rotate
-        // if( n > 10 && n % 10 != 0 ) {
-        if( n > 10 ) {
+        if( n >= 10 && n % 10 != 0 ) {
             const std::string s = std::to_string( n );
-            std::string t = s;
-            // if( s.size() > 1 ) {
-                for( int i = 0; i < s.size(); i ++ ) {
-                    t.at( i ) = s.at( ( i + 1 ) % s.size() );
+            const int len = s.size(); 
+            std::string t = s.substr( len - 1, 1 ) + s.substr( 0, len - 1 );
+            int m = std::stoi( t );
+            if( depth.at( m ) == -1 ) {
+                depth.at( m ) = depth.at( n ) + 1;
+                // Anwer check
+                if( m == N ) {
+                    break;
                 }
-                int m = std::stoi( t );
-                if( m % 10 != 0) {
-                    if( dp.at( m ) == -1 ) {
-                        dp.at( m ) = dp.at( n ) + 1;
-                        q.push( m );
-                    }
+                else {
+                    q.push( m );
                 }
-            // }
+            }
         }
     }
-    std::cout << dp.at( 1 ) << std::endl;
+    std::cout << depth.at( N ) << std::endl;
 
     //  Finalize
     if( Debug ) {
