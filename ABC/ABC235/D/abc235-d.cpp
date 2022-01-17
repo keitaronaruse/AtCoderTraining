@@ -1,17 +1,14 @@
 /*
-    ABC235 Problem D
+    ABC235 Problem D - Multiply and Rotate
         https://atcoder.jp/contests/abc235/tasks/abc235_d
         Author: Keitaro Naruse
-        Date:   2022-01-15, 2022-01-16
+        Date:   2022-01-15, 2022-01-17
         MIT License
 */
 
 // # Solution: Inverse operation of mutiple and rotate
-// - N / A % == 0
-// - rotate N 
-// - 1 (*5) 5 (*5) 25 (rot) 52 (*5) 260 (!rot) X602
-// - 260 cannot be ratated to 602 due to the constraints ( 0!= mod 10 )
-// - a = 5, N = 602
+// - Apply the breadth first search to make new numbers
+// - Make each of the new numbers by the two operations of multiplication and rotation
 
 #include <iostream>
 #include <vector>
@@ -49,12 +46,10 @@ int main()
             int m = n * A;
             if( depth.at( m ) == -1 ) {
                 depth.at( m ) = depth.at( n ) + 1;
+                q.push( m );
                 // Anwer check
                 if( m == N ) {
                     break;
-                }
-                else {
-                    q.push( m );
                 }
             } 
         }
@@ -66,12 +61,10 @@ int main()
             int m = std::stoi( t );
             if( depth.at( m ) == -1 ) {
                 depth.at( m ) = depth.at( n ) + 1;
+                q.push( m );
                 // Anwer check
                 if( m == N ) {
                     break;
-                }
-                else {
-                    q.push( m );
                 }
             }
         }

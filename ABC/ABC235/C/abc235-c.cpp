@@ -1,13 +1,13 @@
 /*
-    ABC235 Problem C
+    ABC235 Problem C - The Kth Time Query
         https://atcoder.jp/contests/abc235/tasks/abc235_c
         Author: Keitaro Naruse
-        Date:   2022-01-15
+        Date:   2022-01-15, 2022-01-17
         MIT License
 */
 
 // # Solution
-// - 
+// - Introduce the associative memory for the counter
 
 #include <iostream>
 #include <vector>
@@ -34,6 +34,7 @@ int main()
         }
         std::cerr << std::endl;
     }
+    //  Read Xj and Kj 
     std::vector< int > X( Q, 0 ), K( Q, 0 );
     for( int j = 0; j < Q; j ++ ) {
         std::cin >> X.at( j ) >> K.at( j );
@@ -47,7 +48,7 @@ int main()
     
     //  Preprocess
     //  Make line counter
-    std::map< int, std::vector<int> > counter;
+    std::map< int, std::vector< int > > counter;
     for( int i = 0; i < N; i ++ ) {
         counter[ A.at( i ) ].push_back( i + 1 );
     }
