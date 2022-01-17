@@ -17,19 +17,21 @@
 
 namespace nrs {
     class maze_2d {
-        typedef std::pair< int, int > value_type;
+        public:
+            //  state = ( h, w )
+            typedef std::pair< int, int > state_type;
         public:
             int height, width;
             std::vector< std::string > maze;
             std::vector< std::vector< int > > length;
-            std::queue< value_type > q;
-            std::stack< value_type > s;
+            std::queue< state_type > visiting_queue;
+            std::stack< state_type > visiting_stack;
             std::priority_queue< 
-                std::pair< int, value_type >, 
-                std::vector< std::pair< int, value_type > >,
-                std::greater< std::pair< int, value_type > >
+                std::pair< int, state_type >, 
+                std::vector< std::pair< int, state_type > >,
+                std::greater< std::pair< int, state_type > >
             > pq;
-            std::deque< value_type > dq;
+            std::deque< state_type > dq;
         public:
             maze_2d() : height( 0 ), width( 0 ), 
                 maze( std::vector< std::string >( height, std::string( "" ) ) ),
@@ -61,10 +63,9 @@ namespace nrs {
                 }
                 return( os );
             }
-            std::pair< int, int > next_node_4_queue( ) {
-                std::pair< int, int > v = q.front(); 
-                int h = v.first, w = v.second; 
-                q.pop();
+            std::vector< state_type > get_four_neighbors( const state_type& h_w ) {
+                std::vector< state_type > neighbors;
+                int h = h_w.first, w = h_w.second;
                 for( int k = 0; k < 4; k ++ ) {
                     int i = 0, j = 0;
                     switch( k ) {
@@ -75,41 +76,43 @@ namespace nrs {
                     }
                     if( 0 <= i && i < height && 0 <= j && j < width ) {
                         if( maze.at( i ).at( j ) == '.' ) {
-                            if( length.at( i ).at( j ) == -1 ) {
-                                length.at( i ).at( j ) = length.at( h ).at( w ) + 1;
-                                q.push( std::make_pair( i, j ) );
-                            }
+                            neighbors.push_back( std::make_pair( i, j ) );
                         }
                     }
                 }
-                return( v );
+                return( neighbors );
             }
-            std::pair< int, int > next_node_4_stack() {
-                std::pair< int, int > v = s.top(); 
-                int h = v.first, w = v.second; 
-                s.pop();
-                for( int k = 0; k < 4; k ++ ) {
-                    int i = 0, j = 0;
-                    switch( k ) {
-                        case 0: i = h + 1; j = w + 0; break;
-                        case 1: i = h + 0; j = w + 1; break;
-                        case 2: i = h - 1; j = w + 0; break;
-                        case 3: i = h + 0; j = w - 1; break;
-                    }
-                    if( 0 <= i && i < height && 0 <= j && j < width ) {
-                        if( maze.at( i ).at( j ) == '.' ) {
-                            if( length.at( i ).at( j ) == -1 ) {
-                                length.at( i ).at( j ) = length.at( h ).at( w ) + 1;
-                                s.push( std::make_pair( i, j ) );
-                            }
-                        }
+            state_type next_node_four_neighbor_bfs( ) {
+                state_type h_w = visiting_queue.front(); 
+                visiting_queue.pop();
+                int h = h_w.first, w = h_w.second;
+                std::vector< state_type > neighbors = get_four_neighbors( h_w );
+                for( auto n : neighbors ) {
+                    int i = n.first, j = n.second;
+                    if( length.at( i ).at( j ) == -1 ) {
+                        length.at( i ).at( j ) = length.at( h ).at( w ) + 1;
+                        visiting_queue.push( std::make_pair( i, j ) );
                     }
                 }
-                return( v );
+                return( h_w );
+            }
+            state_type next_node_four_neighbor_dfs() {
+                state_type h_w = visiting_stack.top(); 
+                visiting_stack.pop();
+                int h = h_w.first, w = h_w.second;
+                std::vector< state_type > neighbors = get_four_neighbors( h_w );
+                for( auto n : neighbors ) {
+                    int i = n.first, j = n.second;
+                    if( length.at( i ).at( j ) == -1 ) {
+                        length.at( i ).at( j ) = length.at( h ).at( w ) + 1;
+                        visiting_stack.push( std::make_pair( i, j ) );
+                    }
+                }
+                return( h_w );
             }
 
             std::pair< int, std::pair< int, int > > next_node_4_priority_queue() {
-                std::pair< int, value_type > v = pq.top(); 
+                std::pair< int, state_type > v = pq.top(); 
                 int d = v.first;
                 int h = v.second.first, w = v.second.second; 
                 pq.pop();
@@ -158,12 +161,12 @@ int main()
     int h = 0, w = 0;
     m.length.at( h ).at( w ) = 0;
 
-    const int mode = 2;
+    const int mode = 1;
     if( mode == 0 ) {
         //  BFS: Breadth first search, queue 
-        m.q.push( std::make_pair( h, w ) );
-        while( !m.q.empty() ) {
-            std::pair< int, int > v = m.next_node_4_queue( );
+        m.visiting_queue.push( std::make_pair( h, w ) );
+        while( !m.visiting_queue.empty() ) {
+            nrs::maze_2d::state_type v = m.next_node_four_neighbor_bfs( );
             if( Debug ) {
                 std::cerr << "( " << v.first << ", " << v.second << " )" << " ";
             }
@@ -185,9 +188,9 @@ int main()
     //  -1  4  5 -1  7  8  9 10 
     else if( mode == 1 ) {
         //  DFS: Depth first search 
-        m.s.push( std::make_pair( h, w ) );
-        while( !m.s.empty() ) {
-            std::pair< int, int > v = m.next_node_4_stack( );
+        m.visiting_stack.push( std::make_pair( h, w ) );
+        while( !m.visiting_stack.empty() ) {
+            nrs::maze_2d::state_type v = m.next_node_four_neighbor_dfs( );
             if( Debug ) {
                 std::cerr << "( " << v.first << ", " << v.second << " )" << " ";
             }
