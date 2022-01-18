@@ -21,6 +21,10 @@ struct state {
     int q; // 0(Right: w ++), 1(Up: h --), 2(Left: w --), 3 (Down: h++) 
 };
 
+//  According to the orientaion of q, the increse of the next position is as follows 
+std::vector< int > dh = {  0, -1,  0,  1 };
+std::vector< int > dw = {  1,  0, -1,  0 };
+
 const bool Debug = true;
 
 int main()
@@ -68,17 +72,51 @@ int main()
         ) 
     );
     //  Initial value
-    int h = Rs, w = Cs, q = 0;
-    for( q = 0; q < Q; q ++ ) {
+    int h = Rs, w = Cs;
+    for( int q = 0; q < Q; q ++ ) {
         length.at( h ).at( w ).at( q ) = 0;
         deq.push_back( { h, w, q } );
     }
+    //  Main
     while( !deq.empty() ) {
+        //  Take a current state 
         struct state s = deq.front();
         if( Debug ) {
             std::cerr << s.h << " " << s.w << " " << s.q << std::endl;
         }
         deq.pop_front();
+
+        //  Goal check
+        if( s.h == Rt && s.w == Ct ) {
+            if( Debug ) {
+                std::cerr << "Goal" << std::endl;
+            }
+            break;
+        }
+
+        //  Operation: go-straight
+        int next_h = s.h + dh.at( s.q ); 
+        int next_w = s.w + dw.at( s.q ); 
+        int next_q = s.q;
+        if( 0 <= next_h && next_h < H && 0 <= next_w && next_w < W ) {
+            if( S.at( next_h ).at( next_w ) == '.' ) {
+                if( length.at( next_h ).at( next_w ).at( next_q ) == -1 ) {
+                    length.at( next_h ).at( next_w ).at( next_q ) = 
+                        length.at( s.h ).at( s.w ).at( s.q );
+                    deq.push_front( { next_h, next_w, next_q } );
+                }
+            }
+        }
+        //  Operation: rotation
+        for( int q = 0; q < Q; q ++ ) {
+            if( q != s.q ) {
+                if( length.at( s.h ).at( s.w ).at( q ) == -1 ) {
+                    length.at( s.h ).at( s.w ).at( q ) = 
+                        length.at( s.h ).at( s.w ).at( s.q ) + 1;
+                    deq.push_back( { s.h, s.w, q } );
+                }
+            }
+        }
     }
 
     //  Finalize
