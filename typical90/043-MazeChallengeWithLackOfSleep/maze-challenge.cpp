@@ -1,5 +1,5 @@
 /*
-    043 - Maze Challenge with Lack of Sleep
+    043 - Maze Challenge with Lack of Sleep（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_aq
         Author: Keitaro Naruse
         Date:   2022-01-13, 2022-01-18
