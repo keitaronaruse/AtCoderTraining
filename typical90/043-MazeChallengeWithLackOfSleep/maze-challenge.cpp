@@ -2,11 +2,14 @@
     043 - Maze Challenge with Lack of Sleep
         https://atcoder.jp/contests/typical90/tasks/typical90_aq
         Author: Keitaro Naruse
-        Date:   2022-01-13
+        Date:   2022-01-13, 2022-01-18
         MIT License
 */
 
 // # Solution
+// - Introduce 01-bfs by deque for graph searching
+// - state ( h, w, q ) and four actions
+// - 0 cost for same direction, 1 cost for changing direction
 
 #include <iostream>
 #include <string>
@@ -25,7 +28,8 @@ struct state {
 std::vector< int > dh = {  0, -1,  0,  1 };
 std::vector< int > dw = {  1,  0, -1,  0 };
 
-const bool Debug = true;
+const bool Debug = false;
+const int Inf = 1000000007;
 
 int main()
 {
@@ -67,8 +71,8 @@ int main()
     //  Main
     std::deque< state > deq;
     std::vector< std::vector< std::vector< int > > > length( 
-        H, std::vector< std::vector< int> > ( 
-            W, std::vector< int > ( Q, -1 ) 
+        H, std::vector< std::vector< int > > ( 
+            W, std::vector< int > ( Q, Inf ) 
         ) 
     );
     //  Initial value
@@ -82,7 +86,8 @@ int main()
         //  Take a current state 
         struct state s = deq.front();
         if( Debug ) {
-            std::cerr << s.h << " " << s.w << " " << s.q << std::endl;
+            std::cerr << s.h << " " << s.w << " " << s.q << " " 
+                << length.at( s.h ).at( s.w ).at( s.q ) << std::endl;
         }
         deq.pop_front();
 
@@ -94,31 +99,37 @@ int main()
             break;
         }
 
-        //  Operation: go-straight
-        int next_h = s.h + dh.at( s.q ); 
-        int next_w = s.w + dw.at( s.q ); 
-        int next_q = s.q;
-        if( 0 <= next_h && next_h < H && 0 <= next_w && next_w < W ) {
-            if( S.at( next_h ).at( next_w ) == '.' ) {
-                if( length.at( next_h ).at( next_w ).at( next_q ) == -1 ) {
-                    length.at( next_h ).at( next_w ).at( next_q ) = 
-                        length.at( s.h ).at( s.w ).at( s.q );
-                    deq.push_front( { next_h, next_w, next_q } );
-                }
-            }
-        }
-        //  Operation: rotation
+        //  Move to the four directions
+        //  If it moves to a facing direction, cost is the same
+        //  Otherwise, cost = cost + 1
         for( int q = 0; q < Q; q ++ ) {
-            if( q != s.q ) {
-                if( length.at( s.h ).at( s.w ).at( q ) == -1 ) {
-                    length.at( s.h ).at( s.w ).at( q ) = 
-                        length.at( s.h ).at( s.w ).at( s.q ) + 1;
-                    deq.push_back( { s.h, s.w, q } );
+            int h = s.h + dh.at( q ); 
+            int w = s.w + dw.at( q ); 
+            if( 0 <= h && h < H && 0 <= w && w < W ) {
+                if( S.at( h ).at( w ) == '.' ) {
+                    int cost = length.at( s.h ).at( s.w ).at( s.q ) 
+                        + ( q == s.q ? 0 : 1);
+                    if( length.at( h ).at( w ).at( q ) > cost ) {
+                        length.at( h ).at( w ).at( q ) = cost;
+                        if( q == s.q ) {
+                            deq.push_front( { h, w, q } );
+                        }
+                        else {
+                            deq.push_back( { h, w, q } );
+                        }
+                    }
                 }
             }
         }
     }
 
+    // Display result
+    int result = length.at( Rt ).at( Ct ).at( 0 );
+    for( int q = 1; q < Q; q ++ ) {
+        result = std::min( result, length.at( Rt ).at( Ct ).at( q ) );
+    }
+    std::cout << result << std::endl;
+        
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
