@@ -13,7 +13,7 @@ const bool Debug = false;
 
 int main()
 {
-    //  Read N = [ 1, 100 ]
+    //  Read N = [ 1, 50 ]
     int N = 0;
     std::cin >> N;
     if( Debug ) {
@@ -37,7 +37,7 @@ int main()
         sum += A.at( i );
     }
     //  Display the result
-    std::cout << sum << std::endl;
+    std::cout << sum % 100 << std::endl;
 
     //  Finalize
     if( Debug ) {
