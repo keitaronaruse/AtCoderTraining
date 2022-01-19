@@ -2,15 +2,17 @@
     058 - Original Calculator（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_bf
         Author: Keitaro Naruse
-        Date:   2022-01-18
+        Date:   2022-01-18, 2022-01-19
         MIT License
 */
 
 // # Solution
-// - Make counter by the associative memory
+// - Make counter
 
 #include <iostream>
-#include <map>
+#include <vector>
+#include <algorithm>
+
 const bool Debug = false;
 
 int find_y( int x ) 
@@ -27,6 +29,9 @@ int find_y( int x )
 
 int main()
 {
+    //  Constants
+    const int M = 100000;
+    
     //  Read H and K
     int N = 0;
     long long K = 0LL; 
@@ -36,24 +41,47 @@ int main()
     }
 
     //  Main
-    //  { x, z }
-    std::map< int, int > counter;
     //  Initial value
     int x = N, y = 0, z = 0;
-    for( long long k = 0LL; k < K; k ++ ) {
-        if( counter.count( x ) == 0 ) {
-            y = find_y( x );
-            z = ( x + y ) % 100000;
-            counter[ x ] = z;
+    //  dictionary.at( x ) = position
+    std::vector< int > dictionary( M, -1 );
+    //  Find cycle
+    dictionary.at( x ) = 0;
+    for( int k = 0; k < M; k ++ ) {
+        y = find_y( x );
+        z = ( x + y ) % M;
+        if( dictionary.at( z ) == -1 ) {
+            dictionary.at( z ) = dictionary.at( x ) + 1;
+            x = z;
         }
         else {
-            z = counter[ x ];
+            break;
         }
-        x = z;
+    }
+    if( Debug ) {
+        std::cerr << "x: ( " << x << ", " << dictionary.at( x ) << " )" <<std::endl;
+        std::cerr << "z: ( " << z << ", " << dictionary.at( z ) << " )" <<std::endl;
     }
 
     // Display result
-    std::cout << x << std::endl;
+    long long cycle_start = dictionary.at( z );
+    long long cycle_end = dictionary.at( x );
+    long long cycle_length = cycle_end - cycle_start + 1LL;
+
+    if( cycle_length == 1LL ) {
+        std::cout << N << std::endl;
+    }
+    else {
+        int k = 0;
+        if( cycle_end >= K ) {
+            k = ( int ) K;
+        }
+        else {
+            k = ( int ) ( ( K - cycle_end ) % cycle_length + cycle_start ) - 1;
+        }
+        auto it = std::find( dictionary.begin(), dictionary.end(), k );
+        std::cout << it - dictionary.begin() << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {
