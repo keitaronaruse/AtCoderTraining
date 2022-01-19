@@ -18,9 +18,9 @@ int main()
     
     //  Make A1, A2, A3 = [ 1, 100 ]
     std::uniform_int_distribution< > dist( 1, 100 );
-    int A1 = dist( engine );
-    int A2 = dist( engine );
-    int A3 = dist( engine ); 
+    const int A1 = dist( engine );
+    const int A2 = dist( engine );
+    const int A3 = dist( engine ); 
 
     //  Display the result
     std::cout << A1 << " " << A2 << " " <<  A3 << std::endl;
