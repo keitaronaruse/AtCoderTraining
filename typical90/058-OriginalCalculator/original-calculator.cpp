@@ -41,46 +41,37 @@ int main()
     }
 
     //  Main
-    //  Initial value
-    int x = N, y = 0, z = 0;
-    //  dictionary.at( x ) = position
-    std::vector< int > dictionary( M, -1 );
+    //  next[ x ] = z;
+    std::vector< int > next( M, -1 );
+    //  Make the next table: next: x -> z
+    for( int x = 0; x < M; x ++ ) {
+        next.at( x ) = ( x + find_y( x ) ) % M;
+    }
+    
+    //  order[ x ] = k
+    std::vector< int > order( M, -1 );
     //  Find cycle
-    dictionary.at( x ) = 0;
-    for( int k = 0; k < M; k ++ ) {
-        y = find_y( x );
-        z = ( x + y ) % M;
-        if( dictionary.at( z ) == -1 ) {
-            dictionary.at( z ) = dictionary.at( x ) + 1;
-            x = z;
-        }
-        else {
-            break;
-        }
+    int x = N, count = 0;
+    while( order.at( x ) == -1 ) {
+        order.at( x ) = count;
+        x = next.at( x );
+        count ++;
     }
-    if( Debug ) {
-        std::cerr << "x: ( " << x << ", " << dictionary.at( x ) << " )" <<std::endl;
-        std::cerr << "z: ( " << z << ", " << dictionary.at( z ) << " )" <<std::endl;
-    }
+    int cycle = count - order.at( x );
 
-    // Display result
-    long long cycle_start = dictionary.at( z );
-    long long cycle_end = dictionary.at( x );
-    long long cycle_length = cycle_end - cycle_start + 1LL;
-
-    if( cycle_length == 1LL ) {
-        std::cout << N << std::endl;
+    int k = 0;
+    if( K < ( long long ) count ) {
+        k = ( int ) K;
     }
     else {
-        int k = 0;
-        if( cycle_end >= K ) {
-            k = ( int ) K;
+        k = ( int ) ( ( K - ( long long ) order.at( x ) ) % ( long long ) cycle ) + order.at( x );
+    }
+
+    //  Display result
+    for( int i = 0; i < M; i ++ ) {
+        if( order.at( i ) == k ) {
+            std::cout << i << std::endl;
         }
-        else {
-            k = ( int ) ( ( K - cycle_end ) % cycle_length + cycle_start ) - 1;
-        }
-        auto it = std::find( dictionary.begin(), dictionary.end(), k );
-        std::cout << it - dictionary.begin() << std::endl;
     }
 
     //  Finalize
