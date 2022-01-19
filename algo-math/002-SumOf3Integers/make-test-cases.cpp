@@ -1,6 +1,6 @@
 /**
 * @file make-test-cases.cpp
-* @brief Test case generator for 001 - Print 5+N
+* @brief Test case generator for 02 - Sum of 3 Integers
 * @author Keitaro Naruse
 * @date 2022-01-19
 * @copyright MIT License
@@ -16,12 +16,14 @@ int main()
     std::random_device seed_gen;
     std::default_random_engine engine( seed_gen() );
     
-    //  Make N = [ 1, 100 ]
+    //  Make A1, A2, A3 = [ 1, 100 ]
     std::uniform_int_distribution< > dist( 1, 100 );
-    int N = dist( engine ); 
+    int A1 = dist( engine );
+    int A2 = dist( engine );
+    int A3 = dist( engine ); 
 
     //  Display the result
-    std::cout << N << std::endl;
+    std::cout << A1 << " " << A2 << " " <<  A3 << std::endl;
 
     //  Finalize
     if( Debug ) {
