@@ -1,10 +1,10 @@
 /**
-* @file 001-Print5PlusN.cpp
-* @brief 001 - Print 5+N
+* @file 006-Print2NPlus3.cpp
+* @brief 006 - Print 2N+3
 * @author Keitaro Naruse
-* @date 2022-01-19
+* @date 2022-01-20
 * @copyright MIT License
-* @details https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_a
+* @details https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_f
 */
 
 #include <iostream>
@@ -14,14 +14,14 @@ const bool Debug = false;
 int main()
 {
     //  Read N = [ 1, 100 ]
-    int N = 0; 
+    int N = 0;
     std::cin >> N;
     if( Debug ) {
         std::cerr << N << std::endl;
     }
-
+    //  Main
     //  Display the result
-    std::cout << N + 5 << std::endl;
+    std::cout << 2 * N + 3 << std::endl;
 
     //  Finalize
     if( Debug ) {

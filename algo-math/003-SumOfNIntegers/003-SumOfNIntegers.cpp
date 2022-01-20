@@ -4,6 +4,7 @@
 * @author Keitaro Naruse
 * @date 2022-01-19
 * @copyright MIT License
+* @details https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_c
 */
 
 #include <iostream>

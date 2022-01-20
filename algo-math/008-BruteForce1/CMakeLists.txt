@@ -1,0 +1,1 @@
+add_executable( 008-BruteForce1 008-BruteForce1.cpp ) 
