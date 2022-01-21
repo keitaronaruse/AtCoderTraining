@@ -38,7 +38,7 @@ int main()
     //  dp table: 
     //  - size: N * W = 10^2 * 10^5 = 10^7
     //  - value: V * W = 10^9 * 10^5 = 10^14 -> long long
-    std::vector< std::vector< long long > > dp_value( N + 1, std::vector< long long >( W + 1, 0LL ) ); 
+    std::vector< std::vector< long long > > dp_value( N, std::vector< long long >( W + 1, 0LL ) ); 
 
     //  Initial boundary condition
     for( int k = 0; k <= W; k ++ ) {
