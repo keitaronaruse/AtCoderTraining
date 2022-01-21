@@ -8,6 +8,7 @@
 */
 
 #include <iostream>
+#include <algorithm>
 
 const bool Debug = false; 
 
@@ -23,6 +24,7 @@ int main()
     //  Main
     int count = 0;
     for( int i = 1; i <= N; i ++ ) {
+        // Naive method
         for( int j = 1; j <= N; j ++ ) {
             if( i + j <= S ) {
                 count ++;
