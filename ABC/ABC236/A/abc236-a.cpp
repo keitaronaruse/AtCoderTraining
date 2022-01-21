@@ -1,9 +1,10 @@
-/*
-    ABC235 Problem A
-        https://atcoder.jp/contests/abc236/tasks/abc236_a
-        Author: Keitaro Naruse
-        Date:   2022-01-23
-        MIT License
+/**
+* @file abc236-a.cpp
+* @brief ABC236 Problem A
+* @author Keitaro Naruse
+* @date 2022-01-23
+* @copyright MIT License
+* @details https://atcoder.jp/contests/abc236/tasks/abc236_a
 */
 
 // # Solution
