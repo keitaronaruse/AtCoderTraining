@@ -11,13 +11,10 @@
 #include <vector>
 #include <algorithm>
 
-const bool Debug = true; 
-
+const bool Debug = false; 
+const long long Inf = 1000000000000000000LL;
 int main()
 {
-    //  Constant: V = [1, 10^3]
-    const int V = 1000;
-
     //  Read N = [ 1, 10^2 ] and W = [ 1, 10^9 ]
     int N = 0, W = 0;
     std::cin >> N >> W;
@@ -26,9 +23,11 @@ int main()
     }
 
     //  Read Wi = [ 1, W ] and Vi = [ 1, 10^3 ]
+    int V = 0;
     std::vector< int > w( N, 0 ), v( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> w.at( i ) >> v.at( i );
+        V += v.at( i );
     }
     if( Debug ) {
         for( int i = 0; i < N; i ++ ) {
@@ -37,29 +36,61 @@ int main()
     }
 
     //  Main
-    //  Main::Initialize
-    //  DP principle
-    //  - minimize the weight for each of the summed value
+    //  DP principle: maximize the sum of weights undet the sum of values
     //  DP table: 
-    //  - size: N * (N * V ) = 10^2 * ( 10^2 * 10^3 ) = 10^7
+    //  - size: N * V = 10^2 * ( 10^2 * 10^3 ) = 10^7
     //  - value: N * W = 10^2 * 10^9 = 10^11 -> long long
-    const int K = N * ( N * V ); 
+
+    //  Main::Initialize
+    //  DP table: 
     std::vector< std::vector< long long > >  
-        dp_weight( N, std::vector< long long >( K + 1, 0LL ) ); 
+        dp_weight( N, std::vector< long long >( V + 1, Inf ) ); 
 
     //  Initial boundary condition
-    for( int k = 0; k <= K; k ++ ) {
-        int i = 0;
-        if( k - v.at( i ) >= 0 ) {
-            dp_weight.at( i ).at( k ) = ( long long ) v.at( i );
+    int i = 0;
+    dp_weight.at( i ).at( 0 ) = 0;
+    dp_weight.at( i ).at( v.at( 0 ) ) = w.at( i );
+
+    //  Main::Loop
+    for( int i = 1; i < N; i ++ ) {
+        for( int k = 0; k <= V; k ++ ) {
+            //  If we do not take the item i
+            dp_weight.at( i ).at( k ) = dp_weight.at( i - 1 ).at( k );
+            //  If we take the item i
+            if( k - v.at( i ) >= 0 ) {
+                if( dp_weight.at( i - 1 ).at( k - v.at( i ) ) != -1 ) {
+                    dp_weight.at( i ).at( k ) = std::min(
+                        dp_weight.at( i - 1 ).at( k ), 
+                        dp_weight.at( i - 1 ).at( k - v.at( i ) ) + ( long long ) w.at( i )
+                    );
+                }
+            }
         }
     }
-    
-    //  Main::Loop
-
+    if( Debug ) {
+        for( int i = 0; i < N; i ++ ) {
+            for( int k = 0; k <= V; k ++ ) {
+                if( dp_weight.at( i ).at( k ) == Inf ) {
+                    std::cerr << "*" << " ";
+                }
+                else {
+                    std::cerr << dp_weight.at( i ).at( k ) << " ";
+                }
+            }
+            std::cerr << std::endl;
+        }
+    }
     //  Main::Finalize
+    int max_value = 0;
+    for( int k = 0; k <= V; k ++ ) {
+        if( dp_weight.at( N - 1 ).at( k ) != -1 
+            && dp_weight.at( N - 1 ).at( k ) <= W ) {
+            max_value = k;
+        }
+    }
     //  Display the result
-    
+    std::cout << max_value << std::endl;
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

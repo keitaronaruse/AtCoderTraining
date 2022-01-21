@@ -34,10 +34,11 @@ int main()
     }
 
     //  Main
-    //  Main::Initialize
-    //  dp table: 
+    //  DP principle: maximize the sum of values undet the sum of weights
+    //  DP table: 
     //  - size: N * W = 10^2 * 10^5 = 10^7
-    //  - value: V * W = 10^9 * 10^5 = 10^14 -> long long
+    //  - value: V * N = 10^9 * 10^2 = 10^11 -> long long
+    //  Main::Initialize
     std::vector< std::vector< long long > > dp_value( N, std::vector< long long >( W + 1, 0LL ) ); 
 
     //  Initial boundary condition
