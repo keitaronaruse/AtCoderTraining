@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-const bool Debug = true; 
+const bool Debug = false; 
 const long long Inf = 1000000000000000000LL;
 
 int main()
