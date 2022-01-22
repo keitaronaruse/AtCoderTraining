@@ -13,6 +13,7 @@
 
 const bool Debug = false; 
 const long long Inf = 1000000000000000000LL;
+
 int main()
 {
     //  Read N = [ 1, 10^2 ] and W = [ 1, 10^9 ]
