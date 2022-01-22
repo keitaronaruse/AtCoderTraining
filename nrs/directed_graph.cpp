@@ -1,10 +1,9 @@
 /**
-* @file G-LongestPath.cpp
-* @brief G - Longest Path
+* @file directed_graph.cpp
+* @brief Class of directed graphs
 * @author Keitaro Naruse
 * @date 2022-01-23
 * @copyright MIT License
-* @details https://atcoder.jp/contests/dp/tasks/dp_g
 */
 
 #include <iostream>
@@ -13,7 +12,6 @@
 #include <queue>
 #include <stack>
 #include <utility>
-#include <algorithm>
 
 namespace nrs {
     class directed_graph {
@@ -50,9 +48,6 @@ namespace nrs {
             //  Default w = 1
             void add_weighted_edge( int u, int v, int w = 1 ) {
                 adj_nodes[ u ][ v ] = w;
-            }
-            void add_edge( int u, int v ) {
-                adj_nodes[ u ][ v ] = 1;
             }
             void init_lenght() {
                 length = std::vector< int >( N, -1 );
@@ -147,87 +142,51 @@ namespace nrs {
     };
 }
 
-const bool Debug = true; 
+const bool Debug = true;
 
 int main()
 {
-    //  Read N = [ 2, 10^5 ] and M = [ 1, 10^5 ]
-    int N = 0, M = 0;
-    std::cin >> N >> M;
-    if( Debug ) {
-        std::cerr << N << " " << M << std::endl;
-    }
-    //  Read x = [ 1, N ] and y = [ 1, N ]
-    std::vector< int > x( M ), y( M );
-    for( int j = 0; j < M ; j ++ ) {
-        std::cin >> x.at( j ) >> y.at( j );
-        x.at( j ) --;
-        y.at( j ) --;
-    }
-    if( Debug ) {
-        for( int j = 0; j < M ; j ++ ) {
-            std::cout << x.at( j ) + 1 << " " << y.at( j ) + 1 << std::endl;
-        }
-    }
-
-    //  Main
-    //  Make a graph instance
+    const int N = 4;
     nrs::directed_graph g( N );
-    //  Make degree tables
-    std::vector< int > in_degree( N, 0 ), out_degree( N , 0 );
-    //  Update the graph instance and the degree tables
-    for( int j = 0; j < M; j ++ ) {
-        g.add_edge( x.at( j ), y.at( j ) );
-        out_degree.at( x.at( j ) ) ++;
-        in_degree.at( y.at( j ) ) ++;
-    } 
-    if( Debug ) {
-        std::cerr << g;
-    }
-    //  Add starting nodes to queue
-    for( int i = 0; i < N; i ++ ) {
-        if( in_degree.at( i ) == 0 ) {
-            g.visiting_queue.push( i );
-            g.length.at( i ) = 0;
+    // g.add_weighted_edge( u, v, w );
+    g.add_weighted_edge( 0, 1 );
+    g.add_weighted_edge( 0, 2 );
+    g.add_weighted_edge( 1, 3 );
+    g.add_weighted_edge( 2, 1 );
+    g.add_weighted_edge( 2, 3 );
+    std::cout << g;
+
+    int b = 0, e = 3, l = 0;
+    //  Find the shortest path by BFS
+    g.length.at( b ) = l;
+    g.visiting_queue.push( b );
+    while( !g.visiting_queue.empty() ) {
+        int v = g.next_node_bfs( );
+        if( v == e ) {
+            std::cout << g.length.at( e ) << std::endl; 
+            break;
         }
     }
-    if( Debug ) {
-        std::cerr << "Degrees: node, in, out" << std::endl;
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr 
-                << i + 1 << " " 
-                << in_degree.at( i ) << " " 
-                << out_degree.at( i ) << std::endl;
+    for( int v = 0; v < g.N; v ++ ) {
+        std::cout << g.length.at( v ) << " ";
+    }
+    std::cout << std::endl;
+
+    //  Find the shortest path by Dijlstra's algorithm
+    g.init_lenght();
+    g.length.at( b ) = l;
+    g.visiting_priority_queue.push( std::make_pair( l, b ) );
+    while( !g.visiting_priority_queue.empty() ) {
+        int v = g.next_node_dijkstra( );
+        if( v == e ) {
+            std::cout << g.length.at( e ) << std::endl; 
+            break;
         }
     }
-    if( Debug ) {
-        std::queue< int > q = g.visiting_queue;
-        while( !q.empty() ) {
-            int v = q.front();
-            q.pop();
-            std::cerr << "( " << v + 1 << ", " << g.length.at( v ) << " )" << " ";
-        }
-        std::cerr << std::endl;
+    for( int v = 0; v < g.N; v ++ ) {
+        std::cout << g.length.at( v ) << " ";
     }
-    //  DP principle: DP matching
-    //  DP table: 
-    //  - size: M * N = 3*10^3 * 3*10^3 = 9*10^6
-    //  - value: min( N, M ) = 3*10^3 -> int
-    
-    //  Main::Initialize
-    //  DP table: 
-    std::vector< std::vector< int > > dp_length( M + 1, std::vector< int >( N + 1, 0 ) ); 
+    std::cout << std::endl;
 
-    //  Initial boundary condition
-
-    //  Main::Loop
-
-    //  Main::Finalize
-    //  Display the result
-
-    //  Finalize
-    if( Debug ) {
-        std::cerr << "Normally terminated." << std::endl;
-    }
     return( 0 );
 }

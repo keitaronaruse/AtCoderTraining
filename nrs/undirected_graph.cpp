@@ -1,5 +1,9 @@
-/*
-    undirected_graph.cpp
+/**
+* @file undirected_graph.cpp
+* @brief Class of undirected graphs
+* @author Keitaro Naruse
+* @date 2022-01-23
+* @copyright MIT License
 */
 
 #include <iostream>
