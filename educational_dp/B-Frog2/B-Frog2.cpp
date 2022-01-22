@@ -52,32 +52,32 @@ int main()
     //    - dp_cost.at( i - 2 ) + cost( i, i - 2 ), or
     //    - ...
     //    - dp_cost.at( i - K ) + cost( i, i - K )
-    std::vector< int > dp_cost( N, -1 );
+    std::vector< int > dp_cost( N + 1, -1 );
     
     //  Initail boundary condition
     //  The frog is at the stone 1 with 0 cost
-    dp_cost.at( 0 ) = 0;
+    dp_cost.at( 1 ) = 0;
     //  Main::Loop
-    for( int i = 1; i < N; i ++ ) {
-        dp_cost.at( i ) = dp_cost.at( i - 1 ) + nrs::abs( h.at( i ) - h.at( i - 1 ) );
+    for( int i = 2; i <= N; i ++ ) {
+        dp_cost.at( i ) = dp_cost.at( i - 1 ) + nrs::abs( h.at( i - 1 ) - h.at( i - 2 ) );
         for( int j = 2; j <= K; j ++ ) {
-            if( i - j >= 0 ) {
+            if( i - j - 1 >= 0 ) {
                 dp_cost.at( i ) = std::min(
                     dp_cost.at( i ),
-                    dp_cost.at( i - j ) + nrs::abs( h.at( i ) - h.at( i - j ) )
+                    dp_cost.at( i - j ) + nrs::abs( h.at( i - 1 ) - h.at( i - j - 1 ) )
                 );
             }
         }
     }
     if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
+        for( int i = 0; i <= N; i ++ ) {
             std::cerr << dp_cost.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
     //  Main::Finalize
     //  Display the result
-    std::cout << dp_cost.at( N - 1 ) << std::endl;
+    std::cout << dp_cost.at( N ) << std::endl;
 
     //  Finalize
     if( Debug ) {

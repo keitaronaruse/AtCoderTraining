@@ -39,31 +39,24 @@ int main()
     //  - size: N * W = 10^2 * 10^5 = 10^7
     //  - value: V * N = 10^9 * 10^2 = 10^11 -> long long
     //  Main::Initialize
-    std::vector< std::vector< long long > > dp_value( N, std::vector< long long >( W + 1, 0LL ) ); 
+    std::vector< std::vector< long long > > 
+        dp_value( N + 1, std::vector< long long >( W + 1, 0LL ) ); 
 
-    //  Initial boundary condition
-    for( int k = 0; k <= W; k ++ ) {
-        int i = 0;
-        if( k - w.at( i ) >= 0 ) {
-            dp_value.at( i ).at( k ) = ( long long ) v.at( i );
-        }
-    }
-    
     //  Main::Loop
-    for( int i = 1; i < N; i ++ ) {
+    for( int i = 1; i <= N; i ++ ) {
         for( int k = 0; k <= W; k ++ ) {
             dp_value.at( i ).at( k ) = dp_value.at( i - 1 ).at( k );
-            if( k - w.at( i ) >= 0 ) {
+            if( k - w.at( i - 1 ) >= 0 ) {
                 dp_value.at( i ).at( k ) = std::max(
                     dp_value.at( i - 1 ).at( k ), 
-                    dp_value.at( i - 1 ).at( k - w.at( i ) ) + ( long long ) v.at( i )
+                    dp_value.at( i - 1 ).at( k - w.at( i - 1 ) ) + ( long long ) v.at( i - 1 )
                 );
             }
         }
     }
 
     if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
+        for( int i = 0; i <= N; i ++ ) {
             for( int k = 0; k <= W; k ++ ) {
                 std::cerr << dp_value.at( i ).at( k ) << " ";
             }
@@ -72,7 +65,7 @@ int main()
     }
     //  Main::Finalize
     //  Display the result
-    std::cout << dp_value.at( N - 1 ).at( W ) <<  std::endl;
+    std::cout << dp_value.at( N ).at( W ) <<  std::endl;
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

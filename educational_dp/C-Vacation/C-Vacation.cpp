@@ -49,36 +49,36 @@ int main()
     //  - dp_happiness.at( C ).at( i ) is the maximum of 
     //    - dp_happiness.at( A ).at( i - 1 ) + happiness( C ) and 
     //    - dp_happiness.at( B ).at( i - 1 ) + happiness( C )
-    std::vector< std::vector< int > > dp_happiness( K, std::vector< int >( N, 0 ) );
+    std::vector< std::vector< int > > dp_happiness( K, std::vector< int >( N + 1, 0 ) );
 
     //  Initail boundary condition
     //  - dp_happiness.at( a, b, c ).at( 0 ) = a1, b1, c1
-    dp_happiness.at( 0 ).at( 0 ) = a.at( 0 );
-    dp_happiness.at( 1 ).at( 0 ) = b.at( 0 );
-    dp_happiness.at( 2 ).at( 0 ) = c.at( 0 );
+    dp_happiness.at( 0 ).at( 1 ) = a.at( 0 );
+    dp_happiness.at( 1 ).at( 1 ) = b.at( 0 );
+    dp_happiness.at( 2 ).at( 1 ) = c.at( 0 );
     //  Main::Loop
-    for( int i = 1; i < N; i ++ ) {
+    for( int i = 2; i <= N; i ++ ) {
         //  by a from b, c
         dp_happiness.at( 0 ).at( i ) = std::max(
             dp_happiness.at( 1 ).at( i - 1 ), 
             dp_happiness.at( 2 ).at( i - 1 )            
-        ) + a.at( i );
+        ) + a.at( i - 1 );
         //  by b from c, a
         dp_happiness.at( 1 ).at( i ) = std::max(
             dp_happiness.at( 2 ).at( i - 1 ), 
             dp_happiness.at( 0 ).at( i - 1 )             
-        ) + b.at( i );
+        ) + b.at( i - 1 );
         //  by c from a, b
         dp_happiness.at( 2 ).at( i ) = std::max(
             dp_happiness.at( 0 ).at( i - 1 ), 
             dp_happiness.at( 1 ).at( i - 1 )             
-        ) + c.at( i );
+        ) + c.at( i - 1 );
     }
     //  Main::Finalize
     //  Display the result
     std::cout << std::max( 
-        std::max( dp_happiness.at( 0 ).at( N - 1 ), dp_happiness.at( 1 ).at( N - 1 ) ),
-        dp_happiness.at( 2 ).at( N - 1 ) 
+        std::max( dp_happiness.at( 0 ).at( N ), dp_happiness.at( 1 ).at( N ) ),
+        dp_happiness.at( 2 ).at( N ) 
     ) << std::endl;
 
     //  Finalize
