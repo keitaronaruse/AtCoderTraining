@@ -161,7 +161,7 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& r ) {
     return( os );
 }
 
-const bool Debug = true; 
+const bool Debug = false; 
 
 int main()
 {
@@ -211,18 +211,25 @@ int main()
         int v = g.visiting_queue.front();
         for( auto p : g.adj_nodes.at( v ) ) {
             int u = p.first;
-            g.length.at( u ) = g.length.at( u ) + v;
-            g.visiting_queue.push( u );
-        }
-        if( Debug ) {
-            std::cerr << g.visiting_queue << std::endl;
-            std::cerr << g.length << std::endl;
+            if( g.length.at( u ) == -1 ) {
+                g.length.at( u ) = g.length.at( v ) + 1;
+                g.visiting_queue.push( u );                ;
+            }
         }
         g.visiting_queue.pop();
+        if( Debug ) {
+            std::cerr << g.visiting_queue << std::endl;
+        }
     }
     if( Debug ) {
         std::cerr << g.length << std::endl;
     }
+    //  Find the solution
+    int longest_length = 0;
+    for( int i = 0; i < N; i ++ ) {
+        longest_length = std::max( longest_length, g.length.at( i ) );
+    }
+    std::cout << longest_length << std::endl;
 
     //  Finalize
     if( Debug ) {
