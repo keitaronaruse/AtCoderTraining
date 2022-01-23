@@ -17,28 +17,46 @@ const bool Debug = false;
 
 int main()
 {
-    //  Read N 
-    int N = 0;
-    std::cin >> N;
+    //  Read N and M
+    int N = 0, M = 0;
+    std::cin >> N >> M;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << N << " " << M << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
+    //  Read Si
+    std::vector< std::string > S( N, "" );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+        std::cin >> S.at( i );
     }
     if( Debug ) {
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
+            std::cerr << S.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
+    //  Read Tj
+    std::vector< std::string > T( M, "" );
+    for( int j = 0; j < M; j ++ ) {
+        std::cin >> T.at( j );
+    }
     if( Debug ) {
-        std::cerr << S << std::endl;
+        for( int j = 0; j < M; j ++ ) {
+            std::cerr << T.at( j ) << " ";
+        }
+        std::cerr << std::endl;
+    }
+    //  Main
+    int j = 0;
+    for( int i = 0; i < N; i ++ ) {
+        //  If matched, increment j
+        if( S.at( i ) == T.at( j ) ) {
+            std::cout << "Yes" << std::endl;
+            j ++ ;
+        }
+        //  If not matched, do no increment j
+        else {
+            std::cout << "No" << std::endl;
+        }
     }
 
     //  Finalize

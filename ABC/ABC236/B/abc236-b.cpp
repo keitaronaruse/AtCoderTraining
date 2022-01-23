@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <vector>
-#include <string>
+#include <map>
 
 const bool Debug = false;
 
@@ -24,21 +24,23 @@ int main()
         std::cerr << N << std::endl;
     }
     //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
+    std::vector< int > A( 4 * N, 0 );
+    std::map< int, int > counters;
+    for( int i = 0; i < 4 * N - 1; i ++ ) {
         std::cin >> A.at( i );
+        counters[ A.at( i ) ] ++;
     }
     if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
+        for( int i = 0; i < 4 * N - 1; i ++ ) {
             std::cerr << A.at( i ) << " ";
         }
         std::cerr << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
+    
+    for( auto p: counters ) {
+        if( p.second == 3 ) {
+            std::cout << p.first << std::endl;
+        }
     }
 
     //  Finalize

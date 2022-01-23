@@ -10,36 +10,29 @@
 // # Solution
 
 #include <iostream>
-#include <vector>
 #include <string>
 
 const bool Debug = false;
 
 int main()
 {
-    //  Read N 
-    int N = 0;
-    std::cin >> N;
-    if( Debug ) {
-        std::cerr << N << std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
     //  Read S
     std::string S = "";
     std::cin >> S;
     if( Debug ) {
         std::cerr << S << std::endl;
     }
+    //  Read a and b 
+    int a = 0, b = 0;
+    std::cin >> a >> b;
+    if( Debug ) {
+        std::cerr << a << " " << b << std::endl;
+    }
+    a --;
+    b --;
+    //  Main
+    std::swap( S.at( a ), S.at( b ) );
+    std::cout << S << std::endl;
 
     //  Finalize
     if( Debug ) {
