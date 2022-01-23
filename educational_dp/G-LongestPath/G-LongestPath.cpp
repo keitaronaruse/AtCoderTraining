@@ -146,6 +146,20 @@ namespace nrs {
             }
     };
 }
+std::ostream& operator<<( std::ostream& os, const std::queue< int >& r ) {
+    std::queue< int > q = r;
+    while( !q.empty() ) {
+        os << q.front() << " ";
+        q.pop();
+    }
+    return( os );
+}
+std::ostream& operator<<( std::ostream& os, const std::vector< int >& r ) {
+    for( auto v : r ) {
+        os << v << " ";
+    }
+    return( os );
+}
 
 const bool Debug = true; 
 
@@ -183,37 +197,32 @@ int main()
     } 
 
     //  Add starting nodes to a visiting queue and set their path lengths
-    std::vector< int > dp_length( N, -1 );
     for( int i = 0; i < N; i ++ ) {
         if( in_degree.at( i ) == 0 ) {
             g.visiting_queue.push( i );
-            dp_length.at( i ) = 0;
+            g.length.at( i ) = 0;
         }
     }
     if( Debug ) {
-        std::queue< int > q = g.visiting_queue;
-        while( !q.empty() ) {
-            int v = q.front();
-            q.pop();
-            std::cerr << "( " << v + 1 << ", " << g.length.at( v ) << " )" << " ";
-        }
-        std::cerr << std::endl;
+        std::cerr << g.visiting_queue << std::endl;
     }
 
-    //  DP principle: DP matching
-    //  DP table: 
-    //  - size: M * N = 3*10^3 * 3*10^3 = 9*10^6
-    //  - value: min( N, M ) = 3*10^3 -> int
-    
-    //  Main::Initialize
-    //  DP table: 
-
-    //  Initial boundary condition
-
-    //  Main::Loop
-
-    //  Main::Finalize
-    //  Display the result
+    while( !g.visiting_queue.empty() ) {
+        int v = g.visiting_queue.front();
+        for( auto p : g.adj_nodes.at( v ) ) {
+            int u = p.first;
+            g.length.at( u ) = g.length.at( u ) + v;
+            g.visiting_queue.push( u );
+        }
+        if( Debug ) {
+            std::cerr << g.visiting_queue << std::endl;
+            std::cerr << g.length << std::endl;
+        }
+        g.visiting_queue.pop();
+    }
+    if( Debug ) {
+        std::cerr << g.length << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {
