@@ -181,23 +181,13 @@ int main()
         out_degree.at( x.at( j ) ) ++;
         in_degree.at( y.at( j ) ) ++;
     } 
-    if( Debug ) {
-        std::cerr << g;
-    }
-    //  Add starting nodes to queue
+
+    //  Add starting nodes to a visiting queue and set their path lengths
+    std::vector< int > dp_length( N, -1 );
     for( int i = 0; i < N; i ++ ) {
         if( in_degree.at( i ) == 0 ) {
             g.visiting_queue.push( i );
-            g.length.at( i ) = 0;
-        }
-    }
-    if( Debug ) {
-        std::cerr << "Degrees: node, in, out" << std::endl;
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr 
-                << i + 1 << " " 
-                << in_degree.at( i ) << " " 
-                << out_degree.at( i ) << std::endl;
+            dp_length.at( i ) = 0;
         }
     }
     if( Debug ) {
@@ -209,6 +199,7 @@ int main()
         }
         std::cerr << std::endl;
     }
+
     //  DP principle: DP matching
     //  DP table: 
     //  - size: M * N = 3*10^3 * 3*10^3 = 9*10^6
@@ -216,7 +207,6 @@ int main()
     
     //  Main::Initialize
     //  DP table: 
-    std::vector< std::vector< int > > dp_length( M + 1, std::vector< int >( N + 1, 0 ) ); 
 
     //  Initial boundary condition
 
