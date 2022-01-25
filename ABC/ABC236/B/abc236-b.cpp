@@ -1,6 +1,6 @@
 /**
 * @file abc236-b.cpp
-* @brief ABC236 Problem B
+* @brief ABC236 Problem B - Who is missing?
 * @author Keitaro Naruse
 * @date 2022-01-23
 * @copyright MIT License

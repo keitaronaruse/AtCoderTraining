@@ -1,6 +1,6 @@
 /**
 * @file abc236-a.cpp
-* @brief ABC236 Problem A
+* @brief ABC236 Problem A - chukodai
 * @author Keitaro Naruse
 * @date 2022-01-23
 * @copyright MIT License

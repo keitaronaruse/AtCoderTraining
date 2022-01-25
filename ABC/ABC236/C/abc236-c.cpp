@@ -1,6 +1,6 @@
 /**
 * @file abc236-c.cpp
-* @brief ABC236 Problem C
+* @brief ABC236 Problem C - Route Map
 * @author Keitaro Naruse
 * @date 2022-01-23
 * @copyright MIT License
