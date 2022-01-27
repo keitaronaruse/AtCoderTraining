@@ -32,19 +32,30 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::pair< int, i
     return( os );
 }
 
-class digit_counter {
+class multi_digit_counter {
     public:
         int n;
         std::vector< int > digit;
         std::vector< int > max_value, min_value;
     public:
-        digit_counter( int n_ ) : n( n_ ) {
+        multi_digit_counter( int n_ ) : n( n_ ) {
             digit = std::vector< int >( n, 0 );
             max_value = std::vector< int >( n, 0 );
             min_value = std::vector< int >( n, 0 );
-            for( int i = 0; i < n; i ++ ) {
-                max_value.at( i ) = 2 * ( n - i ) - 1;
+        }
+        bool set_max_value( const std::vector< int >& v ) {
+            bool is_assignable = ( n == v.size() );
+            if( is_assignable ) {
+                max_value = v;
             }
+            return( is_assignable ); 
+        }
+        bool set_min_value( const std::vector< int >& v ) {
+            bool is_assignable = ( n == v.size() );
+            if( is_assignable ) {
+                min_value = v;
+            }
+            return( is_assignable ); 
         }
         bool next() {
             bool is_available = false;
@@ -89,10 +100,18 @@ int main()
         std::cerr << N << std::endl;
     }
 
-    digit_counter c( N );
+    std::vector< int > max_value( N, 0 ), min_value( N, 0 );
+    for( int i = 0; i < N; i ++ ) {
+        max_value.at( i ) = 2 * ( N - i ) - 1;
+        min_value.at( i ) = 0;
+    }
+    multi_digit_counter mdc( N );
+    mdc.max_value = max_value;
+    mdc.min_value = min_value;
+    
     do {
-        std::cerr << c.digit << std::endl;
-    } while( c.next() );
+        std::cerr << mdc.digit << std::endl;
+    } while( mdc.next() );
     
     
 
