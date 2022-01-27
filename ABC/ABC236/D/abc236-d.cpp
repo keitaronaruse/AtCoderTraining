@@ -2,7 +2,7 @@
 * @file abc236-d.cpp
 * @brief ABC236 Problem D - Dance
 * @author Keitaro Naruse
-* @date 2022-01-23
+* @date 2022-01-23, 2022-01-27
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc236/tasks/abc236_d
 */
@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <bitset>
 #include <utility>
+#include <list>
 
 const bool Debug = false;
 
@@ -34,7 +35,7 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::pair< int, i
 
 class multi_digit_counter {
     public:
-        int n;
+        size_t n;
         std::vector< int > digit;
         std::vector< int > max_value, min_value;
     public:
@@ -73,14 +74,13 @@ class multi_digit_counter {
         }
 };
 
-
 int first_n_available( int n, std::vector< bool >& used )
 {
     int k = 0;
-    for( int i = 0; i < used.size(); i ++ ) {
+    for( size_t i = 0; i < used.size(); i ++ ) {
         if( !used.at( i ) ) {
-            used.at( i ) = true;
             if( k == n ) {
+                used.at( i ) = true;
                 return( i );
             }
             else {
@@ -100,6 +100,24 @@ int main()
         std::cerr << N << std::endl;
     }
 
+    //  Read Aij = [ 0, 2^30 ) 
+    std::vector< std::vector< int > > A( 2 * N, std::vector< int >( 2 * N, -1 ) );
+    for( int i = 0; i < 2 * N - 1; i ++ ) {
+        for( int j = i + 1; j < 2 * N; j ++ ) {
+            std::cin >> A.at( i ).at( j );
+            // A.at( j ).at( i ) = A.at( i ).at( j );
+        }
+    }
+    if( Debug ) {
+        for( int i = 0; i < 2 * N; i ++ ) {
+            for( int j = 0; j < 2 * N; j ++ ) {
+                std::cerr << A.at( i ).at( j ) << " ";
+            }
+            std::cerr << std::endl;
+        }
+    }
+
+    //  Main
     std::vector< int > max_value( N, 0 ), min_value( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         max_value.at( i ) = 2 * ( N - i ) - 1;
@@ -109,39 +127,31 @@ int main()
     mdc.max_value = max_value;
     mdc.min_value = min_value;
     
+    int max_sum_fun = 0;
     do {
-        std::cerr << mdc.digit << std::endl;
+        std::list< int > waiting;
+        for( int i = 0; i < 2 * N; i ++ ) {
+            waiting.push_back( i );
+        }
+        std::vector< bool > used( 2 * N, false );
+        std::vector< std::pair< int, int > > pair( N );
+        int sum_fun = 0;
+        for( int i = 0; i < N; i ++ ) {
+            pair.at( i ).first = first_n_available( 0, used );
+            pair.at( i ).second = first_n_available( mdc.digit.at( i ), used );
+            sum_fun ^= A.at( pair.at( i ).first ).at( pair.at( i ).second );
+            if( Debug ) {
+                std::cout << "(" << pair.at( i ).first << ", " << pair.at( i ).second << ") ";
+            }
+        }
+        if( Debug ) {
+            std::cerr << pair << sum_fun << std::endl;
+        }
+        max_sum_fun = std::max( max_sum_fun, sum_fun );
     } while( mdc.next() );
     
-    
-
-    //  Read Aij = [ 0, 2^30 ) 
-    // std::vector< std::vector< int > > A( 2 * N, std::vector< int>( 2 * N, -1 ) );
-    // for( int i = 0; i < 2 * N - 1; i ++ ) {
-    //     for( int j = i + 1; j < 2 * N; j ++ ) {
-    //         std::cin >> A.at( i ).at( j );
-    //         A.at( j ).at( i ) = A.at( i ).at( j );
-    //     }
-    // }
-    // if( Debug ) {
-    //     for( int i = 0; i < 2 * N; i ++ ) {
-    //         for( int j = 0; j < 2 * N; j ++ ) {
-    //             std::cerr << A.at( i ).at( j ) << " ";
-    //         }
-    //         std::cerr << std::endl;
-    //     }
-    // }
-
-    //  Main
-    //  N = 1   {0,1}
-    //          (0,1)
-    //  N = 2   {0,1,2,3}
-    //          0(0,1)0(2,3) 1(0,2)0(1,3) 2(0,3)0(1,2)     
-    //  N = 3   0(0,1)0(2,3)0(4,5) 0(0,1)1(2,4)0(3,5) 0(0,1)2(2,5)0(3,4)  
-    //          1(0,2)0(1,3)0(4,5) 1(0,2)1(1,4)0(3,5) 1(0,2)2(1,5)0(3,4) 
-    //          2(0,3)0(1,2)0(4,5) 2(0,3)1(1,4)0(2,5) 2(0,3)2(1,5)0(2,4) 
-    //          3(0,4)0(1,2)0(3,5) 3(0,4)1(1,3)0(2,5) 3(0,4)2(1,5)0(2,3) 
-    //          4(0,5)0(1,2)0(3,4) 4(0,5)1(1,3)0(2,4) 4(0,5)2(1,4)0(2,3)
+    //  Display the result
+    std::cout << max_sum_fun << std::endl; 
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
