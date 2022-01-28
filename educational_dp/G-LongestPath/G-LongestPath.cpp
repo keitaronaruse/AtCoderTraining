@@ -2,7 +2,7 @@
 * @file G-LongestPath.cpp
 * @brief G - Longest Path
 * @author Keitaro Naruse
-* @date 2022-01-23
+* @date 2022-01-23, 2022-01-28
 * @copyright MIT License
 * @details https://atcoder.jp/contests/dp/tasks/dp_g
 */
@@ -124,7 +124,6 @@ namespace nrs {
             //  Dijkstra's algorithm
             int next_node_dijkstra( ) {
                 length_node_type l_u = visiting_priority_queue.top(); 
-                int l = l_u.first;
                 int u = l_u.second;
                 visiting_priority_queue.pop();
                 //  Common procedure
@@ -161,7 +160,73 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& r ) {
     return( os );
 }
 
-const bool Debug = false; 
+const bool Debug = false;
+
+int rec( int v, nrs::directed_graph& g )
+{
+    if( g.length.at( v ) != -1 ) {
+        return( g.length.at( v ) );
+    }
+        
+    int res = 0;
+    for( auto p : g.adj_nodes.at( v ) ) {
+        int u = p.first;
+        res = std::max( res, rec( u, g ) + 1 );
+    }
+    g.length.at( v ) = res;
+    return( g.length.at( v ) );
+}
+
+int solution_recursive_memoization( nrs::directed_graph& g )
+{
+    int longest_length = 0;
+
+    for( int i = 0; i < g.N; i ++ ) {
+        longest_length = std::max( longest_length, rec( i, g ));
+    }
+    return( longest_length );
+}
+
+int solution_bfs_topological_sort( nrs::directed_graph& g, std::vector< int >& in_degree )
+{
+    //  Add starting nodes to a visiting queue and set their path lengths
+    for( int i = 0; i < g.N; i ++ ) {
+        if( in_degree.at( i ) == 0 ) {
+            g.visiting_queue.push( i );
+            g.length.at( i ) = 0;
+        }
+    }
+    if( Debug ) {
+        std::cerr << g.visiting_queue << std::endl;
+    }
+
+    //  Topological sort
+    while( !g.visiting_queue.empty() ) {
+        int v = g.visiting_queue.front();
+        for( auto p : g.adj_nodes.at( v ) ) {
+            int u = p.first;
+            in_degree.at( u ) --;
+            if( in_degree.at( u ) == 0 ) {
+                g.length.at( u ) = std::max( g.length.at( u ), g.length.at( v ) + 1 );
+                g.visiting_queue.push( u );
+            }
+        }
+        g.visiting_queue.pop();
+        if( Debug ) {
+            std::cerr << g.visiting_queue << std::endl;
+        }
+    }
+    if( Debug ) {
+        std::cerr << g.length << std::endl;
+    }
+
+    //  Find the solution
+    int longest_length = 0;
+    for( int i = 0; i < g.N; i ++ ) {
+        longest_length = std::max( longest_length, g.length.at( i ) );
+    }
+    return( longest_length );
+}
 
 int main()
 {
@@ -196,39 +261,9 @@ int main()
         in_degree.at( y.at( j ) ) ++;
     } 
 
-    //  Add starting nodes to a visiting queue and set their path lengths
-    for( int i = 0; i < N; i ++ ) {
-        if( in_degree.at( i ) == 0 ) {
-            g.visiting_queue.push( i );
-            g.length.at( i ) = 0;
-        }
-    }
-    if( Debug ) {
-        std::cerr << g.visiting_queue << std::endl;
-    }
-
-    while( !g.visiting_queue.empty() ) {
-        int v = g.visiting_queue.front();
-        for( auto p : g.adj_nodes.at( v ) ) {
-            int u = p.first;
-            if( g.length.at( u ) == -1 ) {
-                g.length.at( u ) = g.length.at( v ) + 1;
-                g.visiting_queue.push( u );                ;
-            }
-        }
-        g.visiting_queue.pop();
-        if( Debug ) {
-            std::cerr << g.visiting_queue << std::endl;
-        }
-    }
-    if( Debug ) {
-        std::cerr << g.length << std::endl;
-    }
     //  Find the solution
-    int longest_length = 0;
-    for( int i = 0; i < N; i ++ ) {
-        longest_length = std::max( longest_length, g.length.at( i ) );
-    }
+    int longest_length = solution_recursive_memoization( g );
+    // int longest_length = solution_bfs_topological_sort( g, in_degree );
     std::cout << longest_length << std::endl;
 
     //  Finalize
