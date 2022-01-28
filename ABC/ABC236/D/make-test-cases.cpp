@@ -21,48 +21,17 @@ int main()
     std::random_device seed_gen;
     std::default_random_engine engine( seed_gen() );
     std::uniform_int_distribution< int > dist; 
-    dist = std::uniform_int_distribution< int >( 2, 100000 );
+    dist = std::uniform_int_distribution< int >( 1, 8 );
     const int N  = dist( engine );
+    std::cout << N << std::endl;
     
-    std::vector< std::string > S( N );
-    for( int i = 0; i < N; i ++ ) {
-        dist = std::uniform_int_distribution< int >( 1, 10 );
-        const int M = dist( engine );
-        S.at( i ) = std::string( M, ' ' );
-        dist = std::uniform_int_distribution< int >( 'a', 'z' );
-        for( int j = 0; j < M; j ++ ) {
-            S.at( i ).at( j ) = dist( engine );
+    dist = std::uniform_int_distribution< int >( 0, 1 << 30 );
+    for( int i = 0; i < 2 * N - 1; i ++ ) {
+        for( int j = i + 1; j < 2 * N; j ++ ) {
+            std::cout << dist( engine ) << " ";
         }
+        std::cout << std::endl;
     }
-
-    dist = std::uniform_int_distribution< int >( 2, N );
-    const int K = dist( engine );
-
-    std::vector< bool > express( N, true );
-    dist = std::uniform_int_distribution< int >( 1, N - 2 );
-    for( int k = 0; k < K; k ++ ) {
-        express.at( dist( engine ) ) = false;
-    }
-    
-    int M = 0;
-    for( int i = 0; i < N; i ++ ) {
-        if( express.at( i ) ) {
-            M ++;
-        }
-    }
-
-    std::cout << N << " " << M << std::endl;
-    for( int i = 0; i < N; i ++ ) {
-        std::cout << S.at( i ) << " ";
-    }
-    std::cout << std::endl;
-    
-    for( int i = 0; i < N; i ++ ) {
-        if( express.at( i ) ) {
-            std::cout << S.at( i ) << " ";
-        }
-    }
-    std::cout << std::endl;
     
     //  Finalize
     if( Debug ) {
