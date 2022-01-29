@@ -1,10 +1,10 @@
 /**
-* @file arc133-a.cpp
-* @brief ARC133 Problem A - Erase by Value
+* @file arc134-a.cpp
+* @brief ARC134 Problem A
 * @author Keitaro Naruse
-* @date 2022-01-22, 2022-01-29
+* @date 2022-01-29
 * @copyright MIT License
-* @details https://atcoder.jp/contests/arc133/tasks/arc133_a
+* @details https://atcoder.jp/contests/arc134/tasks/arc134_a
 */
 
 // # Solution
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 
-const bool Debug = false;
+const bool Debug = true;
 
 int main()
 {
@@ -35,30 +35,9 @@ int main()
     }
 
     //  Main
-    //  Find the first i which satisfies Ai > Ai + 1 and set k = i
-    int k = N - 1;
-    for( int i = 0; i < N - 1; i ++ ) {
-        if( A.at( i ) > A.at( i + 1 ) ) {
-            k = i;
-            break;
-        }
-    }
-    if( Debug ) {
-        std::cerr << "k: " << k << std::endl;
-    }
-
-    //  Find the solution
-    for( int i = 0; i < N; i ++ ) {
-        if( A.at( i ) != A.at( k ) ) {
-            std::cout << A.at( i ) << " ";
-        }
-    }
-    std::cout << std::endl;
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
     }    
     return( 0 );
 }
-
