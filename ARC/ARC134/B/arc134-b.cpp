@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <string>
 
 std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 {
