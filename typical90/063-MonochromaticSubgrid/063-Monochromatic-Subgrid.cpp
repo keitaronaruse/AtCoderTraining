@@ -15,28 +15,7 @@
 #include <bitset>
 #include <map>
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
-{
-    for( auto e : v ) {
-        os << e << " ";
-    }
-    return( os );
-}
-
-std::ostream& operator<<( std::ostream& os, const std::vector< bool >& v )
-{
-    for( auto e : v ) {
-        if( e ) {
-            os << "*" << " ";
-        }
-        else {
-            os << "." << " ";
-        }
-    }
-    return( os );
-}
-
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -64,8 +43,9 @@ int main()
 
     //  Main
     //  Find the same number in columns
-    for( int indicies = 1; indicies < ( 1 << H ); indicies ++ ) {
-        std::bitset< 8 > bs( indicies );
+    int max_indecies = 0, max_count = 0, max_number = 0;
+    for( int indecies = 1; indecies < ( 1 << H ); indecies ++ ) {
+        std::bitset< 8 > bs( indecies );
         std::vector< int > same_num( W, 0 );
         std::vector< bool > is_same( W, true );
         std::map< int, int > counters;
@@ -90,11 +70,11 @@ int main()
                 }
             }
         }
-        int max_count = 0, max_number = 0;
         for( auto p : counters ) {
             if( p.second > max_count ) {
                 max_count = p.second;
                 max_number = p.first;
+                max_indecies = indecies;
             }
         }
         if( Debug ) {
@@ -113,6 +93,8 @@ int main()
             std::cerr << "max_number: " << max_number << " max_count: " << max_count << std::endl;
         }
     }
+    //  Display the result
+    std::cout << max_count << std::endl;
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
