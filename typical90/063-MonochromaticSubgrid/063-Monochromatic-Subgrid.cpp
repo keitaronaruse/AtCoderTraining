@@ -13,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 #include <bitset>
+#include <map>
 
 std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 {
@@ -67,6 +68,7 @@ int main()
         std::bitset< 8 > bs( indicies );
         std::vector< int > same_num( W, 0 );
         std::vector< bool > is_same( W, true );
+        std::map< int, int > counters;
         for( int h = 0; h < H; h ++ ) {
             if( bs[ h ] ) {
                 for( int w = 0; w < W; w ++ ) {
@@ -74,11 +76,25 @@ int main()
                         if( same_num.at( w ) == 0 ) {
                             same_num.at( w ) = P.at( h ).at( w );
                         }
-                        else if( same_num.at( w ) != P.at( h ).at( w ) ) {
+                        else if( same_num.at( w ) != P.at( h ).at( w ) ){
                             is_same.at( w ) = false;
                         }
                     }
                 }
+            }
+        }
+        for( int h = 0; h < H; h ++ ) {
+            for( int w = 0; w < W; w ++ ) {
+                if( bs[ h ] && is_same.at( w ) ) {
+                    counters[ same_num.at( w ) ] ++;
+                }
+            }
+        }
+        int max_count = 0, max_number = 0;
+        for( auto p : counters ) {
+            if( p.second > max_count ) {
+                max_count = p.second;
+                max_number = p.first;
             }
         }
         if( Debug ) {
@@ -94,9 +110,9 @@ int main()
                 }
                 std::cerr << std::endl;
             }
+            std::cerr << "max_number: " << max_number << " max_count: " << max_count << std::endl;
         }
     }
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
