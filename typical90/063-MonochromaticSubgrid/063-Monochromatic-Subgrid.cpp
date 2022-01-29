@@ -1,6 +1,6 @@
 /*
 * @file 063-Monochromatic-Subgrid.cpp
-* @brief 063 - Monochromatic Subgrid
+* @brief 063 - Monochromatic Subgrid（★4）
 * @author Keitaro Naruse
 * @date 2022-01-29
 * @copyright MIT License
@@ -8,6 +8,8 @@
 */
 
 // # Solution
+// - Try all combonations in H by the greedy method 
+// - Find the same number in the column
 
 #include <iostream>
 #include <vector>
