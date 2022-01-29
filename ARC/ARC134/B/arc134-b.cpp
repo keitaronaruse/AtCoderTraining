@@ -22,7 +22,7 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
     return( os );
 }
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -32,19 +32,25 @@ int main()
     if( Debug ) {
         std::cerr << N << std::endl;
     }
-    //  Read Ai = [ 1, N ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
+    //  Read S
+    std::string s;
+    std::cin >> s;
     if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
+        std::cerr << s << std::endl;
     }
 
     //  Main
+    //  check no need to swap
+    bool is_no_change = true;
+    for( int i = 0; i < N - 1; i ++ ) {
+        if( s.at( i ) > s.at( i + 1)  ) {
+            is_no_change = false;
+            break;
+        }
+    }
+    if( is_no_change ) {
+        std::cout << s << std::endl;
+    }
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
