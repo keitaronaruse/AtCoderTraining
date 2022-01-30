@@ -32,7 +32,7 @@ char find_smallest_char( std::map< char, int >& m )
     return( ch );
 }
 
-const bool Debug = false;
+const bool Debug = true;
 
 int main()
 {
@@ -66,7 +66,7 @@ int main()
         //  Find the target character
         char ch = find_smallest_char( counters );
         if( Debug ) {
-            std::cerr << ch << std::endl;
+            std::cerr << ch << ": " << l << ", " << r << std::endl;
         }
         //  Find r, the tail end
         if( is_continue ) {
@@ -89,6 +89,10 @@ int main()
         //  Swap the characters at l and r
         if( is_continue ) {
             std::swap( s.at( l ), s.at( r ) );
+            if( Debug ) {
+                std::cerr << "( " << l << ": " << s.at( l ) << ", " 
+                    << r << ": " << s.at( r ) << " )" << std::endl;
+            }
             counters[ s.at( l ) ]--;
             counters[ s.at( r ) ]--;
             r --;
