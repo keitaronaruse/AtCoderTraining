@@ -23,8 +23,6 @@ std::ostream& operator<<( std::ostream& os, const std::map< char, int >& m )
     return( os );
 }
 
-const bool Debug = false;
-
 char find_smallest_char( std::map< char, int >& m )
 {
     char ch = 'a';
@@ -33,6 +31,8 @@ char find_smallest_char( std::map< char, int >& m )
     }
     return( ch );
 }
+
+const bool Debug = false;
 
 int main()
 {
@@ -53,47 +53,49 @@ int main()
     std::string s = S;
     //  Analysis: character -> frequency
     std::map< char, int > counters;
-    for( int i = 0; i < s.size(); i ++ ) {
+    for( size_t i = 0; i < s.size(); i ++ ) {
         counters[ s.at(i) ] ++;
-    }
-    if( Debug ) {
-        std::cerr << counters << std::endl;
     }
     //  Main
     int l = 0, r = N - 1;
-    while( l < r ) {
+    bool is_continue = true;
+    while( is_continue ) {
+        if( Debug ) {
+            std::cerr << counters << std::endl;
+        }
         //  Find the target character
         char ch = find_smallest_char( counters );
         if( Debug ) {
-            std::cerr << ch << " ";
+            std::cerr << ch << std::endl;
         }
         //  Find r, the tail end
-        for( ; r > l; r -- ) {
-            if( s.at( r ) == ch ) {
-                break;
+        if( is_continue ) {
+            while( s.at( r ) != ch ) {
+                if( -- r <= l ) {
+                    is_continue = false;
+                    break;
+                }
             }
         }
         //  Find l, the head end
-        for( ; l < r; l ++ ) {
-            if( s.at( l ) > s.at( r ) ) {
-                break;
+        if( is_continue ) {
+            while( s.at( l ) <= s.at( r ) ) {
+                if( ++ l >= r ) {
+                    is_continue = false;
+                    break;
+                }
             }
         }
-        if( Debug ) {
-            std::cerr << l << " " << r << " " << std::endl;
-        }
         //  Swap the characters at l and r
-        if( l < r ) {
+        if( is_continue ) {
             std::swap( s.at( l ), s.at( r ) );
-            //  Update the counter
             counters[ s.at( l ) ]--;
             counters[ s.at( r ) ]--;
-        }
-        else {
-            break;
-        }
-        if( Debug ) {
-            std::cerr << counters << std::endl;
+            r --;
+            l ++;
+            if( r <= l ) {
+                is_continue = false;
+            }
         }
     }
     //  Display the result
