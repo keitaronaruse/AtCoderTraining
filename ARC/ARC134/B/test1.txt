@@ -1,3 +1,9 @@
 3
 xzy
 
+x: 0
+y: 2
+z: 1
+
+0: x <> no change
+1: z <> 2: y 
