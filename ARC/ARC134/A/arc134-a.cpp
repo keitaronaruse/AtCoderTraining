@@ -21,13 +21,13 @@ const bool Debug = false;
 
 long long num_covers( long long interval, long long width )
 {
-    long long num = 0LL;
-    if( interval % width == 0 ) {
-        num = interval / width;
-    }
-    else {
-        num = interval / width + 1;
-    }
+    long long num = ( interval + width - 1LL ) / width;
+    // if( interval % width == 0 ) {
+    //     num = interval / width;
+    // }
+    // else {
+    //     num = interval / width + 1;
+    // }
     return( num );
 }
 

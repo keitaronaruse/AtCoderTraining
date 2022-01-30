@@ -2,27 +2,19 @@
 * @file arc134-b.cpp
 * @brief ARC134 Problem B
 * @author Keitaro Naruse
-* @date 2022-01-29
+* @date 2022-01-29, 2022-01-30
 * @copyright MIT License
 * @details https://atcoder.jp/contests/arc134/tasks/arc134_b
 */
 
 // # Solution
-
+// - Double pointers from the head and the tail
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <string>
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
-const bool Debug = false;
+const bool Debug = true;
 
 int main()
 {
@@ -40,6 +32,8 @@ int main()
     }
 
     //  Main
+    //  Analysis
+    
     //  check no need to swap
     bool is_no_change = true;
     for( int i = 0; i < N - 1; i ++ ) {
