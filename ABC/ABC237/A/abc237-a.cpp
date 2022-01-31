@@ -1,6 +1,6 @@
 /**
 * @file abc237-a.cpp
-* @brief ABC237 Problem A
+* @brief ABC237 Problem A - Not Overflow
 * @author Keitaro Naruse
 * @date 2022-01-30
 * @copyright MIT License
@@ -17,32 +17,24 @@ const bool Debug = false;
 
 int main()
 {
+    //  Constant
+    long long  min_value = -2147483648LL;
+    long long  max_value =  2147483648LL;
+
     //  Read N
-    int N = 0;
+    long long N = 0;
     std::cin >> N;
     if( Debug ) {
         std::cerr << N << std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
-    }
 
     //  Main
-    std::cout << "" << std::endl;
+    if( min_value <= N && N < max_value ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {
