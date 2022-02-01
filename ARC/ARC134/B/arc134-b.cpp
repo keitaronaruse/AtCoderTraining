@@ -8,42 +8,20 @@
 */
 
 // # Solution
-// - Double pointers from the head and the tail
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
 
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< int > >& v )
-{
-    for( int k = 0; k < v.size(); k ++ ) {
-        os << (char)( k + 'a' ) << ": ";
-        for( int i = 0; i < v.at( k ).size(); i ++ ) {
-            os << v.at( k ).at( i ) << ", ";
-        }
-    }
-    return( os );
-}
+const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::map< char, int >& m )
+std::ostream& operator<<( std::ostream& os, std::map< char, int >& m) 
 {
     for( auto p : m ) {
-        std::cerr << "( " << p.first << ": " << p.second << " )" << " ";
+        os << "(" << p.first << "," << p.second << ")"; 
     }
     return( os );
 }
-
-char find_smallest_char( std::map< char, int >& m )
-{
-    char ch = 'a';
-    while( m[ ch ] == 0 ) {
-        ch ++;
-    }
-    return( ch );
-}
-
-const bool Debug = true;
 
 int main()
 {
@@ -61,82 +39,61 @@ int main()
     }
 
     //  Main
-    //  Preprpcess
+    //  Preprocess
     std::string s = S;
-    const int K = 26; 
-    std::vector< std::vector< int > > dic( K );
-    for( int i = 0; i < s.size(); i ++ ) {
-        dic.at( s.at( i ) - 'a' ).push_back( i ); 
+    std::map< char, int > counters;
+    for( int i = 0; i < N; i ++ ) {
+        counters[ s.at( i ) ] ++;
     }
-    if( Debug ) {
-        std::cerr << dic << std::endl;
-    }
-
-    //  Main
-    int l = 0, r = N -1;
-    for( int k = 0; k < s.at( l ) - 'a'; k ++ ) {
-        //  Data exist
-        if( dic.at( k ).size() != 0 ) {
-            r = dic.at( k ).back();
-            dic.at( k ).pop_back();
-            if( Debug ) {
-                std::cerr << ( char )( k + 'a' ) << ": " << r << std::endl;
-            }
+    //  Minimum char
+    char min_ch = 'a';
+    for( auto p : counters ) {
+        if( p.second != 0 ) {
+            min_ch = p.first;
             break;
         }
     }
+    if( Debug ) {
+        std::cerr << counters << min_ch << std::endl;
+    }
 
-    //  Analysis: character -> frequency
-    // std::map< char, int > counters;
-    // for( size_t i = 0; i < s.size(); i ++ ) {
-    //     counters[ s.at(i) ] ++;
-    // }
     //  Main
-    // int l = 0, r = N - 1;
-    // bool is_continue = true;
-    // while( is_continue ) {
-    //     if( Debug ) {
-    //         std::cerr << counters << std::endl;
-    //     }
-    //     //  Find the target character
-    //     char ch = find_smallest_char( counters );
-    //     if( Debug ) {
-    //         std::cerr << ch << ": " << l << ", " << r << std::endl;
-    //     }
-    //     //  Find r, the tail end
-    //     if( is_continue ) {
-    //         while( s.at( r ) != ch ) {
-    //             if( -- r <= l ) {
-    //                 is_continue = false;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     //  Find l, the head end
-    //     if( is_continue ) {
-    //         while( s.at( l ) <= s.at( r ) ) {
-    //             if( ++ l >= r ) {
-    //                 is_continue = false;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     //  Swap the characters at l and r
-    //     if( is_continue ) {
-    //         std::swap( s.at( l ), s.at( r ) );
-    //         if( Debug ) {
-    //             std::cerr << "( " << l << ": " << s.at( l ) << ", " 
-    //                 << r << ": " << s.at( r ) << " )" << std::endl;
-    //         }
-    //         counters[ s.at( l ) ]--;
-    //         counters[ s.at( r ) ]--;
-    //         r --;
-    //         l ++;
-    //         if( r <= l ) {
-    //             is_continue = false;
-    //         }
-    //     }
-    // }
+    int r = N - 1;
+    for( int l = 0; l < r; l ++ ) {
+        bool not_swapped = true;
+        counters[ s.at( l ) ] --;
+        for( auto p : counters ) {
+            if( p.second != 0 ) {
+                min_ch = p.first;
+                break;
+            }
+        }
+        if( Debug ) {
+            std::cerr << counters << min_ch << std::endl;
+        }
+        for( char k = min_ch; not_swapped && k < s.at( l ); k ++ ) {
+            for( int i = r; i > l; i -- ) {
+                if( s.at( i ) == k ) {
+                    for( int j = i; j <= r; j ++ ) {
+                        counters[ s.at( j ) ] --;
+                    }
+                    for( auto p : counters ) {
+                        if( p.second != 0 ) {
+                            min_ch = p.first;
+                            break;
+                        }
+                    }
+                    if( Debug ) {
+                        std::cerr << counters << min_ch << std::endl;
+                    }
+                    std::swap( s.at( l ), s.at( i ) );
+                    not_swapped = false;
+                    r = i - 1;
+                    break;
+                }
+            }
+        }
+    }
     //  Display the result
     std::cout << s << std::endl;
     //  Finalize

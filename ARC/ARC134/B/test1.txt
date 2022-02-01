@@ -1,9 +1,4 @@
-3
-xzy
+4
+xzzy
 
-x: 0
-y: 2
-z: 1
-
-0: x <> no change
-1: z <> 2: y 
+xyzz
