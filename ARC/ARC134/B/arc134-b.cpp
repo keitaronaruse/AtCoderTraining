@@ -1,8 +1,8 @@
 /**
 * @file arc134-b.cpp
-* @brief ARC134 Problem B
+* @brief ARC134 Problem B - Reserve or Reverse
 * @author Keitaro Naruse
-* @date 2022-01-29, 2022-01-30
+* @date 2022-01-29, 2022-02-01
 * @copyright MIT License
 * @details https://atcoder.jp/contests/arc134/tasks/arc134_b
 */
