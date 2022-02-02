@@ -39,8 +39,9 @@ int main()
     }
 
     //  Main
-    //  Preprocess
+    //  Preprocess: Make alphabet counters
     std::string s = S;
+    //  ( alphabet, counts )
     std::map< char, int > counters;
     for( int i = 0; i < N; i ++ ) {
         counters[ s.at( i ) ] ++;
@@ -71,7 +72,7 @@ int main()
         if( Debug ) {
             std::cerr << counters << min_ch << std::endl;
         }
-        for( char k = min_ch; not_swapped && k < s.at( l ); k ++ ) {
+        for( char k = min_ch; not_swapped && counters[ k ] != 0 && k < s.at( l ); k ++ ) {
             for( int i = r; i > l; i -- ) {
                 if( s.at( i ) == k ) {
                     for( int j = i; j <= r; j ++ ) {
