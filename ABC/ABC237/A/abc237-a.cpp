@@ -2,12 +2,13 @@
 * @file abc237-a.cpp
 * @brief ABC237 Problem A - Not Overflow
 * @author Keitaro Naruse
-* @date 2022-01-30
+* @date 2022-01-30, 2022-02-02
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc237/tasks/abc237_a
 */
 
 // # Solution
+// - Represent 2^31 as long long by the bit shift operation 
 
 #include <iostream>
 #include <vector>
@@ -18,8 +19,8 @@ const bool Debug = false;
 int main()
 {
     //  Constant
-    long long  min_value = -2147483648LL;
-    long long  max_value =  2147483648LL;
+    long long  max_value = 1LL << 31LL;
+    long long  min_value = - max_value;
 
     //  Read N
     long long N = 0;

@@ -8,6 +8,8 @@
 */
 
 // # Solution
+// - Represent a matrix in vector of vector
+// - Display the matrix swtiching rows and columns
 
 #include <iostream>
 #include <vector>
