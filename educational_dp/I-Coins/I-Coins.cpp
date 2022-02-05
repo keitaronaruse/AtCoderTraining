@@ -39,8 +39,8 @@ int main()
     dp_prob.at( 0 ).at( 0 ) = 1.0;
     for( int i = 0; i < N; i ++ ) {
         for( int j = 0; j < N; j ++ ) {
-            dp_prob.at( i + 1 ).at( j + 1 ) += dp_prob.at( i ).at( j ) * p.at( i );
             dp_prob.at( i + 1 ).at( j ) += dp_prob.at( i ).at( j ) * ( 1.0 - p.at( i ) );
+            dp_prob.at( i + 1 ).at( j + 1 ) += dp_prob.at( i ).at( j ) * p.at( i );
         }
     }
     if( Debug ) {
