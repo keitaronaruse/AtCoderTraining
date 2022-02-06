@@ -14,7 +14,23 @@
 
 const bool Debug = false;
 const long long Prime = 998244353LL; 
-const long long Inv2 = 499122177LL;
+long long Inv2 = 499122177LL;
+
+long long modinv( long long a, long long m ) {
+    long long b = m, u = 1LL, v = 0LL;
+    while( b ) {
+        long long t = a / b;
+        a -= t * b; 
+        std::swap( a, b );
+        u -= t * v; 
+        std::swap( u, v );
+    }
+    u %= m; 
+    if( u < 0 ) {
+        u += m;
+    }
+    return( u );
+}
 
 int digit_num( long long x )
 {
@@ -43,7 +59,9 @@ int main()
     if( Debug ) {
         std::cerr << N << std::endl;
     } 
-
+    //  Preprocess
+    Inv2 = modinv( 2LL, Prime );
+    
     //  Main
     int digits = digit_num( N );
     long long ans = 0LL;

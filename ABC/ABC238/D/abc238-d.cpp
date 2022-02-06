@@ -1,6 +1,6 @@
 /**
 * @file abc237-d.cpp
-* @brief ABC237 Problem D - LR insertion
+* @brief ABC237 Problem D - cdc LR insertion
 * @author Keitaro Naruse
 * @date 2022-02-06
 * @copyright MIT License
