@@ -1,6 +1,6 @@
 /**
 * @file arc134-a.cpp
-* @brief ARC134 Problem A
+* @brief ARC134 Problem A - Bridge and Sheets
 * @author Keitaro Naruse
 * @date 2022-01-29, 2022-01-30
 * @copyright MIT License
