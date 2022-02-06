@@ -12,8 +12,9 @@
 #include <iostream>
 #include <algorithm>
 
-const bool Debug = true;
-const long long Large_Prime = 998244353LL; 
+const bool Debug = false;
+const long long Prime = 998244353LL; 
+const long long Inv2 = 499122177LL;
 
 int digit_num( long long x )
 {
@@ -26,17 +27,11 @@ int digit_num( long long x )
     return( digits );
 }
 
-long long sum_1_to_N_mod( long long n ) 
+long long offset_sum_mod( long long begin_val, long long end_val )
 {
-    long long sum = 0LL;
-    sum = ( ( ( ( n + 1LL ) % Large_Prime ) * ( n % Large_Prime ) ) % Large_Prime ) / 2LL;
-    return( sum );
-}
+    long long n = ( end_val - ( begin_val - 1LL ) ) % Prime;
+    long long sum = ( ( ( n * ( n + 1LL ) ) % Prime ) * Inv2 ) % Prime;
 
-long long sum_m_to_n_mod( long long m, long long n ) 
-{
-    long long sum = 0LL;
-    sum = ( ( ( ( n + m ) % Large_Prime ) * ( ( n - m + 1LL) % Large_Prime ) ) % Large_Prime ) / 2LL;
     return( sum );
 }
 
@@ -50,18 +45,22 @@ int main()
     } 
 
     //  Main
-    long long ans = 0LL;
     int digits = digit_num( N );
+    long long ans = 0LL;
+    long long min_val = 1LL, max_val = 10LL;
     if( digits == 1 ) {
-        ans = sum_m_to_n_mod( 1LL, N ); 
+        ans += offset_sum_mod( 1LL, N );
     }
     else {
-        long long begin_val = 1LL;
-        for( int i = 1; i < digits; i++ ) {
-            ans += sum_m_to_n_mod( 1LL, 9 * begin_val + 1LL ); 
-            begin_val *= 10LL;
-        }
-        ans += sum_m_to_n_mod( begin_val, N ); 
+        long long min_val = 1LL, max_val = 10LL;
+        for( int i = 1; i < digits; i ++ ) {
+            ans += offset_sum_mod( min_val, max_val - 1LL );
+            ans %= Prime;
+            min_val *= 10LL;
+            max_val *= 10LL;
+        } 
+        ans += offset_sum_mod( min_val, N );
+        ans %= Prime;
     }
     std::cout << ans << std::endl;
 
