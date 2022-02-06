@@ -1,6 +1,6 @@
 /**
 * @file abc238-a.cpp
-* @brief ABC238 Problem A
+* @brief ABC238 Problem A - Exponential or Quadratic 
 * @author Keitaro Naruse
 * @date 2022-02-06
 * @copyright MIT License
@@ -10,32 +10,27 @@
 // # Solution
 
 #include <iostream>
-#include <vector>
-#include <string>
+#include <cmath>
 
 const bool Debug = false;
 
 int main()
 {
-    //  Constant
-    long long  max_value = 1LL << 31LL;
-    long long  min_value = - max_value;
-
-    //  Read N
-    long long N = 0;
+    //  Read N = [ 1, 10^9 ]
+    int N = 0;
     std::cin >> N;
     if( Debug ) {
         std::cerr << N << std::endl;
     }
 
     //  Main
-    if( min_value <= N && N < max_value ) {
+    double n = ( double ) N;
+    if( n * std::log( 2.0 ) > 2.0 * std::log( n ) ) {
         std::cout << "Yes" << std::endl;
     }
     else {
         std::cout << "No" << std::endl;
     }
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

@@ -1,6 +1,6 @@
 /**
 * @file abc238-b.cpp
-* @brief ABC238 Problem B
+* @brief ABC238 Problem B - Pizza
 * @author Keitaro Naruse
 * @date 2022-02-06
 * @copyright MIT License
@@ -8,48 +8,75 @@
 */
 
 // # Solution
-// - Represent a matrix in vector of vector
-// - Display the matrix swtiching rows and columns
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 const bool Debug = false;
 
+std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
+{
+    for( auto k : v ) {
+        os << k << " ";
+    }
+    return( os );
+}
+
 int main()
 {
-    //  Read H, W
-    int H = 0, W = 0;
-    std::cin >> H >> W;
+    //  Read N = [ 1, 359 ]
+    int N = 0;
+    std::cin >> N;
     if( Debug ) {
-        std::cerr << H << " " << W << std::endl;
+        std::cerr << N <<  std::endl;
     }
     //  Read Aij
-    std::vector< std::vector< int > > A( H, std::vector< int >( W, 0 ) );
-    for( int i = 0; i < H; i ++ ) {
-        for( int j = 0; j < W; j ++ ) {
-            std::cin >> A.at( i ).at( j );
-        }
+    std::vector< int > A( N, 0 );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> A.at( i );
     }
     if( Debug ) {
-        for( int i = 0; i < H; i ++ ) {
-            for( int j = 0; j < W; j ++ ) {
-                std::cerr << A.at( i ).at( j ) << " ";
-            }
-            std::cerr << std::endl;
-        }
+        std::cerr << A << std::endl;
     }
 
     //  Main
-    //  Make Bij
-    std::vector< std::vector< int > > B( W, std::vector< int >( H, 0 ) );
-    for( int j = 0; j < W; j ++ ) {
-        for( int i = 0; i < H; i ++ ) {
-            B.at( j ).at( i ) = A.at( i ).at( j );
-            std::cout << B.at( j ).at( i ) << " ";
-        }
-        std::cout << std::endl;
+    int sum = 0;
+    for( int i = 0; i < N; i ++ ) {
+        sum += A.at( i );
     }
+    const int Deg = 360;
+    std::vector< int > B( N + 2, 0 );
+    B.at( N ) = A.at( N - 1 );
+    for( int i = N - 1; i >= 1; i -- ) {
+        B.at( i ) = B.at( i + 1 ) + A.at( i - 1 );
+    }
+    if( Debug ) {
+        std::cerr << B << std::endl;
+    }
+
+    for( int i = 1; i <= N; i ++ ) {
+        B.at( i ) %= Deg;
+    }
+    if( Debug ) {
+        std::cerr << B << std::endl;
+    }
+
+    B.at( 0 ) = 0;
+    B.at( N + 1) = 360;
+    std::sort( B.begin(), B.end() );
+    if( Debug ) {
+        std::cerr << B << std::endl;
+    }
+
+    //  Find the solution
+    int max_interval = 0;
+    for( int i = 1; i <= N + 1; i ++ ) {
+        if( B.at( i ) - B.at( i - 1 ) > max_interval ) {
+            max_interval = B.at( i ) - B.at( i - 1 );
+        };
+    }
+    std::cout << max_interval << std::endl;
 
     //  Finalize
     if( Debug ) {

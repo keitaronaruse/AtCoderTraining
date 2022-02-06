@@ -1,6 +1,6 @@
 /**
 * @file abc238-c.cpp
-* @brief ABC238 Problem C
+* @brief ABC238 Problem C - digitnum
 * @author Keitaro Naruse
 * @date 2022-02-06
 * @copyright MIT License
@@ -8,100 +8,63 @@
 */
 
 // # Solution
-// - Count p, the number of a's in the head end
-// - Count q, the one in the tail end
-// - If p <= q, remove a's from the head and tail
-//   - If the rest string is palindrome, output Yes
-//   - else output No
-// - All a's
 
 #include <iostream>
-#include <string>
 #include <algorithm>
 
-const bool Debug = false;
+const bool Debug = true;
+const long long Large_Prime = 998244353LL; 
 
-bool is_palindrome( const std::string& s )
+int digit_num( long long x )
 {
-    std::string::const_iterator b = s.begin(), e = s.end() - 1;
-    while( b < e ) {
-        if( *b != *e ) {
-            return( false );
-        }
-        b ++;
-        e --;
+    int digits = 1;
+    x /= 10LL;
+    while( x != 0LL ) {
+        digits ++;
+        x /= 10LL;
     }
-    return( true );
+    return( digits );
 }
 
-int count_head_a( const std::string& s )
+long long sum_1_to_N_mod( long long n ) 
 {
-    int num = 0;
-    std::string::const_iterator it = s.begin();
-    //  Count the number of a's from the head
-    while( it != s.end() ) {
-        if( *it == 'a' ) {
-            num ++;
-            it ++;
-        }
-        else {
-            break;
-        }
-    }
-    return( num );
+    long long sum = 0LL;
+    sum = ( ( ( ( n + 1LL ) % Large_Prime ) * ( n % Large_Prime ) ) % Large_Prime ) / 2LL;
+    return( sum );
 }
 
-int count_tail_a( const std::string& s )
+long long sum_m_to_n_mod( long long m, long long n ) 
 {
-    int num = 0;
-    std::string::const_iterator it = s.end() - 1;
-    //  Count the number of a's from the tail
-    while( it != s.begin() ) {
-        if( *it == 'a' ) {
-            num ++;
-            it --;
-        }
-        else {
-            break;
-        }
-    }
-    if( *it == 'a' ) {
-        num ++;
-    }
-    return( num );
+    long long sum = 0LL;
+    sum = ( ( ( ( n + m ) % Large_Prime ) * ( ( n - m + 1LL) % Large_Prime ) ) % Large_Prime ) / 2LL;
+    return( sum );
 }
 
 int main()
 {
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
+    //  Read N
+    long long N = 0LL;
+    std::cin >> N;
     if( Debug ) {
-        std::cerr << S << std::endl;
-    }
+        std::cerr << N << std::endl;
+    } 
 
     //  Main
-    bool is_palindromable = false;
-    int p = count_head_a( S );
-    int q = count_tail_a( S );
-    if( p <= q ) {
-        std::string t = "";
-        if( p != S.size() ) {
-            t = std::string( S.begin() + p, S.end() - q );
-            if( Debug ) {
-                std::cerr << t << std::endl;
-            } 
-        }
-        is_palindromable = is_palindrome( t );
-    }
-
-    if( is_palindromable ) {
-        std::cout << "Yes" << std::endl;
+    long long ans = 0LL;
+    int digits = digit_num( N );
+    if( digits == 1 ) {
+        ans = sum_m_to_n_mod( 1LL, N ); 
     }
     else {
-        std::cout << "No" << std::endl;
+        long long begin_val = 1LL;
+        for( int i = 1; i < digits; i++ ) {
+            ans += sum_m_to_n_mod( 1LL, 9 * begin_val + 1LL ); 
+            begin_val *= 10LL;
+        }
+        ans += sum_m_to_n_mod( begin_val, N ); 
     }
-    
+    std::cout << ans << std::endl;
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
