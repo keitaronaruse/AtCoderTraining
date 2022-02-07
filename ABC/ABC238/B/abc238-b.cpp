@@ -8,6 +8,8 @@
 */
 
 // # Solution
+// - Make the accumulated angles from the tail and mod by 360 deg
+// - Adding 0 and 360 deg to the accumlated angles, and find the max angle interval
 
 #include <iostream>
 #include <vector>
@@ -41,10 +43,6 @@ int main()
     }
 
     //  Main
-    int sum = 0;
-    for( int i = 0; i < N; i ++ ) {
-        sum += A.at( i );
-    }
     const int Deg = 360;
     std::vector< int > B( N + 2, 0 );
     B.at( N ) = A.at( N - 1 );

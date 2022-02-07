@@ -8,6 +8,8 @@
 */
 
 // # Solution
+// - Calucalte the sum from 1 to N by N(N+1)/2
+// - Insted of devision by 2, multiply the inverse of 2
 
 #include <iostream>
 #include <algorithm>

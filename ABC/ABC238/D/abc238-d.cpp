@@ -1,56 +1,80 @@
 /**
-* @file abc237-d.cpp
-* @brief ABC237 Problem D - cdc LR insertion
+* @file abc238-d.cpp
+* @brief ABC238 Problem D - AND and SUM
 * @author Keitaro Naruse
-* @date 2022-02-06
+* @date 2022-02-07
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc238/tasks/abc238_d
 */
 
 // # Solution
+// - x XOR y = s - 2*a
+// - x AND y = a
+//            x: 0 0 1 1
+//            y: 0 1 0 1
+//  p = x XOR y: 0 1 1 0 
+//  q = x AND y: 0 0 0 1
+// - Never happnes -> No
+//   - s < 2*a
+//   - p == 1 and q == 1 -> No
 
 #include <iostream>
-#include <list>
-#include <string>
-#include <list>
+#include <vector>
+#include <bitset>
 
 const bool Debug = false;
 
 int main()
 {
-    //  Read N = [ 1, 5 * 10^5 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read T = [ 1, 10^5 ]
+    int T = 0;
+    std::cin >> T;
     if( Debug ) {
-        std::cerr << N << std::endl;
+        std::cerr << T << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
+    //  Read si, ai = [ 0, 2^60 ]
+    std::vector< unsigned long long > a( T, 0uLL ), s( T, 0uLL );
+    for( int i = 0; i < T; i ++ ) {
+        std::cin >> a.at( i ) >> s.at( i );
+    }
     if( Debug ) {
-        std::cerr << S << std::endl;
+        for( int i = 0; i < T; i ++ ) {
+            std::cerr << a.at( i ) << " " << s.at( i ) << std::endl;
+        }
     }
 
     //  Main
-    std::list< int > A = { 0 };
-    std::list< int >::iterator it = A.begin();
-    for( int i = 0; i < N; i ++ ) {
-        if( S.at( i ) == 'R' ) {
-            it ++;
-        }
-        it = A.insert( it, i + 1 );
-    std::list< int > A = {};
-    std::list< int >::iterator it = A.insert( A.begin(), 0 );
-    for( int i = 0; i < N; i ++ ) {
-        if( S.at( i ) == 'L' ) {
-            it = A.insert( it , i + 1);
+    for( int i = 0; i < T; i ++ ) {
+        bool isYes = true;
+        if( s.at( i ) < 2uLL * a.at( i ) ) {
+            isYes = false;
         }
         else {
-            it ++;
-            it = A.insert( it , i + 1);
+            std::bitset< 60 > p( s.at( i ) - 2uLL * a.at( i ) );
+            std::bitset< 60 > q( a.at( i ) );
+            if( Debug ) {
+                std::cerr << p << std::endl << q << std::endl;
+            }
+            //            x: 0 0 1 1
+            //            y: 0 1 0 1
+            //  p = x XOR y: 0 1 1 0 
+            //  q = x AND y: 0 0 0 1
+            //  Never happnes: p == 1 and q == 1
+            isYes = true;
+            for( int k = 0; k < 60; k ++ ) {
+                if( p[ k ] && q[ k ] ) {
+                    isYes = false;
+                    break;
+                }
+            }
+        }
+        if( isYes ) {
+            std::cout << "Yes" << std::endl;
+        }
+        else {
+            std::cout << "No" << std::endl;
         }
     }
-    std::cout << A << std::endl;
 
     //  Finalize
     if( Debug ) {
