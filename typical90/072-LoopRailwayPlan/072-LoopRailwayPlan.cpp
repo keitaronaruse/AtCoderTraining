@@ -17,17 +17,19 @@
 
 const bool Debug = false;
 
-// class pose {
-//     public:
-//         int x;
-//         int y;
-// };
+class pose {
+public:
+    int h;
+    int w;
+    int depth;
+    std::vector< std::vector< int > > length;
+};
 
-// std::ostream& operator<<( std::ostream& os, const pose& p )
-// {
-//     os << "( " << p.x << ", " << p.y << " ) ";
-//     return( os );
-// }
+std::ostream& operator<<( std::ostream& os, const pose& p )
+{
+    os << "( " << p.h << ", " << p.w << ", " << p.depth << " ) ";
+    return( os );
+}
 
 int H = 0, W = 0;
 std::vector< std::vector< char > > c;
@@ -112,16 +114,28 @@ int main()
     //  Main
     //  Find the solution
     int length = -1;
-    for( int s_h = 0; s_h < H; s_h ++ ) {
-        for( int s_w = 0; s_w < W; s_w ++ ) {
-            length = std::max( length, dfs( s_h, s_w, s_h, s_w ) );
-        }
-    }
-    //  Apply the constraints
-    if( length < 3 ) {
-        length = -1;
-    }
+
+    int s_h = 0, s_w = 0;
+    std::stack< pose > q;
+    pose p = { s_h, s_w, 0 };
+    p.length = std::vector< std::vector< int > >( H, std::vector< int >( W, -1 ) );
+    p.length.at( s_h ).at( s_w ) = 0;
+    q.push( p );
+    pose r = q.top();
+    q.pop();
+    std::cerr << r << std::endl;
+
     std::cout << length << std::endl;
+
+    // for( int s_h = 0; s_h < H; s_h ++ ) {
+    //     for( int s_w = 0; s_w < W; s_w ++ ) {
+    //         length = std::max( length, dfs( s_h, s_w, s_h, s_w ) );
+    //     }
+    // }
+    // //  Apply the constraints
+    // if( length < 3 ) {
+    //     length = -1;
+    // }
 
     //  Finalize
     if( Debug ) {
