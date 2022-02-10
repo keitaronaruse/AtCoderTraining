@@ -2,7 +2,7 @@
 * @file 072-LoopRailwayPlan.cpp
 * @brief 072 - Loop Railway Plan（★4）
 * @author Keitaro Naruse
-* @date 2022-02-08
+* @date 2022-02-08, 2022-02-10
 * @copyright MIT License
 * @details https://atcoder.jp/contests/typical90/tasks/typical90_bt
 */
@@ -10,6 +10,7 @@
 // # Solution
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <stack>
@@ -21,13 +22,18 @@ class pose {
 public:
     int h;
     int w;
-    int depth;
     std::vector< std::vector< int > > length;
 };
 
 std::ostream& operator<<( std::ostream& os, const pose& p )
 {
-    os << "( " << p.h << ", " << p.w << ", " << p.depth << " ) ";
+    os << "( " << p.h << ", " << p.w << " )" << std::endl;
+    for( auto& v : p.length ) {
+        for( auto c : v ) {
+            os << std::setw( 2 ) << c << " ";
+        }
+        os << std::endl;
+    }
     return( os );
 }
 
@@ -47,16 +53,11 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char
     return( os );
 }
 
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< bool > >& vv )
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< int > >& vv )
 {
     for( auto& v : vv ) {
         for( auto c : v ) {
-            if( c ) {
-                os << "1";
-            }
-            else {
-                os << "0";
-            }
+            os << std::setw( 2 ) << c; 
         }
         os << std::endl;
     }
@@ -92,6 +93,48 @@ int dfs( int s_h, int s_w, int c_h, int c_w )
     return( length );
 }
 
+int dfs_stack( int s_h, int s_w, int c_h, int c_w )
+{
+    int length = -1;
+
+    std::stack< pose > q;
+    pose r = { 
+        s_h, 
+        s_w, 
+        std::vector< std::vector< int > >( H, std::vector< int >( W, -1 ) ) 
+    };
+
+    r.length.at( r.h ).at( r.w ) = 0;
+    q.push( r );
+    while( !q.empty() ) {
+        r = q.top(); q.pop();
+        if( Debug ) {
+            std::cout << r << std::endl;
+        }
+        if( s_h == r.h && s_w == r.w && r.length.at( r.h ).at( r.w ) > -1 ) {
+            //  Goal, update the length
+            length = std::max( length, r.length.at( r.h ).at( r.w ) );
+        } 
+        for( int i = 0; i < 4; i ++ ) {
+            pose p = r;
+            p.h = r.h + d_h.at( i );
+            p.w = r.w + d_w.at( i );
+
+            //  If the next is reachable
+            if( 0 <= p.h && p.h < H && 0 <= p.w && p.w < W && c.at( p.h ).at( p.w ) == '.' ) {
+                //  If the next is unvisited
+                if( p.length.at( p.h ).at( p.w ) < 1 ) {
+                    //  Push to the stack
+                    p.length.at( p.h ).at( p.w ) = p.length.at( r.h ).at( r.w ) + 1;
+                    q.push( p );
+                }
+            }
+        }
+    }
+
+    return( length );
+}
+
 int main()
 {
     //  Read H * W <= 16
@@ -115,27 +158,17 @@ int main()
     //  Find the solution
     int length = -1;
 
-    int s_h = 0, s_w = 0;
-    std::stack< pose > q;
-    pose p = { s_h, s_w, 0 };
-    p.length = std::vector< std::vector< int > >( H, std::vector< int >( W, -1 ) );
-    p.length.at( s_h ).at( s_w ) = 0;
-    q.push( p );
-    pose r = q.top();
-    q.pop();
-    std::cerr << r << std::endl;
-
+    for( int s_h = 0; s_h < H; s_h ++ ) {
+        for( int s_w = 0; s_w < W; s_w ++ ) {
+            length = std::max( length, dfs( s_h, s_w, s_h, s_w ) );
+            // length = std::max( length, dfs_stack( s_h, s_w, s_h, s_w ) );
+        }
+    }
+    //  Apply the constraints
+    if( length < 3 ) {
+        length = -1;
+    }
     std::cout << length << std::endl;
-
-    // for( int s_h = 0; s_h < H; s_h ++ ) {
-    //     for( int s_w = 0; s_w < W; s_w ++ ) {
-    //         length = std::max( length, dfs( s_h, s_w, s_h, s_w ) );
-    //     }
-    // }
-    // //  Apply the constraints
-    // if( length < 3 ) {
-    //     length = -1;
-    // }
 
     //  Finalize
     if( Debug ) {
