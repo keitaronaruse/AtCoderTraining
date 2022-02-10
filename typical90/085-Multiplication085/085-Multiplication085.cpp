@@ -17,7 +17,7 @@ const bool Debug = true;
 int main()
 {
     //  Read K = [ 1,10^12 ]
-    long long K = 0LL, k = 0LL;;
+    long long K = 0LL;
     std::cin >> K;
     if( Debug ) {
         std::cerr << K << std::endl;
@@ -25,7 +25,7 @@ int main()
 
     //  Main
     std::vector< long long > primes;
-    k = K;
+    long k = K;
     for( long long i = 2LL; i * i <= k; i ++ ) {
         while( k % i == 0 ) {
             primes.push_back( i );
