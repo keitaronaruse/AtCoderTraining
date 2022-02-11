@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 const bool Debug = true;
 
@@ -24,21 +25,20 @@ int main()
     }
 
     //  Main
-    std::vector< long long > primes;
-    long k = K;
-    for( long long i = 2LL; i * i <= k; i ++ ) {
-        while( k % i == 0 ) {
-            primes.push_back( i );
-            k /= i; 
+    std::vector< long long > divisors;
+    for( long long i = 1LL; i * i <= K; i ++ ) {
+        if( K % i == 0LL )  {
+            divisors.push_back( i );
+            if( K / i != i ) {
+                divisors.push_back( K / i );
+            }
         }
     }
-    //  Prime
-    if( k == K ) {
-        primes.push_back( k );
-        ;}
+    std::sort( divisors.begin(), divisors.end() );
+    
     if( Debug ) {
-        for( auto p : primes ) {
-            std::cerr << p << " ";
+        for( auto d : divisors ) {
+            std::cerr << d << " ";
         }
         std::cerr << std::endl;
     }
