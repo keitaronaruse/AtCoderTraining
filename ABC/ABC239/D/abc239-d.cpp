@@ -14,25 +14,30 @@
 
 const bool Debug = false;
 
+std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
+{
+    for( auto k : v ) {
+        os << k << " ";
+    }
+    return( os );
+}
+
 int main()
 {
-    //  Read T = [ 1, 10^5 ]
-    int T = 0;
-    std::cin >> T;
+    //  Read N = [ 1, 359 ]
+    int N = 0;
+    std::cin >> N;
     if( Debug ) {
-        std::cerr << T << std::endl;
+        std::cerr << N <<  std::endl;
     }
-    //  Read si, ai = [ 0, 2^60 ]
-    std::vector< unsigned long long > a( T, 0uLL ), s( T, 0uLL );
-    for( int i = 0; i < T; i ++ ) {
-        std::cin >> a.at( i ) >> s.at( i );
+    //  Read Aij
+    std::vector< int > A( N, 0 );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> A.at( i );
     }
     if( Debug ) {
-        for( int i = 0; i < T; i ++ ) {
-            std::cerr << a.at( i ) << " " << s.at( i ) << std::endl;
-        }
+        std::cerr << A << std::endl;
     }
-
     //  Main
     //  Finalize
     if( Debug ) {

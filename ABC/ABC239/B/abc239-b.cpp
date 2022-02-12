@@ -31,7 +31,7 @@ int main()
     if( Debug ) {
         std::cerr << N <<  std::endl;
     }
-    //  Read Aij
+    //  Read Ai
     std::vector< int > A( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
