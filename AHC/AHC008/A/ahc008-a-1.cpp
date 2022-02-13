@@ -37,6 +37,9 @@ std::vector< std::vector< int > > hx;
 //  Human y positions, hy.at( t ).at( i )
 std::vector< std::vector< int > > hy;
 
+//  Random generator
+std::default_random_engine engine;
+
 void read_input()
 {
     std::cin >> N;
@@ -80,6 +83,10 @@ void read_input()
                 << hy.at( t ).at( j ) << std::endl;
         }
     }
+
+    unsigned long long seed_num = 0uLL;
+    std::cin >> seed_num;
+    engine = std::default_random_engine( seed_num );
 }
 
 int main()
@@ -88,6 +95,11 @@ int main()
     read_input();
 
     //  Main
+    std::uniform_int_distribution<> dist(0, 1);
+    for(int i = 0; i < 16; i ++ ) {
+        std::cout << dist( engine ) << " ";
+    }
+    std::cout << std::endl << std::flush;
 
     //  Finalize
     if( Debug ) {
