@@ -23,19 +23,19 @@ const int T = 300;
 
 //  The number of pets 
 int N = 0;
-//  Pet x positions, py.at( t ).at( i )
-std::vector< std::vector< int > > px;
-//  Pet y positions, py.at( t ).at( i )
-std::vector< std::vector< int > > py;
+//  Pet x positions, py.at( i )
+std::vector< int > px;
+//  Pet y positions, py.at( i )
+std::vector< int > py;
 //  Pet types, pt.at( i )
 std::vector< int > pt;
 
 //  The number of humans 
 int M = 0;
-//  Human x positions, hy.at( t ).at( i )
-std::vector< std::vector< int > > hx;
-//  Human y positions, hy.at( t ).at( i )
-std::vector< std::vector< int > > hy;
+//  Human x positions, hy.at( i )
+std::vector< int > hx;
+//  Human y positions, hy.at( i )
+std::vector< int > hy;
 
 //  The map
 std::vector< std::vector< char > > ws;
@@ -46,44 +46,35 @@ std::default_random_engine engine;
 void read_input()
 {
     std::cin >> N;
-    //  Pet x positions, py.at( t ).at( i )
-    px = std::vector< std::vector< int > >( T, std::vector<int>( N, 0 ) );
-    //  Pet y positions, py.at( t ).at( i )
-    py = std::vector< std::vector< int > >( T, std::vector<int>( N, 0 ) );
+    //  Pet x positions
+    px = std::vector< int >( N, 0 );
+    //  Pet y positions
+    py = std::vector< int >( N, 0 );
     //  Pet types, pt.at( i )
     pt = std::vector< int >( N, 0 );
 
     for( int i = 0; i < N; i ++ ) {
-        int t = 0;
-        std::cin >> px.at( t ).at( i ) >> py.at( t ).at( i ) >> pt.at( i );
+        std::cin >> px.at( i ) >> py.at( i ) >> pt.at( i );
     }
     if( Debug ) {
         std::cerr << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
-            int t = 0;
-            std::cerr 
-                << px.at( t ).at( i ) << " " 
-                << py.at( t ).at( i ) << " " 
-                << pt.at( i ) << std::endl;
+            std::cerr << px.at( i ) << " " << py.at( i ) << " " << pt.at( i ) << std::endl;
         }        
     }
 
     std::cin >> M;
     //  Human x positions, hy.at( t ).at( i )
-    hx = std::vector< std::vector< int > >( T, std::vector<int>( M, 0 ) );
+    hx = std::vector< int >( M, 0 );
     //  Human y positions, hy.at( t ).at( i )
-    hy = std::vector< std::vector< int > > ( T, std::vector<int>( M, 0 ) );
+    hy = std::vector< int > ( M, 0 );
     for( int j = 0; j < M; j ++ ) {
-        int t = 0;
-        std::cin >> hx.at( t ).at( j ) >> hy.at( t ).at( j );
+        std::cin >> hx.at( j ) >> hy.at( j );
     }
     if( Debug ) {
         std::cerr << M << std::endl;
         for( int j = 0; j < M; j ++ ) {
-            int t = 0;
-            std::cerr 
-                << hx.at( t ).at( j ) << " "
-                << hy.at( t ).at( j ) << std::endl;
+            std::cerr << hx.at( j ) << " " << hy.at( j ) << std::endl;
         }
     }
 
@@ -121,12 +112,17 @@ void make_map()
 
 class Pet {
     public:
-        int h, w, t; 
+        int t;
+        int h, w;
+        int a[3];
+    public:
+        void basic_action( int h, int w, int i );
+        void update();
 };
 
 class Human {
     public:
-        int h, w, t; 
+        int h, w; 
 };
 
 int main()
