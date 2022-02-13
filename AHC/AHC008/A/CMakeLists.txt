@@ -1,0 +1,1 @@
+add_executable( ahc008-a-1 ahc008-a-1.cpp )
