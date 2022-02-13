@@ -10,44 +10,67 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
+#include <map>
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
+const long long Prime = 998244353LL;
+std::map< long long , long long > lut;
+
+long long floor_ceil_decomp( long long x )
 {
-    for( auto k : v ) {
-        os << k << " ";
+    long long fx = ( x / 2LL );
+    // long long fx = ( x / 2LL ) % Prime;
+    if( lut[ fx ] == 0LL ) {
+        lut[ fx ] = floor_ceil_decomp( fx );
     }
-    return( os );
+
+    long long cx;
+    if( x % 2LL == 0LL ) {
+        cx = fx;
+    }
+    else {
+        // cx = (fx + 1LL) % Prime;
+        cx = ( ( x + 1LL ) / 2LL );
+        if( lut[ cx ] == 0LL ) {
+            lut[ cx ] = floor_ceil_decomp( cx );
+        } 
+    }
+
+    return( ( ( lut[ fx ] % Prime ) * ( lut[ cx ] % Prime ) ) % Prime );
 }
 
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read X = [ 1, 10^18 ]
+    long long X = 0LL;
+    std::cin >> X;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
+        std::cerr << X <<  std::endl;
     }
 
     //  Main
+    lut[ 1LL ] = 1LL;
+    lut[ 2LL ] = 2LL;
+    lut[ 3LL ] = 3LL;
+    lut[ 4LL ] = 4LL;
+
+    long long prod = 1LL;
+    // std::stack< long long > factors;
+    if( X > 4LL ) {
+        prod = floor_ceil_decomp( X );
+    }
+    else {
+        prod = X;
+    }
+
+    if( Debug ) {
+        for( auto p : lut ) {
+            std::cerr << "( " << p.first << ", " << p.second << " ) ";
+        }
+        std::cerr << std::endl;
+    }
+    std::cout << prod << std::endl;
 
     //  Finalize
     if( Debug ) {
