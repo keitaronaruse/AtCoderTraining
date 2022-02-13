@@ -37,6 +37,9 @@ std::vector< std::vector< int > > hx;
 //  Human y positions, hy.at( t ).at( i )
 std::vector< std::vector< int > > hy;
 
+//  The map
+std::vector< std::vector< char > > ws;
+
 //  Random generator
 std::default_random_engine engine;
 
@@ -89,16 +92,55 @@ void read_input()
     engine = std::default_random_engine( seed_num );
 }
 
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char > >& m )
+{
+    for( int h = 0; h < H + 2; h ++ ) {
+        for( int w = 0; w < W + 2; w ++ ) {
+            os << m.at( h ).at( w );
+        }
+        os << std::endl;
+    }
+    return( os );
+}
+
+void make_map()
+{
+    //  free = ., obstacle = #
+    //  Pets: cow = C, pig = P, rabbit = R, dog = D, cat = C 
+    //  Human : human = H 
+    ws = std::vector< std::vector< char > >( H + 2, std::vector< char >( W + 2, '.' ) );
+    for( int h = 0; h < H + 2; h ++ ) {
+        ws.at( h ).at( 0 ) = '#';
+        ws.at( h ).at( W + 1 ) = '#';
+    }
+    for( int w = 0; w < W + 2; w ++ ) {
+        ws.at( 0 ).at( w ) = '#';
+        ws.at( H + 1 ).at( w ) = '#';
+    }
+}
+
+class Pet {
+    public:
+        int h, w, t; 
+};
+
+class Human {
+    public:
+        int h, w, t; 
+};
+
 int main()
 {
     //  Read input
     read_input();
+    //  Make a map
+    make_map();
+    if( Debug ) {
+        std::cerr << ws;
+    }
 
     //  Main
-    std::uniform_int_distribution<> dist(0, 1);
-    for(int i = 0; i < 16; i ++ ) {
-        std::cout << dist( engine ) << " ";
-    }
+    // std::uniform_int_distribution<> dist(0, 1);
     std::cout << std::endl << std::flush;
 
     //  Finalize
