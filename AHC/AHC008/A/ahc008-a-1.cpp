@@ -8,6 +8,7 @@
 */
 
 // # Solution
+// - Humans do nothing
 
 #include <iostream>
 #include <ostream>
@@ -110,9 +111,8 @@ void read_input()
             std::cerr << humans.at( j ) << std::endl;
         }
     }
-
     unsigned long long seed_num = 0uLL;
-    std::cin >> seed_num;
+    // std::cin >> seed_num;
     engine = std::default_random_engine( seed_num );
 }
 
