@@ -71,8 +71,7 @@ fn main() {
 		return;
 	}
 	let (command, args) = if JUDGE {
-		let s = std::env::args().nth(1).unwrap().split_whitespace().map(|s| s.to_owned()).collect::<Vec<_>>();
-		(s[0].clone(), s[1..].iter().cloned().collect())
+		("sh".to_owned(), vec!["-c".to_owned(), std::env::args().nth(1).unwrap()])
 	} else {
 		(std::env::args().nth(1).unwrap(), std::env::args().skip(2).collect::<Vec<_>>())
 	};

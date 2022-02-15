@@ -10,6 +10,7 @@
 // # Solution
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -39,6 +40,10 @@ std::vector< int > hy;
 
 //  The map
 std::vector< std::vector< char > > ws;
+
+//  Moves: U, D, L, R
+const int K = 4;
+const std::vector< int > dh = { -1,  0,  1,  0 }, dw = {  0,  1,  0, -1 };
 
 //  Random generator
 std::default_random_engine engine;
@@ -110,20 +115,61 @@ void make_map()
     }
 }
 
+const int A = 3;
 class Pet {
     public:
-        int t;
         int h, w;
-        int a[3];
+        int t;
+        std::vector< int > m;
     public:
-        void basic_action( int h, int w, int i );
-        void update();
+        Pet() : m( A, -1 ) { }
+        Pet( int rh, int rw, int rt ) : m( A, -1 ) {
+            h = rh; w = rw; t = rt; 
+        }
+        //  Return a move: U, D, L, R
+        int standard_move( int h, int w ) {
+            std::vector< int > moves;
+            for( int k = 0; k < K; k ++ ) {
+                int v = h + dh.at( k ), u = w + dw.at( k );
+                if( ws.at( v ).at( u ) != '#' ) {
+                    moves.push_back( k );
+                }
+            }
+            std::uniform_int_distribution<> dist( 0, moves.size() );
+            return( moves.at( dist( engine ) )  );
+        }
+        void update() {
+            for( int i = 0; i < A; i ++ ) {
+                if( m.at( i ) != -1 ) {
+                    h += dh.at( m.at( i ) );
+                    w += dw.at( m.at( i ) );
+                }
+                m.at( i ) = -1;
+            }
+        }
 };
 
 class Human {
     public:
         int h, w; 
 };
+
+std::ostream& operator<<( std::ostream& os, const Pet& p )
+{
+    std::string a( A, ' ' );
+    for( int i = 0; i < A; i ++ ) {
+        //  Moves: U, D, L, R
+        switch( p.m.at( i ) ) {
+            case 0: a.at( i ) = 'U'; break;
+            case 1: a.at( i ) = 'D'; break;
+            case 2: a.at( i ) = 'L'; break;
+            case 3: a.at( i ) = 'R'; break;
+            default: a.at( i ) = '.'; break;
+        }
+    }
+    os << p.h << " " << p.w << " " << p.t << " " << a.at( 0 ) << a.at( 1 ) << a.at( 2 );
+    return( os );
+}
 
 int main()
 {
@@ -136,8 +182,14 @@ int main()
     }
 
     //  Main
-    // std::uniform_int_distribution<> dist(0, 1);
-    std::cout << std::endl << std::flush;
+    Pet p( 1, 1, 1 );
+    std::cout << p << std::endl << std::flush;
+    p.m[ 0 ] = p.standard_move( p.h, p.w );
+    p.m[ 1 ] = p.standard_move( p.h + dh[ p.m[ 0 ] ], p.w  + dw[ p.m[ 0 ] ]);
+    p.m[ 2 ] = p.standard_move( p.h + dh[ p.m[ 0 ] ] + dh[ p.m[ 1 ] ], p.w + dw[ p.m[ 0 ] ] + dw[ p.m[ 1 ] ]);
+    std::cout << p << std::endl << std::flush;
+    p.update();
+    std::cout << p << std::endl << std::flush;
 
     //  Finalize
     if( Debug ) {

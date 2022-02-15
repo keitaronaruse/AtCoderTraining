@@ -33,6 +33,7 @@ pub const DIR: [(usize, usize); 4] = [(!0, 0), (1, 0), (0, !0), (0, 1)];
 pub const DIR_CHAR: [char; 5] = ['U', 'D', 'L', 'R', '.'];
 
 pub type Output = Vec<(String, Vec<String>)>; // (human_move, comments)
+pub type Output2 = Vec<(String, String, Vec<String>)>; // (human_move, pet_move, comments)
 
 pub struct Input {
 	pub ps: Vec<(usize, usize, usize)>,
@@ -75,6 +76,27 @@ pub fn parse_output(_input: &Input, f: &str) -> Output {
 		} else if line.len() > 0 {
 			out.push((line.to_owned(), comments));
 			comments = vec![];
+		}
+	}
+	out
+}
+
+pub fn parse_output2(_input: &Input, f: &str) -> Output2 {
+	let mut out = vec![];
+	let mut comments = vec![];
+	let mut human = None;
+	for line in f.lines() {
+		let line = line.trim();
+		if line.starts_with('#') {
+			comments.push(line[1..].trim().to_owned());
+		} else if line.len() > 0 {
+			if let Some(h) = human {
+				out.push((h, line.to_owned(), comments));
+				comments = vec![];
+				human = None;
+			} else {
+				human = Some(line.to_owned());
+			}
 		}
 	}
 	out
@@ -319,6 +341,31 @@ impl Sim {
 		}).map(|s| s.iter().collect::<String>()).join(" ");
 		self.ps = ps;
 		ret
+	}
+	pub fn apply_pet_move(&mut self, pet_move: &str) -> Result<(), String> {
+		let pet_move = pet_move.split_whitespace().collect::<Vec<_>>();
+		if pet_move.len() != self.ps.len() {
+			return Err(format!("illegal pet_move length (turn {})", self.turn));
+		}
+		for (i, s) in pet_move.into_iter().enumerate() {
+			for c in s.chars() {
+				match c {
+					'.' => (),
+					c => {
+						if let Some(dir) = DIR_CHAR.iter().position(|&d| d == c) {
+							self.ps[i].0 += DIR[dir].0;
+							self.ps[i].1 += DIR[dir].1;
+							if self.ps[i].0 >= D || self.ps[i].1 >= D || self.blocked[self.ps[i].0][self.ps[i].1] {
+								return Err(format!("a pet is trying to move to an impassible square (turn {})", self.turn));
+							}
+						} else {
+							return Err(format!("illegal pet_move char {} (turn {})", c, self.turn))
+						}
+					}
+				}
+			}
+		}
+		Ok(())
 	}
 	pub fn compute_score(&self) -> i64 {
 		let mut score = 0.0;
