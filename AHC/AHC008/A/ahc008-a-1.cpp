@@ -10,12 +10,53 @@
 // # Solution
 
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <random>
 
-const bool Debug = true;
+const bool Debug = false;
+
+const int A = 3;
+class Pet {
+    public:
+        int h, w;
+        int t;
+        std::vector< int > m;
+    public:
+        Pet() : m( A, -1 ) { }
+        //  Return a move: U, D, L, R
+};
+
+std::ostream& operator<<( std::ostream& os, const Pet& p )
+{
+    os << p.h << " " << p.w << " " << p.t;
+    // char c = ' ';
+    // for( int i = 0; i < A; i ++ ) {
+    //     //  Moves: U, D, L, R
+    //     switch( p.m.at( i ) ) {
+    //         case 0: c = 'U'; break;
+    //         case 1: c = 'D'; break;
+    //         case 2: c = 'L'; break;
+    //         case 3: c = 'R'; break;
+    //         default: c = '.'; break;
+    //     }
+    //     os << c << " "; 
+    // }
+    return( os );
+}
+
+class Human {
+    public:
+        int h, w; 
+};
+
+std::ostream& operator<<( std::ostream& os, const Human& h )
+{
+    os << h.h << " " << h.w;
+    return( os );
+}
 
 //  Room size
 const int H = 30, W = 30;
@@ -24,19 +65,13 @@ const int T = 300;
 
 //  The number of pets 
 int N = 0;
-//  Pet x positions, py.at( i )
-std::vector< int > px;
-//  Pet y positions, py.at( i )
-std::vector< int > py;
-//  Pet types, pt.at( i )
-std::vector< int > pt;
+//  Pets
+std::vector< Pet > pets;
 
 //  The number of humans 
 int M = 0;
-//  Human x positions, hy.at( i )
-std::vector< int > hx;
-//  Human y positions, hy.at( i )
-std::vector< int > hy;
+//  Humans
+std::vector< Human > humans;
 
 //  The map
 std::vector< std::vector< char > > ws;
@@ -50,53 +85,35 @@ std::default_random_engine engine;
 
 void read_input()
 {
+    //  Pets
     std::cin >> N;
-    //  Pet x positions
-    px = std::vector< int >( N, 0 );
-    //  Pet y positions
-    py = std::vector< int >( N, 0 );
-    //  Pet types, pt.at( i )
-    pt = std::vector< int >( N, 0 );
-
+    pets = std::vector< Pet >( N );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> px.at( i ) >> py.at( i ) >> pt.at( i );
+        std::cin >> pets.at( i ).h >> pets.at( i ).w >> pets.at( i ).t;
     }
     if( Debug ) {
         std::cerr << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << px.at( i ) << " " << py.at( i ) << " " << pt.at( i ) << std::endl;
+            std::cerr << pets.at( i ) << std::endl;
         }        
     }
 
+    //  Humans
     std::cin >> M;
-    //  Human x positions, hy.at( t ).at( i )
-    hx = std::vector< int >( M, 0 );
-    //  Human y positions, hy.at( t ).at( i )
-    hy = std::vector< int > ( M, 0 );
+    humans = std::vector< Human >( M );
     for( int j = 0; j < M; j ++ ) {
-        std::cin >> hx.at( j ) >> hy.at( j );
+        std::cin >> humans.at( j ).h >> humans.at( j ).w;
     }
     if( Debug ) {
         std::cerr << M << std::endl;
         for( int j = 0; j < M; j ++ ) {
-            std::cerr << hx.at( j ) << " " << hy.at( j ) << std::endl;
+            std::cerr << humans.at( j ) << std::endl;
         }
     }
 
     unsigned long long seed_num = 0uLL;
     std::cin >> seed_num;
     engine = std::default_random_engine( seed_num );
-}
-
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char > >& m )
-{
-    for( int h = 0; h < H + 2; h ++ ) {
-        for( int w = 0; w < W + 2; w ++ ) {
-            os << m.at( h ).at( w );
-        }
-        os << std::endl;
-    }
-    return( os );
 }
 
 void make_map()
@@ -115,79 +132,14 @@ void make_map()
     }
 }
 
-const int A = 3;
-class Pet {
-    public:
-        int h, w;
-        int t;
-        std::vector< int > m;
-    public:
-        Pet() : m( A, -1 ) { }
-        Pet( int rh, int rw, int rt ) : m( A, -1 ) {
-            h = rh; w = rw; t = rt; 
-        }
-        //  Return a move: U, D, L, R
-        int standard_move( int h, int w ) {
-            std::vector< int > moves;
-            for( int k = 0; k < K; k ++ ) {
-                int v = h + dh.at( k ), u = w + dw.at( k );
-                if( ws.at( v ).at( u ) != '#' ) {
-                    moves.push_back( k );
-                }
-            }
-            std::uniform_int_distribution<> dist( 0, moves.size() );
-            return( moves.at( dist( engine ) )  );
-        }
-        void action() {
-            //  Cow
-            int v = h, u = w;
-            if( t == 1 ) {
-                m.at( 0 ) = standard_move( v, u );
-            }
-            else if( t == 2 ) {
-                m.at( 0 ) = standard_move( v, u );
-                v += dh.at( m.at( 0 ) ); u += dw.at( m.at( 0 ) );
-                m.at( 1 ) = standard_move( v, u );
-            }
-            else if( t == 3 ) {
-                v = h; u = w;
-                m.at( 0 ) = standard_move( v, u );
-                v += dh.at( m.at( 0 ) ); u += dw.at( m.at( 0 ) );
-                m.at( 1 ) = standard_move( v, u );
-                v += dh.at( m.at( 1 ) ); u += dw.at( m.at( 1 ) );
-                m.at( 2 ) = standard_move( v, u );
-            }
-        }
-        void update() {
-            for( int i = 0; i < A; i ++ ) {
-                if( m.at( i ) != -1 ) {
-                    h += dh.at( m.at( i ) );
-                    w += dw.at( m.at( i ) );
-                }
-                m.at( i ) = -1;
-            }
-        }
-};
-
-class Human {
-    public:
-        int h, w; 
-};
-
-std::ostream& operator<<( std::ostream& os, const Pet& p )
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char > >& m )
 {
-    std::string a( A, ' ' );
-    for( int i = 0; i < A; i ++ ) {
-        //  Moves: U, D, L, R
-        switch( p.m.at( i ) ) {
-            case 0: a.at( i ) = 'U'; break;
-            case 1: a.at( i ) = 'D'; break;
-            case 2: a.at( i ) = 'L'; break;
-            case 3: a.at( i ) = 'R'; break;
-            default: a.at( i ) = '.'; break;
+    for( int h = 0; h < H + 2; h ++ ) {
+        for( int w = 0; w < W + 2; w ++ ) {
+            os << m.at( h ).at( w );
         }
+        os << std::endl;
     }
-    os << p.h << " " << p.w << " " << p.t << " " << a.at( 0 ) << a.at( 1 ) << a.at( 2 );
     return( os );
 }
 
@@ -202,12 +154,18 @@ int main()
     }
 
     //  Main
-    Pet p( 1, 1, 1 );
-    std::cout << p << std::endl << std::flush;
-    p.action();
-    std::cout << p << std::endl << std::flush;
-    p.update();
-    std::cout << p << std::endl << std::flush;
+    for( int t = 0; t < T; t ++ ) {
+        std::string human_actions( M, '.' );
+        // for( int j = 0; j < M; j ++ ) {
+        //     std::cout << ".";
+        // }
+        std::cout << human_actions << std::endl;
+        // std::cout << std::flush;
+        
+        std::string pet_actions;
+        std::getline( std::cin, pet_actions );
+        std::cerr << pet_actions << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {
