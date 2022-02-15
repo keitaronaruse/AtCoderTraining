@@ -1,5 +1,5 @@
 /**
-* @file ahc008-a-1.cpp
+* @file game.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
 * @date 2022-02-19
