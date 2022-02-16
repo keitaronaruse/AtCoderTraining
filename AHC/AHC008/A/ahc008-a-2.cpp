@@ -163,11 +163,31 @@ int main()
         //     std::cout << ".";
         // }
         std::cout << human_actions << std::endl;
-        // std::cout << std::flush;
         
-        std::string pet_actions;
-        std::getline( std::cin, pet_actions );
-        std::cerr << pet_actions << std::endl;
+        //  Pet motion
+        for( int i = 0; i < N; i ++ ) {
+            std::string pet_action;
+            std::cin >> pet_action;
+            switch( pets.at( i ).at( t ).t ) {
+                case 1: //  Cow
+                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
+                break;
+                case 2: //  Pig
+                case 4: //  Dog
+                case 5: //  Cat
+                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
+                    pets.at( i ).at( t ).m.at( 1 ) = pet_action.at( 1 );
+                break;
+                case 3: //  Rabbit
+                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
+                    pets.at( i ).at( t ).m.at( 1 ) = pet_action.at( 1 );
+                    pets.at( i ).at( t ).m.at( 2 ) = pet_action.at( 2 );
+                break;
+                default:
+                break;
+            }
+            std::cerr << pet_action << " " << std::endl;
+        }
     }
 
     //  Finalize
