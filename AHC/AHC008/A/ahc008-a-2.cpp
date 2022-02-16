@@ -1,15 +1,15 @@
 /**
-* @file ahc008-a-1.cpp
+* @file ahc008-a-2.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
-* @date 2022-02-15
+* @date 2022-02-16
 * @copyright MIT License
 * @details https://atcoder.jp/contests/ahc008/tasks/ahc008_a
 */
 
 // # Solution
 // - Humans do nothing
-// - Do not update the motion of the pets
+// - Update the motions of the pets
 
 #include <iostream>
 #include <ostream>
