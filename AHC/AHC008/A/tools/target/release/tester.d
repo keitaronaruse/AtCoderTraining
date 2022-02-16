@@ -1,0 +1,1 @@
+/home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/target/release/tester: /home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/src/bin/tester.rs /home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/src/lib.rs
