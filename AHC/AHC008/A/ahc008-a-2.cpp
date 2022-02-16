@@ -27,7 +27,7 @@ class Pet {
         int t;
         std::vector< int > m;
     public:
-        Pet() : m( A, -1 ) { }
+        Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, -1 ) { }
         //  Return a move: U, D, L, R
 };
 
@@ -67,13 +67,13 @@ const int T = 300;
 
 //  The number of pets 
 int N = 0;
-//  Pets
-std::vector< Pet > pets;
+//  Pets: pets.at( i ).at( t )
+std::vector< std::vector< Pet > > pets;
 
 //  The number of humans 
 int M = 0;
-//  Humans
-std::vector< Human > humans;
+//  Humans: humans.at( j ).at( t )
+std::vector< std::vector< Human > > humans;
 
 //  The map
 std::vector< std::vector< char > > ws;
@@ -88,33 +88,31 @@ std::default_random_engine engine;
 void read_input()
 {
     //  Pets
+    int t = 0;
     std::cin >> N;
-    pets = std::vector< Pet >( N );
+    pets = std::vector< std::vector< Pet > >( N, std::vector< Pet >( T ) );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> pets.at( i ).h >> pets.at( i ).w >> pets.at( i ).t;
+        std::cin >> pets.at( i ).at( t ).h >> pets.at( i ).at( t ).w >> pets.at( i ).at( t ).t;
     }
     if( Debug ) {
         std::cerr << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << pets.at( i ) << std::endl;
+            std::cerr << pets.at( i ).at( t ) << std::endl;
         }        
     }
 
     //  Humans
     std::cin >> M;
-    humans = std::vector< Human >( M );
+    humans = std::vector< std::vector< Human > >( M, std::vector< Human >( T ) );
     for( int j = 0; j < M; j ++ ) {
-        std::cin >> humans.at( j ).h >> humans.at( j ).w;
+        std::cin >> humans.at( j ).at( t ).h >> humans.at( j ).at( t ).w;
     }
     if( Debug ) {
         std::cerr << M << std::endl;
         for( int j = 0; j < M; j ++ ) {
-            std::cerr << humans.at( j ) << std::endl;
+            std::cerr << humans.at( j ).at( t ) << std::endl;
         }
     }
-    unsigned long long seed_num = 0uLL;
-    // std::cin >> seed_num;
-    engine = std::default_random_engine( seed_num );
 }
 
 void make_map()
@@ -146,6 +144,10 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char
 
 int main()
 {
+    //  Initailze random
+    unsigned long long seed_num = 0uLL;
+    engine = std::default_random_engine( seed_num );
+
     //  Read input
     read_input();
     //  Make a map
