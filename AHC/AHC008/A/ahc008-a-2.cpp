@@ -20,6 +20,21 @@
 
 const bool Debug = false;
 
+//  Room size
+const int H = 30, W = 30;
+//  The number of turns
+const int T = 300;
+
+//  The map
+std::vector< std::vector< char > > ws;
+
+//  Moves: U, D, L, R
+const int K = 4;
+const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  1, -1 };
+
+//  Random generator
+std::default_random_engine engine;
+
 const int A = 3;
 class Pet {
     public:
@@ -28,24 +43,62 @@ class Pet {
         std::vector< int > m;
     public:
         Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, -1 ) { }
-        //  Return a move: U, D, L, R
+        void read( std::string& actions ) {
+            int K = 0;
+            switch( t ) {
+                case 1: //  Cow
+                    K = 1; 
+                break;
+                case 2: //  Pig
+                case 4: //  Dog
+                case 5: //  Cat
+                    K = 2; 
+                break;
+                case 3: //  Rabbit
+                    K = 3;
+                break;
+                default:
+                break;
+            }
+            for( int k = 0; k < K; k ++ ) {
+                int index = -1;
+                switch( actions.at( k ) ) {
+                    case 'U': index = 0; break;
+                    case 'D': index = 1; break;
+                    case 'L': index = 2; break;
+                    case 'R': index = 3; break;
+                    default: index = -1; break;
+                }
+                m.at( k ) = index;
+            }
+        }
+        void update() {
+            int K = 0;
+            switch( t ) {
+                case 1: //  Cow
+                    K = 1;
+                break;
+                case 2: //  Pig
+                case 4: //  Dog
+                case 5: //  Cat
+                    K = 2;
+                break;
+                case 3: //  Rabbit
+                    K = 3;
+                break;
+                default:
+                break;
+            }
+            for( int k = 0; k < K; k ++ ) {
+                h += dh.at( m.at( k ) );
+                w += dw.at( m.at( k ) );
+            }
+        }
 };
 
 std::ostream& operator<<( std::ostream& os, const Pet& p )
 {
     os << p.h << " " << p.w << " " << p.t;
-    // char c = ' ';
-    // for( int i = 0; i < A; i ++ ) {
-    //     //  Moves: U, D, L, R
-    //     switch( p.m.at( i ) ) {
-    //         case 0: c = 'U'; break;
-    //         case 1: c = 'D'; break;
-    //         case 2: c = 'L'; break;
-    //         case 3: c = 'R'; break;
-    //         default: c = '.'; break;
-    //     }
-    //     os << c << " "; 
-    // }
     return( os );
 }
 
@@ -60,57 +113,41 @@ std::ostream& operator<<( std::ostream& os, const Human& h )
     return( os );
 }
 
-//  Room size
-const int H = 30, W = 30;
-//  The number of turns
-const int T = 300;
-
 //  The number of pets 
 int N = 0;
-//  Pets: pets.at( i ).at( t )
-std::vector< std::vector< Pet > > pets;
+//  Pets: pets.at( i )
+std::vector< Pet > pets;
 
 //  The number of humans 
 int M = 0;
-//  Humans: humans.at( j ).at( t )
-std::vector< std::vector< Human > > humans;
-
-//  The map
-std::vector< std::vector< char > > ws;
-
-//  Moves: U, D, L, R
-const int K = 4;
-const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  1, -1 };
-
-//  Random generator
-std::default_random_engine engine;
+//  Humans: humans.at( j )
+std::vector< Human > humans;
 
 void read_input()
 {
     //  Pets
-    int t = 0;
     std::cin >> N;
-    pets = std::vector< std::vector< Pet > >( N, std::vector< Pet >( T ) );
+    pets = std::vector< Pet >( N );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> pets.at( i ).at( t ).h >> pets.at( i ).at( t ).w >> pets.at( i ).at( t ).t;
+        std::cin >> pets.at( i ).h >> pets.at( i ).w >> pets.at( i ).t;
     }
     if( Debug ) {
         std::cerr << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
-            std::cerr << pets.at( i ).at( t ) << std::endl;
+            std::cerr << pets.at( i ) << std::endl;
         }        
     }
 
     //  Humans
     std::cin >> M;
-    humans = std::vector< std::vector< Human > >( M, std::vector< Human >( T ) );
+    humans = std::vector< Human >( M );
     for( int j = 0; j < M; j ++ ) {
-        std::cin >> humans.at( j ).at( t ).h >> humans.at( j ).at( t ).w;
+        std::cin >> humans.at( j ).h >> humans.at( j ).w;
     }
     if( Debug ) {
         std::cerr << M << std::endl;
         for( int j = 0; j < M; j ++ ) {
-            std::cerr << humans.at( j ).at( t ) << std::endl;
+            std::cerr << humans.at( j ) << std::endl;
         }
     }
 }
@@ -158,35 +195,18 @@ int main()
 
     //  Main
     for( int t = 0; t < T; t ++ ) {
+        //  Human actions
         std::string human_actions( M, '.' );
-        // for( int j = 0; j < M; j ++ ) {
-        //     std::cout << ".";
-        // }
         std::cout << human_actions << std::endl;
         
-        //  Pet motion
+        //  Pet motions
         for( int i = 0; i < N; i ++ ) {
             std::string pet_action;
             std::cin >> pet_action;
-            switch( pets.at( i ).at( t ).t ) {
-                case 1: //  Cow
-                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
-                break;
-                case 2: //  Pig
-                case 4: //  Dog
-                case 5: //  Cat
-                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
-                    pets.at( i ).at( t ).m.at( 1 ) = pet_action.at( 1 );
-                break;
-                case 3: //  Rabbit
-                    pets.at( i ).at( t ).m.at( 0 ) = pet_action.at( 0 );
-                    pets.at( i ).at( t ).m.at( 1 ) = pet_action.at( 1 );
-                    pets.at( i ).at( t ).m.at( 2 ) = pet_action.at( 2 );
-                break;
-                default:
-                break;
+            pets.at( i ).read( pet_action );
+            if( Debug ) {
+                std::cerr << pet_action << " " << std::endl;
             }
-            std::cerr << pet_action << " " << std::endl;
         }
     }
 
