@@ -2,7 +2,7 @@
 * @file abc239-d.cpp
 * @brief ABC239 Problem D
 * @author Keitaro Naruse
-* @date 2022-02-12
+* @date 2022-02-19
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc239/tasks/abc239_d
 */
