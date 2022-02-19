@@ -40,13 +40,13 @@ std::default_random_engine engine;
 const int A = 3;
 class Pet {
     public:
-        int h, w;
-        int t;
-        std::vector< int > m;
+        int h, w, t;
+        int K;
+        std::vector< char > m;
     public:
-        Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, -1 ) { }
-        void read( std::string& actions ) {
-            int K = 0;
+        Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, ' ' ), K( 0 ) { }
+        Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt), m( A, ' ' )
+        {
             switch( t ) {
                 case 1: //  Cow
                     K = 1; 
@@ -62,38 +62,21 @@ class Pet {
                 default:
                 break;
             }
-            // std::cout << t << " " << K << " ";
+        }
+        void read( std::string& actions ) {
             for( int k = 0; k < K; k ++ ) {
-                int index = -1;
-                switch( actions.at( k ) ) {
-                    case 'U': index = 0; break;
-                    case 'D': index = 1; break;
-                    case 'L': index = 2; break;
-                    case 'R': index = 3; break;
-                    default: index = -1; break;
-                }
-                m.at( k ) = index;
-                // std::cout << m.at( k ) << " "; 
+                // int index = -1;
+                // switch( actions.at( k ) ) {
+                //     case 'U': index = 0; break;
+                //     case 'D': index = 1; break;
+                //     case 'L': index = 2; break;
+                //     case 'R': index = 3; break;
+                //     default: index = -1; break;
+                // }
+                m.at( k ) = actions.at( k );
             }
-            // std::cout << std::endl;
         }
         void update() {
-            int K = 0;
-            switch( t ) {
-                case 1: //  Cow
-                    K = 1;
-                break;
-                case 2: //  Pig
-                case 4: //  Dog
-                case 5: //  Cat
-                    K = 2;
-                break;
-                case 3: //  Rabbit
-                    K = 3;
-                break;
-                default:
-                break;
-            }
             for( int k = 0; k < K; k ++ ) {
                 h += dh.at( m.at( k ) );
                 w += dw.at( m.at( k ) );
@@ -109,7 +92,21 @@ std::ostream& operator<<( std::ostream& os, const Pet& p )
 
 class Human {
     public:
-        int h, w; 
+        int h, w;
+        int m;
+    public:
+        void action() {
+            //  '.':0
+            //  'U':1, 'D':2, 'L':3, 'R':4
+            //  'u':5, 'd':6, 'l':7, 'r':8
+            ;
+        }
+        void write() {
+            ;
+        }
+        void update() {
+            ;
+        }
 };
 
 std::ostream& operator<<( std::ostream& os, const Human& h )
@@ -134,7 +131,9 @@ void read_input()
     std::cin >> N;
     pets = std::vector< Pet >( N );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> pets.at( i ).h >> pets.at( i ).w >> pets.at( i ).t;
+        int rh = 0, rw = 0, rt = 0;
+        std::cin >> rh >> rw >> rt;
+        pets.at( i ) = Pet( rh, rw, rt);
     }
     if( Debug ) {
         std::cerr << N << std::endl;
@@ -264,12 +263,6 @@ int main()
     update_map_pets();
     //  Update humans
     update_map_human();
-    if( Debug ) {
-        print_map( std::cout );
-        for( auto p : pets ) {
-            std::cout << p << std::endl; 
-        }
-    }
     //  Main
     for( int t = 0; t < T; t ++ ) {
         //  Human actions
@@ -291,12 +284,9 @@ int main()
             //  Update pets
             update_map_pets();
         }
-        if( Debug ) {
-            print_map( std::cout );
-            for( auto p : pets ) {
-                std::cout << p << std::endl; 
-            }
-        }
+    }
+    if( Debug ) {
+        print_map( std::cout );
     }
     //  Finalize
     if( Debug ) {
