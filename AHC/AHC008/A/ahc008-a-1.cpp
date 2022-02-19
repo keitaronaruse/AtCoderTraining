@@ -80,7 +80,7 @@ std::vector< std::vector< char > > ws;
 
 //  Moves: U, D, L, R
 const int K = 4;
-const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  1, -1 };
+const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  -1,  1 };
 
 //  Random generator
 std::default_random_engine engine;
@@ -97,7 +97,7 @@ void read_input()
         std::cerr << N << std::endl;
         for( int i = 0; i < N; i ++ ) {
             std::cerr << pets.at( i ) << std::endl;
-        }        
+        }
     }
 
     //  Humans

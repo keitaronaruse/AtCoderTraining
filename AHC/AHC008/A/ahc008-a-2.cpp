@@ -32,7 +32,7 @@ std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Moves: U, D, L, R
 const int K = 4;
-const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  1, -1 };
+const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  -1, 1 };
 
 //  Random generator
 std::default_random_engine engine;
@@ -62,6 +62,7 @@ class Pet {
                 default:
                 break;
             }
+            // std::cout << t << " " << K << " ";
             for( int k = 0; k < K; k ++ ) {
                 int index = -1;
                 switch( actions.at( k ) ) {
@@ -72,7 +73,9 @@ class Pet {
                     default: index = -1; break;
                 }
                 m.at( k ) = index;
+                // std::cout << m.at( k ) << " "; 
             }
+            // std::cout << std::endl;
         }
         void update() {
             int K = 0;
@@ -168,6 +171,15 @@ void make_map()
         map_obst.at( 0 ).at( w ) = '#';
         map_obst.at( H + 1 ).at( w ) = '#';
     }
+     
+    map_pets = std::vector< std::vector< std::list< int > > >( 
+        H + 2, 
+        std::vector< std::list< int > >( W + 2 ) 
+    );
+    map_humans = std::vector< std::vector< std::list< int > > >( 
+        H + 2, 
+        std::vector< std::list< int > >( W + 2 ) 
+    );
 }
 
 std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char > >& m )
@@ -181,6 +193,63 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char
     return( os );
 }
 
+void update_map_human()
+{
+    for( int h = 0; h < H + 2; h ++ ) {
+        for( int w = 0; w < W + 2; w ++ ) {
+            map_humans.at( h ).at( w ).clear();
+        }
+    }
+    for( int j = 0; j < M; j ++ ) {
+        int h = humans.at( j ).h;
+        int w = humans.at( j ).w;
+        map_humans.at( h ).at( w ).push_back( j );
+    }
+}
+
+void update_map_pets()
+{
+    for( int h = 0; h < H + 2; h ++ ) {
+        for( int w = 0; w < W + 2; w ++ ) {
+            map_pets.at( h ).at( w ).clear();
+        }
+    }
+    for( int i = 0; i < N; i ++ ) {
+        int h = pets.at( i ).h;
+        int w = pets.at( i ).w;
+        int t = pets.at( i ).t;
+        map_pets.at( h ).at( w ).push_back( t );
+    }
+}
+
+void print_map( std::ostream& os )
+{
+    for( int h = 0; h < H + 2; h ++ ) {
+        for( int w = 0; w < W + 2; w ++ ) {
+            if( !map_humans.at( h ).at( w ).empty() ) {
+                os << "H";
+            }
+            else if( !map_pets.at( h ).at( w ).empty() ) {
+                char ch = ' ';
+                auto t = map_pets.at( h ).at( w ).front();
+                switch( t ) {
+                    case 1: ch = 'C'; break;
+                    case 2: ch = 'P'; break;
+                    case 3: ch = 'R'; break;
+                    case 4: ch = 'D'; break;
+                    case 5: ch = 'C'; break;
+                    default: ch = ' '; break;
+                }
+                os << ch;
+            }
+            else {
+                os << map_obst.at( h ).at( w );
+            }
+        }
+        os << std::endl;
+    }
+}
+
 int main()
 {
     //  Initailze random
@@ -191,32 +260,44 @@ int main()
     read_input();
     //  Make a map
     make_map();
-
+    //  Update pets
+    update_map_pets();
+    //  Update humans
+    update_map_human();
+    if( Debug ) {
+        print_map( std::cout );
+        for( auto p : pets ) {
+            std::cout << p << std::endl; 
+        }
+    }
     //  Main
     for( int t = 0; t < T; t ++ ) {
         //  Human actions
         std::string human_actions( M, '.' );
         std::cout << human_actions << std::endl;
+        //  Update humans
+        update_map_human();
         
         //  Pet motions
         if( t < T - 1 ) {
             for( int i = 0; i < N; i ++ ) {
                 std::string pet_action;
                 std::cin >> pet_action;
+                std::cout << pet_action << " ";
                 pets.at( i ).read( pet_action );
-                if( Debug ) {
-                    std::cerr << pet_action << " ";
-                }
+                pets.at( i ).update();
             }
-            if( Debug ) {
-                std::cerr << std::endl;
+            std::cout << std::endl;
+            //  Update pets
+            update_map_pets();
+        }
+        if( Debug ) {
+            print_map( std::cout );
+            for( auto p : pets ) {
+                std::cout << p << std::endl; 
             }
         }
-        // if( Debug ) {
-        //     std::cerr << map_obst;
-        // }
     }
-
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
