@@ -15,18 +15,20 @@
 #include <ostream>
 #include <string>
 #include <vector>
+#include <list>
 #include <algorithm>
 #include <random>
 
-const bool Debug = false;
+const bool Debug = true;
 
 //  Room size
 const int H = 30, W = 30;
 //  The number of turns
 const int T = 300;
 
-//  The map
-std::vector< std::vector< char > > ws;
+//  The maps
+std::vector< std::vector< char > > map_obst;
+std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Moves: U, D, L, R
 const int K = 4;
@@ -157,14 +159,14 @@ void make_map()
     //  free = ., obstacle = #
     //  Pets: cow = C, pig = P, rabbit = R, dog = D, cat = C 
     //  Human : human = H 
-    ws = std::vector< std::vector< char > >( H + 2, std::vector< char >( W + 2, '.' ) );
+    map_obst = std::vector< std::vector< char > >( H + 2, std::vector< char >( W + 2, '.' ) );
     for( int h = 0; h < H + 2; h ++ ) {
-        ws.at( h ).at( 0 ) = '#';
-        ws.at( h ).at( W + 1 ) = '#';
+        map_obst.at( h ).at( 0 ) = '#';
+        map_obst.at( h ).at( W + 1 ) = '#';
     }
     for( int w = 0; w < W + 2; w ++ ) {
-        ws.at( 0 ).at( w ) = '#';
-        ws.at( H + 1 ).at( w ) = '#';
+        map_obst.at( 0 ).at( w ) = '#';
+        map_obst.at( H + 1 ).at( w ) = '#';
     }
 }
 
@@ -189,9 +191,6 @@ int main()
     read_input();
     //  Make a map
     make_map();
-    if( Debug ) {
-        std::cerr << ws;
-    }
 
     //  Main
     for( int t = 0; t < T; t ++ ) {
@@ -200,14 +199,22 @@ int main()
         std::cout << human_actions << std::endl;
         
         //  Pet motions
-        for( int i = 0; i < N; i ++ ) {
-            std::string pet_action;
-            std::cin >> pet_action;
-            pets.at( i ).read( pet_action );
+        if( t < T - 1 ) {
+            for( int i = 0; i < N; i ++ ) {
+                std::string pet_action;
+                std::cin >> pet_action;
+                pets.at( i ).read( pet_action );
+                if( Debug ) {
+                    std::cerr << pet_action << " ";
+                }
+            }
             if( Debug ) {
-                std::cerr << pet_action << " " << std::endl;
+                std::cerr << std::endl;
             }
         }
+        // if( Debug ) {
+        //     std::cerr << map_obst;
+        // }
     }
 
     //  Finalize
