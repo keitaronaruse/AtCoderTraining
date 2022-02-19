@@ -45,8 +45,7 @@ class Pet {
         std::vector< char > m;
     public:
         Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, ' ' ), K( 0 ) { }
-        Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt), m( A, ' ' )
-        {
+        Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt), m( A, ' ' ) {
             switch( t ) {
                 case 1: //  Cow
                     K = 1; 
@@ -62,6 +61,17 @@ class Pet {
                 default:
                 break;
             }
+        }
+        Pet( const Pet& r ) : h( r.h ), w( r.w ), t( r.t ), K( r.K ), m( r.m ) {
+            ;
+        }
+        Pet& operator=( const Pet& r ) {
+            h = r.h;
+            w = r.w;
+            t = r.t;
+            K = r.K;
+            m = r.m;
+            return( *this );
         }
         void read( std::string& actions ) {
             for( int k = 0; k < K; k ++ ) {
