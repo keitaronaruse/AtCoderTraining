@@ -1,8 +1,8 @@
 /**
 * @file abc239-a.cpp
-* @brief ABC239 Problem A
+* @brief ABC239 Problem A - Horizon
 * @author Keitaro Naruse
-* @date 2022-02-19
+* @date 2022-02-19, 2022-02-20
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc239/tasks/abc239_a
 */
@@ -10,39 +10,25 @@
 // # Solution
 
 #include <iostream>
-#include <vector>
-#include <string>
+#include <iomanip>
+#include <cmath>
 
 const bool Debug = false;
 
 int main()
 {
-    //  Read N = [ 1, 10^9 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read h = [ 1, 10^5 ]
+    int H = 0;
+    std::cin >> H;
     if( Debug ) {
-        std::cerr << N << std::endl;
-    }
-
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    } 
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << A.at( i ) << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
+        std::cerr << H << std::endl;
     }
 
     //  Main
+    double x = ( double ) H;
+    double h = std::sqrt( x * ( 12800000.0 + x ) );
+    std::cout << std::fixed << std::setprecision( 9 ) << h << std::endl;
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

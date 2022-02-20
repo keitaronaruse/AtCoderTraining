@@ -1,8 +1,8 @@
 /**
 * @file abc239-b.cpp
-* @brief ABC239 Problem B
+* @brief ABC239 Problem B - Integer Division
 * @author Keitaro Naruse
-* @date 2022-02-19
+* @date 2022-02-19, 2022-02-20
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc239/tasks/abc239_b
 */
@@ -10,38 +10,37 @@
 // # Solution
 
 #include <iostream>
-#include <vector>
-#include <algorithm>
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
+namespace nrs {
+    template < class T >
+    T ceiling( T a, T b )
+    {
+        return( ( a + b - 1 ) / b );
     }
-    return( os );
 }
 
 int main()
 {
-    //  Read N = [ 1, 359 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read X = [ -10^18, 10^18 ]
+    long long X = 0LL;
+    std::cin >> X;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
+        std::cerr << X <<  std::endl;
     }
 
     //  Main
-
+    long long floor_x = 0LL;
+    if( X >= 0LL ) {
+        floor_x = X / 10LL;
+    }
+    else {
+        floor_x = -nrs::ceiling( -X, 10LL );
+    }
+    //  Output the result
+    std::cout << floor_x << std::endl;
+    
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
