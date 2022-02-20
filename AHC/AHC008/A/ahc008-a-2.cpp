@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <random>
 
-const bool Debug = true;
+const bool Debug = false;
 
 //  Room size
 const int H = 30, W = 30;
@@ -75,21 +75,21 @@ class Pet {
         }
         void read( std::string& actions ) {
             for( int k = 0; k < K; k ++ ) {
-                // int index = -1;
-                // switch( actions.at( k ) ) {
-                //     case 'U': index = 0; break;
-                //     case 'D': index = 1; break;
-                //     case 'L': index = 2; break;
-                //     case 'R': index = 3; break;
-                //     default: index = -1; break;
-                // }
                 m.at( k ) = actions.at( k );
             }
         }
         void update() {
             for( int k = 0; k < K; k ++ ) {
-                h += dh.at( m.at( k ) );
-                w += dw.at( m.at( k ) );
+                int index = -1;
+                switch( m.at( k ) ) {
+                    case 'U': index = 0; break;
+                    case 'D': index = 1; break;
+                    case 'L': index = 2; break;
+                    case 'R': index = 3; break;
+                    default: index = -1; break;
+                }
+                h += dh.at( index );
+                w += dw.at( index );
             }
         }
 };
@@ -103,19 +103,30 @@ std::ostream& operator<<( std::ostream& os, const Pet& p )
 class Human {
     public:
         int h, w;
-        int m;
+        char m;
     public:
         void action() {
-            //  '.':0
-            //  'U':1, 'D':2, 'L':3, 'R':4
-            //  'u':5, 'd':6, 'l':7, 'r':8
-            ;
+            //  '.'
+            //  'U', 'D', 'L', 'R'
+            //  'u', 'd', 'l', 'r'
+            m = '.';
         }
         void write() {
-            ;
+            std::cout << m;
         }
         void update() {
-            ;
+            int index = -1;
+            switch( m ) {
+                case 'U': index = 0; break;
+                case 'D': index = 1; break;
+                case 'L': index = 2; break;
+                case 'R': index = 3; break;
+                default: index = -1; break;
+            }
+            if( index != -1 ) {
+                h += dh.at( index );
+                w += dw.at( index );
+            }
         }
 };
 
@@ -276,8 +287,12 @@ int main()
     //  Main
     for( int t = 0; t < T; t ++ ) {
         //  Human actions
-        std::string human_actions( M, '.' );
-        std::cout << human_actions << std::endl;
+        for( int j = 0; j < M; j ++ ) {
+            humans.at( j ).action();
+            humans.at( j ).write();
+            humans.at( j ).update();
+        }
+        std::cout << std::endl;
         //  Update humans
         update_map_human();
         
@@ -286,11 +301,15 @@ int main()
             for( int i = 0; i < N; i ++ ) {
                 std::string pet_action;
                 std::cin >> pet_action;
-                std::cout << pet_action << " ";
+                if( Debug ) {
+                    std::cout << pet_action << " ";
+                }
                 pets.at( i ).read( pet_action );
                 pets.at( i ).update();
             }
-            std::cout << std::endl;
+            if( Debug ) {
+                std::cout << std::endl;
+            }
             //  Update pets
             update_map_pets();
         }
