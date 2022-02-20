@@ -10,9 +10,8 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
+#include <map>
 
 const bool Debug = false;
 
@@ -32,22 +31,23 @@ int main()
     if( Debug ) {
         std::cerr << N <<  std::endl;
     }
-    //  Read Ai
+    //  Read Ai = [ 1, 10^9 ]
     std::vector< int > A( N, 0 );
+    std::map< int, int > counters;
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
+        counters[ A.at( i ) ] ++;
     }
     if( Debug ) {
         std::cerr << A << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
-    }
 
     //  Main
+    int num = 0;
+    for( auto p : counters ) {
+        num ++ ;
+    }
+    std::cout << num << std::endl;
 
     //  Finalize
     if( Debug ) {

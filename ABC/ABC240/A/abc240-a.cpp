@@ -11,44 +11,34 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read a, b = [ 1, 10 ]
+    int a = 0, b = 0;
+    std::cin >> a >> b;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
+        std::cerr << a << " " << b << std::endl;
     }
 
     //  Main
+    bool isYes = false;
+    if( b - a == 1 ) {
+        isYes = true;
+    }
+    else if( b == 10 && a == 1) {
+        isYes = true;
+    }
 
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
+    
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
