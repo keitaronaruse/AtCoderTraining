@@ -1,14 +1,14 @@
 /**
-* @file ahc008-a-2.cpp
+* @file ahc008-a-3.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
-* @date 2022-02-16, 2022-02-20
+* @date 2022-02-20
 * @copyright MIT License
 * @details https://atcoder.jp/contests/ahc008/tasks/ahc008_a
 */
 
 // # Solution
-// - Humans do nothing
+// - Humans make walls
 // - Update the motions of the pets
 
 #include <iostream>
