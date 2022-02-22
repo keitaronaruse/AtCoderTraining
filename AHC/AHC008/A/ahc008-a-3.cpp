@@ -17,7 +17,7 @@
 #include <vector>
 #include <list>
 #include <algorithm>
-#include <random>
+#include <queue>
 
 const bool Debug = false;
 
@@ -34,8 +34,11 @@ std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 const int K = 4;
 const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  -1, 1 };
 
-//  Random generator
-std::default_random_engine engine;
+//  Zones
+const int Z = 9;
+std::vector< int > hh = { 11, 11, 11, 21, 21, 21, 30, 30, 30 };
+std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30 };
+
 
 const int A = 3;
 class Pet {
@@ -105,11 +108,25 @@ class Human {
         int h, w;
         char m;
     public:
+        //  zone
+        int z;
+        std::queue< char > plan;
+        //  s = 0: Nothing
+        //  s = 1: Go zone position
+        //  s = 2: Run plan
+        int s;
+    public:
+        Human() : h( -1 ), w( -1 ), m( ' ' ), z( -1 ), s( -1 ) {}
         void action() {
             //  '.'
             //  'U', 'D', 'L', 'R'
             //  'u', 'd', 'l', 'r'
-            m = '.';
+            switch( s ) {
+                case 0: do_nothing(); break;
+                case 1: make_plan(); breakl
+                case 2: go_to_zone(); break;
+                case 3: make_walls(); break;
+            }
         }
         void write() {
             std::cout << m;
@@ -126,6 +143,48 @@ class Human {
             if( index != -1 ) {
                 h += dh.at( index );
                 w += dw.at( index );
+            }
+        }
+        void do_nothing()
+        {
+            m = '.';
+        }
+        void go_to_zone()
+        {
+            if( h == hh.at( z ) && w == hw.at( z ) ) {
+                m = '.';
+                s = 1;
+                return;
+            }
+
+            if( hh.at( z ) < h && map_obst.at( h - 1 ).at( w ) == '.' ) {
+                m = 'U';
+            }
+            else if( hh.at( z ) > h && map_obst.at( h + 1 ).at( w ) == '.' ) {
+                m = 'D';
+            }
+            else if( hw.at( z ) < w && map_obst.at( h ).at( w - 1 ) == '.' ) {
+                m = 'L';
+            }
+            else if( hw.at( z ) > w && map_obst.at( h ).at( w + 1 ) == '.' ) {
+                m = 'R';
+            }
+            else {
+                m = '.';
+            }
+        }
+        void run_plan()
+        {
+            switch( z ) {
+                ;
+            }
+            for( int i = 0; i < 10; i ++ ) {
+                plan.push('u');
+                plan.push('R');
+            }
+            for( int i = 0; i < 10; i ++ ) {
+                plan.push('D');
+                plan.push('l');
             }
         }
 };
@@ -145,6 +204,9 @@ std::vector< Pet > pets;
 int M = 0;
 //  Humans: humans.at( j )
 std::vector< Human > humans;
+
+class Planner {
+};
 
 void read_input()
 {
@@ -168,6 +230,7 @@ void read_input()
     humans = std::vector< Human >( M );
     for( int j = 0; j < M; j ++ ) {
         std::cin >> humans.at( j ).h >> humans.at( j ).w;
+        humans.at( j ).s = 0;
     }
     if( Debug ) {
         std::cerr << M << std::endl;
@@ -272,10 +335,6 @@ void print_map( std::ostream& os )
 
 int main()
 {
-    //  Initailze random
-    unsigned long long seed_num = 0uLL;
-    engine = std::default_random_engine( seed_num );
-
     //  Read input
     read_input();
     //  Make a map
@@ -284,6 +343,14 @@ int main()
     update_map_pets();
     //  Update humans
     update_map_human();
+
+    //  Plan: Zone assignment
+    for( int j = 0; j < M; j ++) {
+        humans.at( j ).z = j % Z;
+        //  Go home position
+        humans.at( j ).s = 1;
+    }
+
     //  Main
     for( int t = 0; t < T; t ++ ) {
         //  Human actions
