@@ -31,9 +31,10 @@ std::vector< std::vector< char > > map_obst;
 std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Zones
-const int Z = 9;
-std::vector< int > hh = { 11, 11, 11, 21, 21, 21, 30, 30, 30 };
-std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30 };
+//  9: d
+const int Z = 10;
+std::vector< int > hh = {  9,  9,  9, 19, 19, 19, 30, 30, 30, 15 };
+std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30, 15 };
 
 const int A = 3;
 class Pet {
@@ -158,32 +159,34 @@ class Human {
                 case 1:
                 case 3:
                 case 4:
-                    for( int i = 0; i < 10; i ++ ) {
-                        plan.push('u');
+                    for( int i = 0; i < 8; i ++ ) {
+                        plan.push('d');
                         plan.push('R');
                     }
-                    for( int i = 0; i < 10; i ++ ) {
+                    plan.push('d');
+                    for( int i = 0; i < 8; i ++ ) {
+                        plan.push('r');
                         plan.push('U');
-                        plan.push('l');
                     }
+                    plan.push('r');
                 break;
 
                 case 2:
                 case 5:
                     for( int i = 0; i < 9; i ++ ) {
-                        plan.push('u');
+                        plan.push('d');
                         plan.push('R');
                     }
-                    plan.push('u');
+                    plan.push('d');
                 break;
 
                 case 6:
                 case 7:
-                    for( int i = 0; i < 9; i ++ ) {
-                        plan.push('l');
+                    for( int i = 0; i < 8; i ++ ) {
+                        plan.push('r');
                         plan.push('U');
                     }
-                    plan.push('l');
+                    plan.push('r');
                 break;
                 case 8:
                 case 9:
@@ -419,7 +422,7 @@ int main()
     //  Plan: Zone assignment
     for( int j = 0; j < M; j ++) {
         //  Assigne zone
-        humans.at( j ).z = j % Z;
+        humans.at( j ).z = j;
         //  Male a plan
         humans.at( j ).make_plan();
         //  Go home position
@@ -446,15 +449,11 @@ int main()
             for( int i = 0; i < N; i ++ ) {
                 std::string pet_action;
                 std::cin >> pet_action;
-                if( Debug ) {
-                    std::cout << pet_action << " ";
-                }
+                std::cerr << pet_action << " ";
                 pets.at( i ).read( pet_action );
                 pets.at( i ).update();
             }
-            if( Debug ) {
-                std::cout << std::endl;
-            }
+            std::cerr << std::endl;
             //  Update pets
             update_map_pets();
         }

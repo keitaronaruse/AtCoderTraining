@@ -1,1 +1,1 @@
-/home/naruse/work/AtCoderTraining/AHC/AHC008/A/build/target/release/gen: /home/naruse/work/AtCoderTraining/AHC/AHC008/A/build/src/bin/gen.rs /home/naruse/work/AtCoderTraining/AHC/AHC008/A/build/src/lib.rs
+/home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/target/release/gen: /home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/src/bin/gen.rs /home/naruse/work/AtCoderTraining/AHC/AHC008/A/tools/src/lib.rs
