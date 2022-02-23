@@ -30,15 +30,10 @@ const int T = 300;
 std::vector< std::vector< char > > map_obst;
 std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
-//  Moves: U, D, L, R
-const int K = 4;
-const std::vector< int > dh = { -1,  1,  0,  0 }, dw = {  0,  0,  -1, 1 };
-
 //  Zones
 const int Z = 9;
 std::vector< int > hh = { 11, 11, 11, 21, 21, 21, 30, 30, 30 };
 std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30 };
-
 
 const int A = 3;
 class Pet {
@@ -48,7 +43,7 @@ class Pet {
         std::vector< char > m;
     public:
         Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, ' ' ), K( 0 ) { }
-        Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt), m( A, ' ' ) {
+        Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt ), m( A, ' ' ) {
             switch( t ) {
                 case 1: //  Cow
                     K = 1; 
@@ -83,16 +78,13 @@ class Pet {
         }
         void update() {
             for( int k = 0; k < K; k ++ ) {
-                int index = -1;
                 switch( m.at( k ) ) {
-                    case 'U': index = 0; break;
-                    case 'D': index = 1; break;
-                    case 'L': index = 2; break;
-                    case 'R': index = 3; break;
-                    default: index = -1; break;
+                    case 'U': h -= 1; break;
+                    case 'D': h += 1; break;
+                    case 'L': w -= 1; break;
+                    case 'R': w += 1; break;
+                    default: break;
                 }
-                h += dh.at( index );
-                w += dw.at( index );
             }
         }
 };
@@ -111,9 +103,9 @@ class Human {
         //  zone
         int z;
         std::queue< char > plan;
-        //  s = 0: Nothing
-        //  s = 1: Go zone position
-        //  s = 2: Run plan
+        //  s = 1: Do nothing
+        //  s = 2: Go zone position
+        //  s = 3: Make walls
         int s;
     public:
         Human() : h( -1 ), w( -1 ), m( ' ' ), z( -1 ), s( -1 ) {}
@@ -123,69 +115,149 @@ class Human {
             //  'u', 'd', 'l', 'r'
             switch( s ) {
                 case 0: do_nothing(); break;
-                case 1: make_plan(); breakl
+                case 1: do_nothing(); break;
                 case 2: go_to_zone(); break;
-                case 3: make_walls(); break;
+                case 3: make_wall(); break;
             }
         }
         void write() {
             std::cout << m;
         }
         void update() {
-            int index = -1;
             switch( m ) {
-                case 'U': index = 0; break;
-                case 'D': index = 1; break;
-                case 'L': index = 2; break;
-                case 'R': index = 3; break;
-                default: index = -1; break;
-            }
-            if( index != -1 ) {
-                h += dh.at( index );
-                w += dw.at( index );
+                case 'U': 
+                    if( map_obst.at( h - 1 ).at( w ) == '.' ) {
+                        h -= 1;
+                    }
+                break;
+                case 'D':
+                    if( map_obst.at( h + 1 ).at( w ) == '.' ) {
+                        h += 1;
+                    }
+                break;
+                case 'L':
+                    if( map_obst.at( h ).at( w - 1 ) == '.' ) {
+                        w -= 1;
+                    }
+                break;
+                case 'R':
+                    if( map_obst.at( h ).at( w + 1 ) == '.' ) {
+                        w += 1;
+                    }
+                break;
+                case 'u': map_obst.at( h - 1 ).at( w ) = '#'; break;
+                case 'd': map_obst.at( h + 1 ).at( w ) = '#'; break;
+                case 'l': map_obst.at( h ).at( w - 1 ) = '#'; break;
+                case 'r': map_obst.at( h ).at( w + 1 ) = '#'; break;
+                default: break;
             }
         }
-        void do_nothing()
-        {
+        void make_plan() {
+            switch( z ) {
+                case 0:
+                case 1:
+                case 3:
+                case 4:
+                    for( int i = 0; i < 10; i ++ ) {
+                        plan.push('u');
+                        plan.push('R');
+                    }
+                    for( int i = 0; i < 10; i ++ ) {
+                        plan.push('U');
+                        plan.push('l');
+                    }
+                break;
+
+                case 2:
+                case 5:
+                    for( int i = 0; i < 9; i ++ ) {
+                        plan.push('u');
+                        plan.push('R');
+                    }
+                    plan.push('u');
+                break;
+
+                case 6:
+                case 7:
+                    for( int i = 0; i < 9; i ++ ) {
+                        plan.push('l');
+                        plan.push('U');
+                    }
+                    plan.push('l');
+                break;
+                case 8:
+                case 9:
+                break;
+                default:
+                break;
+            }
+        }
+        //  s = 1
+        void do_nothing() {
             m = '.';
         }
-        void go_to_zone()
-        {
+        //  s = 2
+        void go_to_zone() {
             if( h == hh.at( z ) && w == hw.at( z ) ) {
                 m = '.';
-                s = 1;
+                s = 3;
                 return;
             }
-
-            if( hh.at( z ) < h && map_obst.at( h - 1 ).at( w ) == '.' ) {
+            if( hh.at( z ) < h ) {
                 m = 'U';
             }
-            else if( hh.at( z ) > h && map_obst.at( h + 1 ).at( w ) == '.' ) {
+            else if( hh.at( z ) > h ) {
                 m = 'D';
             }
-            else if( hw.at( z ) < w && map_obst.at( h ).at( w - 1 ) == '.' ) {
+            else if( hw.at( z ) < w ) {
                 m = 'L';
             }
-            else if( hw.at( z ) > w && map_obst.at( h ).at( w + 1 ) == '.' ) {
+            else if( hw.at( z ) > w ) {
                 m = 'R';
             }
             else {
                 m = '.';
             }
         }
-        void run_plan()
-        {
-            switch( z ) {
-                ;
+        //  s = 3
+        void make_wall() {
+            if( plan.empty() ) {
+                s = 1;
             }
-            for( int i = 0; i < 10; i ++ ) {
-                plan.push('u');
-                plan.push('R');
+            else {
+                int u = h, v = w;
+                bool wall_build = false;
+                m = plan.front();
+                switch( m ) {
+                    case 'u': wall_build = true; u = h - 1; v = w; break;
+                    case 'd': wall_build = true; u = h + 1; v = w; break;
+                    case 'l': wall_build = true; u = h; v = w - 1; break;
+                    case 'r': wall_build = true; u = h; v = w + 1; break;
+                }
+                if( wall_build ) {
+                    if( is_placable( u, v ) ) {
+                        plan.pop();
+                    }
+                    else {
+                        m = '.';
+                    }
+                }
+                else {
+                    plan.pop();
+                }
             }
-            for( int i = 0; i < 10; i ++ ) {
-                plan.push('D');
-                plan.push('l');
+        }
+        bool is_placable( int u, int v ) {
+            if( map_humans.at( u ).at( v ).empty() 
+                && map_pets.at( u ).at( v ).empty() 
+                && map_pets.at( u - 1 ).at( v ).empty() 
+                && map_pets.at( u + 1 ).at( v ).empty()
+                && map_pets.at( u ).at( v - 1 ).empty() 
+                && map_pets.at( u ).at( v + 1 ).empty()
+            ) {
+               return( true );
             }
+            return( false );
         }
 };
 
@@ -346,13 +418,19 @@ int main()
 
     //  Plan: Zone assignment
     for( int j = 0; j < M; j ++) {
+        //  Assigne zone
         humans.at( j ).z = j % Z;
+        //  Male a plan
+        humans.at( j ).make_plan();
         //  Go home position
-        humans.at( j ).s = 1;
+        humans.at( j ).s = 2;
     }
 
     //  Main
     for( int t = 0; t < T; t ++ ) {
+        if( Debug ) {
+            print_map( std::cout );
+        }
         //  Human actions
         for( int j = 0; j < M; j ++ ) {
             humans.at( j ).action();
@@ -380,9 +458,6 @@ int main()
             //  Update pets
             update_map_pets();
         }
-    }
-    if( Debug ) {
-        print_map( std::cout );
     }
     //  Finalize
     if( Debug ) {
