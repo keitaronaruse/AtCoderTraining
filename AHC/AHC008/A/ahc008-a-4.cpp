@@ -1,8 +1,8 @@
 /**
-* @file ahc008-a-3.cpp
+* @file ahc008-a-4.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
-* @date 2022-02-20, 2022-02-25
+* @date 2022-02-25
 * @copyright MIT License
 * @details https://atcoder.jp/contests/ahc008/tasks/ahc008_a
 */
@@ -37,6 +37,16 @@ std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 const int Z = 10;
 std::vector< int > hh = {  9,  9,  9, 19, 19, 19, 30, 30, 30, 15 };
 std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30, 15 };
+
+class Zone {
+    public:
+        int zu, zd, zl, zr;
+        int hh, hw;
+    public:
+        bool is_empty() {
+            return( true );
+        }
+};
 
 const int A = 3;
 class Pet {
