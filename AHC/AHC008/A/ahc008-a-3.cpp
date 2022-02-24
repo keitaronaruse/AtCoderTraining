@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <queue>
 
-const bool Debug = false;
+const bool Debug = true;
 
 //  Room size
 const int H = 30, W = 30;
@@ -40,45 +40,30 @@ const int A = 3;
 class Pet {
     public:
         int h, w, t;
-        int K;
         std::vector< char > m;
     public:
-        Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, ' ' ), K( 0 ) { }
+        Pet() : h( -1 ), w( -1 ), t( -1 ), m( A, ' ' ) { }
         Pet( int ph, int pw, int pt ) : h( ph ), w( pw ), t( pt ), m( A, ' ' ) {
-            switch( t ) {
-                case 1: //  Cow
-                    K = 1; 
-                break;
-                case 2: //  Pig
-                case 4: //  Dog
-                case 5: //  Cat
-                    K = 2; 
-                break;
-                case 3: //  Rabbit
-                    K = 3;
-                break;
-                default:
-                break;
-            }
+            ;
         }
-        Pet( const Pet& r ) : h( r.h ), w( r.w ), t( r.t ), K( r.K ), m( r.m ) {
+        Pet( const Pet& r ) : h( r.h ), w( r.w ), t( r.t ), m( r.m ) {
             ;
         }
         Pet& operator=( const Pet& r ) {
             h = r.h;
             w = r.w;
             t = r.t;
-            K = r.K;
             m = r.m;
             return( *this );
         }
         void read( std::string& actions ) {
-            for( int k = 0; k < K; k ++ ) {
+            m = { ' ', ' ', ' ' };
+            for( int k = 0; k < actions.size(); k ++ ) {
                 m.at( k ) = actions.at( k );
             }
         }
         void update() {
-            for( int k = 0; k < K; k ++ ) {
+            for( int k = 0; k < A; k ++ ) {
                 switch( m.at( k ) ) {
                     case 'U': h -= 1; break;
                     case 'D': h += 1; break;
@@ -203,7 +188,7 @@ class Human {
         void go_to_zone() {
             if( h == hh.at( z ) && w == hw.at( z ) ) {
                 m = '.';
-                s = 3;
+                s = 1;
                 return;
             }
             if( hh.at( z ) < h ) {
@@ -433,6 +418,12 @@ int main()
     for( int t = 0; t < T; t ++ ) {
         if( Debug ) {
             print_map( std::cout );
+        }
+        if( t == 60 ) {
+            //  make walls
+            for( int j = 0; j < M; j ++ ) {
+                humans.at( j ).s = 3;
+            }
         }
         //  Human actions
         for( int j = 0; j < M; j ++ ) {

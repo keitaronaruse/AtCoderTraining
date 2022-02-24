@@ -76,7 +76,9 @@ LD RU DD RU DR RU LRR RL RUL LU D UR RL
 UU UD LR LD DU DR DRL RL RRR LL R RU UU 
 LU DD UU RR LD RU ULD RU DDL DU R RL DR 
 DD UR RU DL DL RR UUL UL RRD LD R RR UL 
-LL DL LD DD DL L terminate called after throwing an instance of 'std::out_of_range'
-  what():  basic_string::at: __n (which is 1) >= this->size() (which is 1)
-Your program has terminated unexpectedly on turn 78
+LL DL LD DD DL L LLD UR DRD RU U RD RL 
+LR UD RR RL RL RL URR R UDD DR L RR RD 
+LR RR RU UU RL RD RLD LD UUU UR L RD RD 
+LL RR UR RD DD UD RDU UL DLD DU U RL UU 
+trying to block a square whose adjacent square contains a pet (turn 81)
 Score = 0

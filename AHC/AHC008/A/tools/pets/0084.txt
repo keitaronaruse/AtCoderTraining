@@ -1,4 +1,4 @@
-    Finished release [optimized] target(s) in 0.02s
+    Finished release [optimized] target(s) in 0.01s
      Running `target/release/tester ../build/ahc008-a-3`
 LLL UU DL UL D LR U UU U LU RL U LR LL ULU UR U 
 RDR UR LD UU U LR L RU L LD DL U LR DD LLL UR D 
@@ -62,7 +62,6 @@ RLL UU UD LD U UU U LU D UD UL L RD LL DLU DR D
 DDU RD DL LD U RD R DR U RU RD U UL UD LDL DR D 
 DRU UL UD UD R RL D LL U RR UD U RD UD RUU DR U 
 RDL RL LU UR D RL D LD D RD UL R RU UR RDU DL D 
-DUR RL UU LL R DD R UL L DD RD L DU L terminate called after throwing an instance of 'std::out_of_range'
-  what():  basic_string::at: __n (which is 1) >= this->size() (which is 1)
-Your program has terminated unexpectedly on turn 64
+DUR RL UU LL R DD R UL L DD RD L DU L RDR LR U 
+trying to block a square whose adjacent square contains a pet (turn 64)
 Score = 0

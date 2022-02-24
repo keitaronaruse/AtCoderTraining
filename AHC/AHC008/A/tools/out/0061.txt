@@ -41,3 +41,11 @@ drdrr
 RUd.U
 .r...
 .U...
+.r..r
+.U..U
+.r..r
+dU..U
+Rr..r
+dr..U
+R...r
+d...r
