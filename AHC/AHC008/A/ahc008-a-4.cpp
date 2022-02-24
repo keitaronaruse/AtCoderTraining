@@ -33,11 +33,7 @@ std::vector< std::vector< char > > map_obst;
 std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Zones
-//  9: d
-const int Z = 10;
-std::vector< int > hh = {  9,  9,  9, 19, 19, 19, 30, 30, 30, 15 };
-std::vector< int > hw = {  1, 11, 21,  1, 11, 21,  9, 19, 30, 15 };
-
+const int Z = 9;
 class Zone {
     public:
         int zu, zd, zl, zr;
@@ -47,6 +43,7 @@ class Zone {
             return( true );
         }
 };
+std::vector< Zone > zones;
 
 const int A = 3;
 class Pet {
@@ -197,21 +194,21 @@ class Human {
         }
         //  s = 2
         void go_to_zone() {
-            if( h == hh.at( z ) && w == hw.at( z ) ) {
+            if( h == zones.at( z ).hh && w == zones.at( z ).hw ) {
                 m = '.';
                 s = 1;
                 return;
             }
-            if( hh.at( z ) < h ) {
+            if( zones.at( z ).hh < h ) {
                 m = 'U';
             }
-            else if( hh.at( z ) > h ) {
+            else if( zones.at( z ).hh > h ) {
                 m = 'D';
             }
-            else if( hw.at( z ) < w ) {
+            else if( zones.at( z ).hw < w ) {
                 m = 'L';
             }
-            else if( hw.at( z ) > w ) {
+            else if( zones.at( z ).hw > w ) {
                 m = 'R';
             }
             else {
@@ -393,6 +390,30 @@ void print_map( std::ostream& os )
     }
 }
 
+
+void make_zones()
+{
+    zones = std::vector< Zone >( Z );
+    //  zu, zd, zl, zr, hh, hw
+    // zones.at( 0 ) = {  1, 10,  1, 10 };
+    // zones.at( 1 ) = {  1, 10, 11, 20 };
+    // zones.at( 2 ) = {  1, 10, 21, 30 };
+    // zones.at( 3 ) = { 11, 20,  1, 10 };
+    // zones.at( 4 ) = { 11, 20, 11, 20 };
+    // zones.at( 5 ) = { 11, 20, 21, 30 };
+    // zones.at( 6 ) = { 21, 30,  1, 10 };
+    // zones.at( 7 ) = { 21, 30, 11, 20 };
+    // zones.at( 8 ) = { 21, 30, 21, 30 };
+    for( int z = 0; z < Z; z ++ ) {
+        zones.at( z ).zu = ( z / 3 ) * 10 +  1;
+        zones.at( z ).zd = ( z / 3 ) * 10 + 10;
+        zones.at( z ).zl = ( z % 3 ) * 10 +  1;
+        zones.at( z ).zr = ( z % 3 ) * 10 + 10;
+        zones.at( z ).hh = zones.at( z ).zd - 1;
+        zones.at( z ).hw = zones.at( z ).zl;
+    }
+}
+
 int main()
 {
     //  Read input
@@ -403,6 +424,8 @@ int main()
     update_map_pets();
     //  Update humans
     update_map_human();
+    //  Make zones;
+    make_zones();
 
     //  Plan: Zone assignment
     for( int j = 0; j < M; j ++) {
