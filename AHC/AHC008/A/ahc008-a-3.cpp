@@ -18,8 +18,10 @@
 #include <list>
 #include <algorithm>
 #include <queue>
+#include <fstream>
+#include <cstdio>
 
-const bool Debug = true;
+const bool Debug = false;
 
 //  Room size
 const int H = 30, W = 30;
@@ -56,9 +58,9 @@ class Pet {
             m = r.m;
             return( *this );
         }
-        void read( std::string& actions ) {
+        void read( const std::string& actions ) {
             m = { ' ', ' ', ' ' };
-            for( int k = 0; k < actions.size(); k ++ ) {
+            for( size_t k = 0; k < actions.size(); k ++ ) {
                 m.at( k ) = actions.at( k );
             }
         }
@@ -73,13 +75,12 @@ class Pet {
                 }
             }
         }
+        friend std::ostream& operator<<( std::ostream& os, const Pet& p ) {
+            os << p.h << " " << p.w << " " << p.t << " " 
+                << p.m.at( 0 ) << " " << p.m.at( 1 ) << " " << p.m.at( 2 ) << " "; 
+            return( os );
+        }
 };
-
-std::ostream& operator<<( std::ostream& os, const Pet& p )
-{
-    os << p.h << " " << p.w << " " << p.t;
-    return( os );
-}
 
 class Human {
     public:
@@ -167,7 +168,7 @@ class Human {
 
                 case 6:
                 case 7:
-                    for( int i = 0; i < 8; i ++ ) {
+                    for( int i = 0; i < 9; i ++ ) {
                         plan.push('r');
                         plan.push('U');
                     }
@@ -210,6 +211,7 @@ class Human {
         //  s = 3
         void make_wall() {
             if( plan.empty() ) {
+                m = '.';
                 s = 1;
             }
             else {
@@ -278,12 +280,6 @@ void read_input()
         std::cin >> rh >> rw >> rt;
         pets.at( i ) = Pet( rh, rw, rt);
     }
-    if( Debug ) {
-        std::cerr << N << std::endl;
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << pets.at( i ) << std::endl;
-        }        
-    }
 
     //  Humans
     std::cin >> M;
@@ -291,12 +287,6 @@ void read_input()
     for( int j = 0; j < M; j ++ ) {
         std::cin >> humans.at( j ).h >> humans.at( j ).w;
         humans.at( j ).s = 0;
-    }
-    if( Debug ) {
-        std::cerr << M << std::endl;
-        for( int j = 0; j < M; j ++ ) {
-            std::cerr << humans.at( j ) << std::endl;
-        }
     }
 }
 
@@ -417,7 +407,10 @@ int main()
     //  Main
     for( int t = 0; t < T; t ++ ) {
         if( Debug ) {
-            print_map( std::cout );
+            char filename[ 9 ]; 
+            std::sprintf( filename, "%03d.txt", t );
+            std::ofstream ofs( filename );
+            print_map( ofs );
         }
         if( t == 60 ) {
             //  make walls
