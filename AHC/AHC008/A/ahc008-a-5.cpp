@@ -1,5 +1,5 @@
 /**
-* @file ahc008-a-4.cpp
+* @file ahc008-a-5.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
 * @date 2022-02-25
@@ -37,9 +37,15 @@ class Zone {
     public:
         int zu, zd, zl, zr;
         int hh, hw;
-        std::queue< char > first_plan,  second_plan;
     public:
         bool is_empty() {
+            for( int h = zu; h <= zd; h ++ ) {
+                for( int w = zl; w <= zr; w ++ ) {
+                    if( !map_pets.at( h ).at( w ).empty() ) {
+                        return( false );
+                    }
+                }
+            }
             return( true );
         }
 };
@@ -111,6 +117,7 @@ class Human {
                 case 3: make_first_wall(); break;
                 case 4: do_nothing(); break;
                 case 5: wait_and_make_second_wall(); break;
+                case 6: make_second_wall(); break;
             }
         }
         void write() {
@@ -203,6 +210,36 @@ class Human {
         }
         //  s = 5
         void wait_and_make_second_wall() {
+            if( plan.empty() ) {
+                m = '.';
+                s = 0;
+            }
+            else {
+                int u = h, v = w;
+                bool wall_build = false;
+                m = plan.front();
+                switch( m ) {
+                    case 'u': wall_build = true; u = h - 1; v = w; break;
+                    case 'd': wall_build = true; u = h + 1; v = w; break;
+                    case 'l': wall_build = true; u = h; v = w - 1; break;
+                    case 'r': wall_build = true; u = h; v = w + 1; break;
+                }
+                if( wall_build ) {
+                    // if( is_placable( u, v ) ) {
+                    if( is_placable( u, v ) && zones.at( z ).is_empty() ) {
+                        plan.pop();
+                    }
+                    else {
+                        m = '.';
+                    }
+                }
+                else {
+                    plan.pop();
+                }
+            }
+        }
+        //  s = 6
+        void make_second_wall() {
             if( plan.empty() ) {
                 m = '.';
                 s = 0;
@@ -468,6 +505,14 @@ int main()
                     default: break;
                 }
                 humans.at( j ).s = 5;
+            }
+        }
+        if( 270 <= t ) {
+            //  force to make second wall
+            for( int j = 0; j < M; j ++ ) {
+                if( humans.at( j ).s == 5 ) {
+                    humans.at( j ).s = 6;
+                }
             }
         }
         //  Human actions

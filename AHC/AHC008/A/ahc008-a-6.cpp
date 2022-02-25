@@ -1,5 +1,5 @@
 /**
-* @file ahc008-a-4.cpp
+* @file ahc008-a-6.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
 * @date 2022-02-25
@@ -32,15 +32,30 @@ std::vector< std::vector< char > > map_obst;
 std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Zones
-const int Z = 10;
+const int Z = 9;
 class Zone {
     public:
         int zu, zd, zl, zr;
         int hh, hw;
-        std::queue< char > first_plan,  second_plan;
     public:
         bool is_empty() {
+            for( int h = zu; h <= zd; h ++ ) {
+                for( int w = zl; w <= zr; w ++ ) {
+                    if( !map_pets.at( h ).at( w ).empty() ) {
+                        return( false );
+                    }
+                }
+            }
             return( true );
+        }
+        int num_pets() {
+            int num = 0;
+            for( int h = zu; h <= zd; h ++ ) {
+                for( int w = zl; w <= zr; w ++ ) {
+                    num += map_pets.at( h ).at( w ).size();
+                }
+            }
+            return( num );
         }
 };
 std::vector< Zone > zones;
@@ -111,6 +126,7 @@ class Human {
                 case 3: make_first_wall(); break;
                 case 4: do_nothing(); break;
                 case 5: wait_and_make_second_wall(); break;
+                case 6: make_second_wall(); break;
             }
         }
         void write() {
@@ -203,6 +219,36 @@ class Human {
         }
         //  s = 5
         void wait_and_make_second_wall() {
+            if( plan.empty() ) {
+                m = '.';
+                s = 0;
+            }
+            else {
+                int u = h, v = w;
+                bool wall_build = false;
+                m = plan.front();
+                switch( m ) {
+                    case 'u': wall_build = true; u = h - 1; v = w; break;
+                    case 'd': wall_build = true; u = h + 1; v = w; break;
+                    case 'l': wall_build = true; u = h; v = w - 1; break;
+                    case 'r': wall_build = true; u = h; v = w + 1; break;
+                }
+                if( wall_build ) {
+                    // if( is_placable( u, v ) ) {
+                    if( is_placable( u, v ) && zones.at( z ).is_empty() ) {
+                        plan.pop();
+                    }
+                    else {
+                        m = '.';
+                    }
+                }
+                else {
+                    plan.pop();
+                }
+            }
+        }
+        //  s = 6
+        void make_second_wall() {
             if( plan.empty() ) {
                 m = '.';
                 s = 0;
@@ -388,7 +434,6 @@ void print_map( std::ostream& os )
     }
 }
 
-
 void make_zones()
 {
     zones = std::vector< Zone >( Z );
@@ -402,7 +447,6 @@ void make_zones()
     zones.at( 6 ) = { 21, 30,  1, 10, 30,  9 };
     zones.at( 7 ) = { 21, 30, 11, 20, 30, 19 };
     zones.at( 8 ) = { 21, 30, 21, 30, 30, 30 };
-    zones.at( 9 ) = { 15, 15, 15, 15, 15, 15 };
 }
 
 bool are_all_humans_in_state( int s )
@@ -434,6 +478,18 @@ int main()
         humans.at( j ).z = j;
         //  Go home position
         humans.at( j ).s = 1;
+        if( j == Z ) {
+            int min_pets_num = N;
+            int min_index = 0;
+            for( int k = 0; k < Z; k ++ ) {
+                int pets_num = zones.at( k ).num_pets();
+                if( pets_num < min_pets_num ) {
+                    min_pets_num = pets_num;
+                    min_index = k;
+                }
+            }
+            humans.at( j ).z = min_index;
+        }
     }
 
     //  Main
@@ -468,6 +524,14 @@ int main()
                     default: break;
                 }
                 humans.at( j ).s = 5;
+            }
+        }
+        if( 270 <= t ) {
+            //  force to make second wall
+            for( int j = 0; j < M; j ++ ) {
+                if( humans.at( j ).s == 5 ) {
+                    humans.at( j ).s = 6;
+                }
             }
         }
         //  Human actions
