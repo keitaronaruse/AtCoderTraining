@@ -23,6 +23,14 @@
 
 const bool Debug = false;
 
+namespace nrs {
+    template < class T >
+    T abs( T a )
+    {
+        return( ( a > 0 )? a : -a );
+    }
+}
+
 //  Room size
 const int H = 30, W = 30;
 //  The number of turns
@@ -33,7 +41,7 @@ std::vector< std::vector< char > > map_obst;
 std::vector< std::vector< std::list< int > > > map_pets, map_humans;
 
 //  Zones
-const int Z = 9;
+const int Z = 10;
 class Zone {
     public:
         int zu, zd, zl, zr;
@@ -273,8 +281,15 @@ std::vector< Pet > pets;
 int M = 0;
 //  Humans: humans.at( j )
 std::vector< Human > humans;
+//  s = 1: Do nothing
+//  s = 2: Go zone position
+//  s = 3: Make walls
+std::vector< int > states;
+std::vector< int > assign;
 
 class Planner {
+    public:
+        Planner() {}
 };
 
 void read_input()
@@ -291,6 +306,9 @@ void read_input()
     //  Humans
     std::cin >> M;
     humans = std::vector< Human >( M );
+    states = std::vector< int >( M, 0 );
+    assign = std::vector< int >( M, -1 );
+
     for( int j = 0; j < M; j ++ ) {
         std::cin >> humans.at( j ).h >> humans.at( j ).w;
         humans.at( j ).s = 0;
@@ -404,13 +422,19 @@ void make_zones()
     // zones.at( 6 ) = { 21, 30,  1, 10 };
     // zones.at( 7 ) = { 21, 30, 11, 20 };
     // zones.at( 8 ) = { 21, 30, 21, 30 };
+    // zones.at( 9 ) = { 15, 15, 15, 15, 15, 15 };
     for( int z = 0; z < Z; z ++ ) {
-        zones.at( z ).zu = ( z / 3 ) * 10 +  1;
-        zones.at( z ).zd = ( z / 3 ) * 10 + 10;
-        zones.at( z ).zl = ( z % 3 ) * 10 +  1;
-        zones.at( z ).zr = ( z % 3 ) * 10 + 10;
-        zones.at( z ).hh = zones.at( z ).zd - 1;
-        zones.at( z ).hw = zones.at( z ).zl;
+        if( z == 9 ) {
+            zones.at( z ) = { 15, 15, 15, 15, 15, 15 };
+        }
+        else {
+            zones.at( z ).zu = ( z / 3 ) * 10 +  1;
+            zones.at( z ).zd = ( z / 3 ) * 10 + 10;
+            zones.at( z ).zl = ( z % 3 ) * 10 +  1;
+            zones.at( z ).zr = ( z % 3 ) * 10 + 10;
+            zones.at( z ).hh = zones.at( z ).zd - 1;
+            zones.at( z ).hw = zones.at( z ).zl;
+        }
     }
 }
 
@@ -429,7 +453,7 @@ int main()
 
     //  Plan: Zone assignment
     for( int j = 0; j < M; j ++) {
-        //  Assigne zone
+        //  Assign zone
         humans.at( j ).z = j;
         //  Male a plan
         humans.at( j ).make_plan();
