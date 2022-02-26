@@ -10,9 +10,7 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
 
 const bool Debug = false;
 
@@ -26,28 +24,26 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
-    if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
+    //  Read N = 10
+    int N = 10;
     //  Read Ai
-    std::vector< int > A( N, 0 );
+    std::vector< int > a( N, 0 );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+        std::cin >> a.at( i );
     }
     if( Debug ) {
-        std::cerr << A << std::endl;
+        std::cerr << a << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
-    }
-
+    
     //  Main
+    int k = 0;
+    for( int i = 0; i < 3; i ++ ) {
+        k = a.at( k );
+        if( Debug ) {
+            std::cerr << k << std::endl;
+        }
+    }
+    std::cout << k << std::endl;
 
     //  Finalize
     if( Debug ) {

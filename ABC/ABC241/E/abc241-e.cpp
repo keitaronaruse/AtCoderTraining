@@ -10,11 +10,10 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
-const bool Debug = false;
+const bool Debug = true;
 
 std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 {
@@ -26,11 +25,11 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read N, M = [ 1, 1000 ]
+    int N = 0, M = 0;
+    std::cin >> N >> M;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
+        std::cerr << N << " " << M << std::endl;
     }
     //  Read Ai
     std::vector< int > A( N, 0 );
@@ -40,14 +39,33 @@ int main()
     if( Debug ) {
         std::cerr << A << std::endl;
     }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
+    //  Read Bj
+    std::vector< int > B( M, 0 );
+    for( int j = 0; j < M; j ++ ) {
+        std::cin >> B.at( j );
+    }
     if( Debug ) {
-        std::cerr << S <<  std::endl;
+        std::cerr << B << std::endl;
     }
 
     //  Main
+    std::vector< bool > not_taken( N, true );
+    for( int j = 0; j < M; j ++ ) {
+        bool is_found = false;
+        for( int i = 0; i < N; i ++ ) {
+            if( B.at( j ) == A.at( i ) ) {
+                if( not_taken.at( i ) ) {
+                    not_taken.at( i ) = false;
+                    is_found = true;
+                    break;
+                }
+            }
+        }
+        if( !is_found ) {
+            std::cout << "No" << std::endl;
+        }
+    }
+    std::cout << "Yes" << std::endl;
 
     //  Finalize
     if( Debug ) {
