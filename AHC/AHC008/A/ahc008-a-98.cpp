@@ -1,5 +1,5 @@
 /**
-* @file ahc008-a-7.cpp
+* @file ahc008-a-8.cpp
 * @brief AHC008 Problem A - Territory
 * @author Keitaro Naruse
 * @date 2022-02-26
@@ -127,6 +127,10 @@ class Human {
                 case 4: do_nothing(); break;
                 case 5: wait_and_make_second_wall(); break;
                 case 6: make_second_wall(); break;
+                case 7: go_to_zone(); break;
+                case 8: do_nothing(); break;
+                case 9: wait_and_make_second_wall(); break;
+                case 10: do_nothing(); break;
             }
         }
         void write() {
@@ -169,7 +173,7 @@ class Human {
         void go_to_zone() {
             if( h == zones.at( z ).hh && w == zones.at( z ).hw ) {
                 m = '.';
-                s = 2;
+                s ++;
                 return;
             }
             if( zones.at( z ).hh < h ) {
@@ -221,7 +225,7 @@ class Human {
         void wait_and_make_second_wall() {
             if( plan.empty() ) {
                 m = '.';
-                s = 0;
+                s ++;
             }
             else {
                 int u = h, v = w;
@@ -250,7 +254,7 @@ class Human {
         void make_second_wall() {
             if( plan.empty() ) {
                 m = '.';
-                s = 0;
+                s = 7;
             }
             else {
                 int u = h, v = w;
@@ -300,6 +304,26 @@ class Human {
                 plan.push( 'U' );
             }
             plan.push('r');
+        }
+        void move_up( int n ) {
+            for( int i = 0; i < n; i ++ ) {
+                plan.push( 'U' );
+            }
+        }
+        void move_down( int n ) {
+            for( int i = 0; i < n; i ++ ) {
+                plan.push( 'D' );
+            }
+        }
+        void move_left( int n ) {
+            for( int i = 0; i < n; i ++ ) {
+                plan.push( 'L' );
+            }
+        }
+        void move_right( int n ) {
+            for( int i = 0; i < n; i ++ ) {
+                plan.push( 'R' );
+            }
         }
 };
 
@@ -436,27 +460,16 @@ void print_map( std::ostream& os )
 void make_zones()
 {
     zones = std::vector< Zone >( Z );
-    if( M <= 6 ) {
-        //  zu, zd, zl, zr, hh, hw
-        zones.at( 0 ) = {  1, 15,  1, 10, 14,  1, 0 };
-        zones.at( 1 ) = {  1, 15, 11, 20, 14, 11, 0 };
-        zones.at( 2 ) = {  1, 15, 21, 30, 14 ,21, 0 };
-        zones.at( 3 ) = { 16, 30,  1, 10, 29,  1, 0 };
-        zones.at( 4 ) = { 16, 30, 11, 20, 29, 11, 0 };
-        zones.at( 5 ) = { 16, 30, 21, 30, 29, 21, 0 };
-    }
-    else {
-        //  zu, zd, zl, zr, hh, hw
-        zones.at( 0 ) = {  1, 10,  1, 10,  9,  1, 0 };
-        zones.at( 1 ) = {  1, 10, 11, 20,  9, 11, 0 };
-        zones.at( 2 ) = {  1, 10, 21, 30,  9 ,21, 0 };
-        zones.at( 3 ) = { 11, 20,  1, 10, 19,  1, 0 };
-        zones.at( 4 ) = { 11, 20, 11, 20, 19, 11, 0 };
-        zones.at( 5 ) = { 11, 20, 21, 30, 19, 21, 0 };
-        zones.at( 6 ) = { 21, 30,  1, 10, 30,  9, 0 };
-        zones.at( 7 ) = { 21, 30, 11, 20, 30, 19, 0 };
-        zones.at( 8 ) = { 21, 30, 21, 30, 30, 30, 0 };
-    }
+    //  zu, zd, zl, zr, hh, hw
+    zones.at( 0 ) = {  1, 10,  1, 10,  9,  1, 0 };
+    zones.at( 1 ) = {  1, 10, 11, 20,  9, 11, 0 };
+    zones.at( 2 ) = {  1, 10, 21, 30,  9 ,21, 0 };
+    zones.at( 3 ) = { 11, 20,  1, 10, 19,  1, 0 };
+    zones.at( 4 ) = { 11, 20, 11, 20, 19, 11, 0 };
+    zones.at( 5 ) = { 11, 20, 21, 30, 19, 21, 0 };
+    zones.at( 6 ) = { 21, 30,  1, 10, 30,  9, 0 };
+    zones.at( 7 ) = { 21, 30, 11, 20, 30, 19, 0 };
+    zones.at( 8 ) = { 21, 30, 21, 30, 30, 30, 0 };
 }
 
 bool are_all_humans_in_state( int s )
@@ -481,16 +494,16 @@ int main()
     update_map_human();
     //  Make zones
     make_zones();
-
+    //  Update the number of pets in each of the zones
     //  Plan: Zone assignment
     for( int j = 0; j < M; j ++) {
         //  Assign zone
         humans.at( j ).z = j;
+        //  Go home position
+        humans.at( j ).s = 1;
         if( j == Z ) {
             humans.at( j ).z = Z - 1;
         }
-        //  Go home position
-        humans.at( j ).s = 1;
     }
 
     //  Main
@@ -521,29 +534,39 @@ int main()
                 case 4:
                     switch( j ) {
                         case 0: case 1: case 3: case 4: 
-                            if( M <= 6 ) {
-                                humans.at( j ).plan_b( 13 ); 
-                            }
-                            else {
-                                humans.at( j ).plan_b( 8 ); 
-                            }
+                            humans.at( j ).plan_b( 8 ); 
                         break;
                         case 6: case 7:
-                            if( M <= 6 ) {
-                                humans.at( j ).plan_b( 14 ); 
-                            }
-                            else {
-                                humans.at( j ).plan_b( 9 ); 
-                            }
+                            humans.at( j ).plan_b( 9 ); 
                         break;
                         default: break;
                     }
                     humans.at( j ).s = 5;
                 break; 
+
+                case 8:
+                    if( zones.at( j ).num_pets != 0 ) {
+                        humans.at( j ).s = 0;
+                    }
+                    else {
+                        zones.at( j ).zr = zones.at( j ).zl + 5; 
+                        humans.at( j ).move_right( 5 );
+                        switch( humans.at( j ).z ) {
+                            case 0: case 1: case 2: case 3: case 4: case 5: 
+                                humans.at( j ).plan_b( 8 ); 
+                            break;
+                            case 6: case 7: case 8:
+                                humans.at( j ).plan_b( 9 ); 
+                            break;
+                        }
+                        humans.at( j ).s = 9;
+                    }
+                break;
+
                 default: break;
             }
         }
-        if( 270 == t ) {
+        if( 100 == t ) {
             //  force to make second wall
             for( int j = 0; j < M; j ++ ) {
                 if( humans.at( j ).s == 5 ) {

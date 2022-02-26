@@ -1,5 +1,5 @@
     Finished release [optimized] target(s) in 0.01s
-     Running `target/release/tester ../build/ahc008-a-7`
+     Running `target/release/tester ../build/ahc008-a-8`
 R RDU RU DUU D UDD UU DD RR L LU RL RR LD DDD 
 D ULU RU DDU R LRR RU RL RR L DD UL LR LD LUR 
 D LDL RL LRD R DUU UR RU RU D LR RD RL RD RLR 
@@ -299,4 +299,4 @@ L ULL RL LRD L LUL RD UD UL R RR DL DD DR RRR
 L DLL RD ULU D LLL DU RR RL R LD DU RR LD DUR 
 D RLR UL RUD D RLD UU LD RU D DR RD LL UR DDD 
 D RLR RD UUR R RUL LU UU RL U LU RD RU DU LRD 
-Score = 5519444
+Score = 4588889

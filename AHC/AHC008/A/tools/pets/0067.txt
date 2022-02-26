@@ -1,5 +1,5 @@
     Finished release [optimized] target(s) in 0.01s
-     Running `target/release/tester ../build/ahc008-a-7`
+     Running `target/release/tester ../build/ahc008-a-8`
 RD UL R DL DU UL DU LD LUR UDU 
 DL UL R DR DD LU DU LL URU RLD 
 DL LL L RU DD DL UD UR DDL DRU 
