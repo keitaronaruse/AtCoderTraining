@@ -32,48 +32,9 @@ namespace nrs {
             adj_graph( const adj_graph& r ) : n( r.n ) {
                 adj_nodes = r.adj_nodes;
             }
-            void add_d_edge( int b, int e ) {
-                adj_nodes.at( b ).push_back( e );
-            }
             void add_u_edge( int b, int e ) {
                 adj_nodes.at( b ).push_back( e );
                 adj_nodes.at( e ).push_back( b );
-            }
-            bool has_d_edge( int b, int e ) {
-                return( 
-                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
-                    != adj_nodes.at( b ).end()
-                );
-            }
-            bool has_u_edge( int b, int e ) {
-                return( 
-                    ( std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
-                    != adj_nodes.at( b ).end() ) &&
-                    ( std::find( adj_nodes.at( e ).begin(), adj_nodes.at( e ).end(), b ) 
-                    != adj_nodes.at( e ).end() )
-                );
-            }
-            /**
-             * @brief find the next node from the given stack by DFS
-             * @param[in] s: working stack for DFS
-             * @param[in] length: distance from a source node
-             * @return v: the found next node
-             */
-            int next_node_dfs( std::stack< int >& s, std::vector< int >& length ) {
-                int v = s.top(); 
-                s.pop();
-                //  Common procedure
-                for( auto u : adj_nodes.at( v ) ) {
-                    if( length.at( u ) == -1 ) {
-                        length.at( u ) = length.at( v ) + 1;
-                        s.push( u );
-                    }
-                    else if( length.at( u ) > length.at( v ) + 1 ) {
-                        length.at( u ) = length.at( v ) + 1;
-                        s.push( u );
-                    }
-                }
-                return( v );
             }
             /**
              * @brief find the next node from the stack by BFS
@@ -93,24 +54,12 @@ namespace nrs {
                 }
                 return( v );
             }
-            /**
-             * @brief find the next node from the given priority que by Dijkkstra's algorithm
-             * @param[in] pq: working priority que stack for Dijkstra's algorithm
-             * @param[in] length: distance from a source node
-             * @return v: the found next node
-             */
-            template < class T, class Container, class Compare >
-            int next_node_dijkstra( std::priority_queue< T, Container, Compare >& pq, std::vector< int >& length ) {
-                int v = pq.top(); 
-                pq.pop();
+            int next_node_deeper( std::queue< int >& s, const std::vector< int >& length ) {
+                int v = s.front(); s.pop();
                 //  Common procedure
                 for( auto u : adj_nodes.at( v ) ) {
-                    if( length.at( u ) == -1 ) {
-                        length.at( u ) = length.at( v ) + 1;
-                        pq.push( u );
-                    }
-                    else if( length.at( u ) > length.at( v ) + 1 ) {
-                        length.at( u ) = length.at( v ) + 1;
+                    if( length.at( u ) > length.at( v ) ) {
+                        s.push( u );
                     }
                 }
                 return( v );
@@ -126,7 +75,7 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
     return( os );
 }
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -169,6 +118,34 @@ int main()
     }
 
     //  Main
+    //  Make tree
+    nrs::adj_graph tree( N );
+    for( int i = 0; i < N - 1; i ++ ) {
+        tree.add_u_edge( A.at( i ) - 1, B.at( i ) - 1 );
+    }
+    //  Find the distance from the root to each of the nodes 
+    std::vector< int > length( N, -1 );
+    std::queue< int > s;
+    s.push( 0 ); length.at( 0 ) = 0;
+    while( !s.empty() ) {
+        int v = tree.next_node_bfs( s, length );
+    }
+    
+    //  Queries
+    for( int j = 0; j < Q; j ++ ) {
+        std::vector< int > l;
+        std::queue< int > s;
+        s.push( V.at( j ) - 1 );
+        while( !s.empty() ) {
+            int v = tree.next_node_deeper( s, length );
+            l.push_back( X.at( v ) );
+        }
+        std::sort( l.begin(), l.end(), std::greater< int >{} );
+        if( Debug ) {
+            std::cerr << l << std::endl;
+        }
+        std::cout << l.at( K.at( j ) - 1 ) << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {
