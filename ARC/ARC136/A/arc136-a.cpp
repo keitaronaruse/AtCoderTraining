@@ -8,6 +8,8 @@
 */
 
 // # Solution
+// - BA -> (BBB) -> AB
+// - BB -> A
 
 #include <iostream>
 #include <string>
@@ -16,29 +18,13 @@
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
+    //  Read N = [ 1, 2*10^5 ]
     int N = 0;
     std::cin >> N;
     if( Debug ) {
         std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
     }
     //  Read S
     std::string S = "";
@@ -48,6 +34,62 @@ int main()
     }
 
     //  Main
+    //  First stage 
+    std::string tBB;
+    int i = 0;
+    while( i < S.size() ) {
+        if( S.at( i ) == 'A' ) {
+            tBB.push_back( 'B' );
+            tBB.push_back( 'B' );
+            i ++;
+        }
+        else {
+            tBB.push_back( S.at( i ) );
+            i ++ ;
+        }
+    }
+    // std::cout << tBB << std::endl;
+
+    //  Second stage 
+    std::string tA;
+    i = 0;
+    while( i < tBB.size() ) {
+        if( i < tBB.size() - 1 && tBB.at( i ) == 'B' && tBB.at( i + 1 ) == 'B' ) {
+            tA.push_back( 'A' );
+            i += 2;
+        }
+        else {
+            tA.push_back( tBB.at( i ) );
+            i ++ ;
+        }
+    }
+    std::cout << tA << std::endl;
+
+    // bool is_modified = true;
+    // while( is_modified ) {
+    //     s = t;
+    //     t = "";
+    //     is_modified = false;
+    //     int i = 0;
+    //     while( i < s.size() ) {
+    //         if( i < s.size() - 1 && s.at( i ) == 'B' && s.at( i + 1 ) == 'A' ) {
+    //             t.push_back( 'A' );
+    //             t.push_back( 'B' );
+    //             is_modified = true;
+    //             i += 2;
+    //         }
+    //         else if( i < s.size() - 1 && s.at( i ) == 'B' && s.at( i + 1 ) == 'B' ) {
+    //             t.push_back( 'A' );
+    //             is_modified = true;
+    //             i += 2;
+    //         }
+    //         else {
+    //             t.push_back( s.at( i ) );
+    //             i ++ ;
+    //         }
+    //     }
+    // }
+    // std::cout << t << std::endl;
 
     //  Finalize
     if( Debug ) {
