@@ -1,8 +1,8 @@
 /**
 * @file abc241-c.cpp
-* @brief ABC241 Problem C
+* @brief ABC241 Problem C - Connect 6
 * @author Keitaro Naruse
-* @date 2022-02-26
+* @date 2022-02-26, 2022-02-27
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc241/tasks/abc241_c
 */
@@ -27,27 +27,9 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< char
     return( os );
 }
 
-int main()
+bool old_solution( int N, int K, const std::vector< std::vector< char > >& S )
 {
-    //  Read N = [ 6, 1000 ]
-    int N = 0;
-    std::cin >> N;
-    if( Debug ) {
-        std::cerr << N << std::endl;
-    }
-    //  Read Sij
-    std::vector< std::vector< char > > S( N, std::vector< char >( N, ' ' ) );
-    for( int i = 0; i < N; i ++ ) {
-        for( int j = 0; j < N; j ++ ) {
-            std::cin >> S.at( i ).at( j );
-        }
-    }
-    if( Debug ) {
-        std::cerr << S;
-    }
-    
-    //  Main
-    const int K = 6;
+    //  Matching patterns
     std::vector< std::string > patterns;
     //  No period
     patterns.push_back("######");
@@ -86,8 +68,7 @@ int main()
                     }
                 }
                 if( is_match ) {
-                    std::cout << "Yes" << std::endl;
-                    return( 0 );
+                    return( true );
                 }
             }
         }
@@ -106,8 +87,7 @@ int main()
                     }
                 }
                 if( is_match ) {
-                    std::cout << "Yes" << std::endl;
-                    return( 0 );
+                    return( true );
                 }
             }
         }
@@ -126,8 +106,7 @@ int main()
                     }
                 }
                 if( is_match ) {
-                    std::cout << "Yes" << std::endl;
-                    return( 0 );
+                    return( true );
                 }
 
                 //  Another diagonal check
@@ -139,13 +118,103 @@ int main()
                     }
                 }
                 if( is_match ) {
-                    std::cout << "Yes" << std::endl;
-                    return( 0 );
+                    return( true );
                 }
             }
         }
     }
-    std::cout << "No" << std::endl;
+    return( false );
+}
+
+bool new_solution( int N, int K, const std::vector< std::vector< char > >& S )
+{
+    for( int h = 0; h < N; h ++ ) {
+        for( int w = 0; w < N; w ++ ) {
+            //  check out in the width direction
+            if( w <= N - K ) {
+                int num_hash = 0;
+                for( int k = 0; k < K; k ++ ) {
+                    if( S.at( h ).at( w + k ) == '#' ) {
+                        num_hash ++;
+                    }
+                }
+                if( num_hash >= 4 ) {
+                    return( true );
+                }
+            }
+            //  check out in the height direction
+            if( h <= N - K ) {
+                int num_hash = 0;
+                for( int k = 0; k < K; k ++ ) {
+                    if( S.at( h + k ).at( w ) == '#' ) {
+                        num_hash ++;
+                    }
+                }
+                if( num_hash >= 4 ) {
+                    return( true );
+                }
+            }
+            //  check out in the diagonal check, positive slope 
+            if( h <= N - K && w <= N - K ) {
+                int num_hash = 0;
+                for( int k = 0; k < K; k ++ ) {
+                    if( S.at( h + k ).at( w + k ) == '#' ) {
+                        num_hash ++;
+                    }
+                }
+                if( num_hash >= 4 ) {
+                    return( true );
+                }
+            }
+            //  check out in the diagonal check, negative slope 
+            if( h <= N - K && w <= N - K ) {
+                int num_hash = 0;
+                for( int k = 0; k < K; k ++ ) {
+                    if( S.at( h + k ).at( w + K - 1 - k ) == '#' ) {
+                        num_hash ++;
+                    }
+                }
+                if( num_hash >= 4 ) {
+                    return( true );
+                }
+            }
+        }
+    }
+    return( false );
+}
+
+int main()
+{
+    //  Constant
+    const int K = 6;
+
+    //  Read N = [ 6, 1000 ]
+    int N = 0;
+    std::cin >> N;
+    if( Debug ) {
+        std::cerr << N << std::endl;
+    }
+    //  Read Sij
+    std::vector< std::vector< char > > S( N, std::vector< char >( N, ' ' ) );
+    for( int i = 0; i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
+            std::cin >> S.at( i ).at( j );
+        }
+    }
+    if( Debug ) {
+        std::cerr << S;
+    }
+    
+    //  Main
+    // bool isYes = old_solution( N, K, S );
+    bool isYes = new_solution( N, K, S );
+    
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     if( Debug ) {

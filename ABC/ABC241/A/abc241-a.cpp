@@ -1,8 +1,8 @@
 /**
 * @file abc241-a.cpp
-* @brief ABC241 Problem A
+* @brief ABC241 Problem A - Digit Machine 
 * @author Keitaro Naruse
-* @date 2022-02-26
+* @date 2022-02-26, 2022-02-27
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc241/tasks/abc241_a
 */
@@ -26,7 +26,7 @@ int main()
 {
     //  Read N = 10
     int N = 10;
-    //  Read Ai
+    //  Read ai
     std::vector< int > a( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> a.at( i );

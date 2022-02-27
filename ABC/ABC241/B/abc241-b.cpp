@@ -1,8 +1,8 @@
 /**
 * @file abc241-b.cpp
-* @brief ABC241 Problem B
+* @brief ABC241 Problem B - Pasta
 * @author Keitaro Naruse
-* @date 2022-02-26
+* @date 2022-02-26, 2022-02-27
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc241/tasks/abc241_b
 */
@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 const bool Debug = false;
 
@@ -50,16 +49,14 @@ int main()
 
     //  Main
     bool isYes = true;
-    std::vector< bool > not_taken( N, true );
+    std::vector< bool > unused( N, true );
     for( int j = 0; j < M; j ++ ) {
         bool is_found = false;
         for( int i = 0; i < N; i ++ ) {
-            if( B.at( j ) == A.at( i ) ) {
-                if( not_taken.at( i ) ) {
-                    not_taken.at( i ) = false;
-                    is_found = true;
-                    break;
-                }
+            if( B.at( j ) == A.at( i ) && unused.at( i ) ) {
+                unused.at( i ) = false;
+                is_found = true;
+                break;
             }
         }
         if( !is_found ) {
