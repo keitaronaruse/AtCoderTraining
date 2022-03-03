@@ -26,7 +26,8 @@
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
+template< class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 {
     for( auto k : v ) {
         os << k << " ";
@@ -43,7 +44,8 @@ int main()
         std::cerr << N <<  std::endl;
     }
     //  Read Si
-    std::vector< int > S( N, 0 );
+    std::vector< long long > S( N, 0 );
+    // std::vector< int > S( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> S.at( i );
     }
@@ -53,7 +55,7 @@ int main()
 
     //  Main
     //  Make Xi
-    std::vector< int > X( N + 2, 0 );
+    std::vector< long long > X( N + 2, 0 );
     X.at( 0 ) = 0;
     X.at( 1 ) = 0;
     for( int i = 2; i < N + 2; i ++ ) {
@@ -63,32 +65,28 @@ int main()
         std::cerr << X << std::endl;
     }
     //  Find the solution 
-    int c1 = X.at( 0 );
-    for( int i = 0; i < N; i += 3 ) {
-        c1 = std::min( c1, X.at( i ) );
+    long long c1 = -X.at( 0 ), c2 = -X.at( 1 ), c3 = X.at( 2 );
+    for( int i = 0; i < N + 2; i ++ ) {
+        switch( i % 3 ) {
+            case 0: c1 = std::max( c1, -X.at( i ) ); break;
+            case 1: c2 = std::max( c2, -X.at( i ) ); break;
+            case 2: c3 = std::min( c3,  X.at( i ) ); break;
+            default: break;
+        }
     }
-    c1 *= -1;
+    if( Debug ) {
+        std::cerr << c1 << " " << c2 << " " << c3 << std::endl;
+    }
 
-    int c2 = X.at( 1 );
-    for( int i = 1; i < N; i += 3 ) {
-        c2 = std::min( c2, X.at( i ) );
-    }
-    c2 *= -1;
-
-    int c3 = X.at( 2 );
-    for( int i = 2; i < N; i += 3 ) {
-        c3 = std::min( c3, X.at( i ) );
-    }
     //  Judge
-    std::vector< int > A( N + 2, 0 );
-    if( c1 + c2 < c3 ) {
+    std::vector< long long > A( N + 2, 0 );
+    if( ( c1 + c2 ) <= c3 ) {
         std::cout << "Yes" << std::endl;
-        int a = c1, b = c2;
         for( int i = 0; i < N + 2; i ++ ) {
             switch( i % 3 ) {
-                case 0: A.at( i ) = X.at( i ) + a; break;
-                case 1: A.at( i ) = X.at( i ) + b; break;
-                case 2: A.at( i ) = X.at( i ) - a - b; break;
+                case 0: A.at( i ) = X.at( i ) + c1; break;
+                case 1: A.at( i ) = X.at( i ) + c2; break;
+                case 2: A.at( i ) = X.at( i ) - c1 - c2; break;
                 default: break;
             }
         }
