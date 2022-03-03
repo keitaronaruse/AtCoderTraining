@@ -2,7 +2,7 @@
     008 - AtCounter（★4）
         https://atcoder.jp/contests/typical90/tasks/typical90_h
         Author: Keitaro Naruse
-        Date:   2021-01-04
+        Date:   2022-01-04
         MIT License
 */
 

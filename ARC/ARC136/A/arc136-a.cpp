@@ -1,10 +1,10 @@
 /**
 * @file arc136-a.cpp
-* @brief ARC136 Problem A
+* @brief ARC136 Problem A - A ↔ BB
 * @author Keitaro Naruse
 * @date 2022-02-27
 * @copyright MIT License
-* @details https://atcoder.jp/contests/arc240/tasks/arc136_a
+* @details https://atcoder.jp/contests/arc136/tasks/arc136_a
 */
 
 // # Solution

@@ -1,20 +1,20 @@
 /**
 * @file arc136-b.cpp
-* @brief ARC136 Problem B
+* @brief ARC136 Problem B - Triple Shift
 * @author Keitaro Naruse
-* @date 2022-02-27
+* @date 2022-02-27, 2022-03-02
 * @copyright MIT License
-* @details https://atcoder.jp/contests/arc240/tasks/arc136_b
+* @details https://atcoder.jp/contests/arc136/tasks/arc136_b
 */
 
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
 {
@@ -22,6 +22,19 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
         os << k << " ";
     }
     return( os );
+}
+
+int inversion_number( const std::vector< int >& v )
+{
+    int num = 0;
+    for( int l = 0; l < v.size(); l ++ ) {
+        for( int r = l + 1; r < v.size(); r ++ ) {
+            if( v.at( l ) >= v.at( r ) ) {
+                num ++;
+            }
+        }
+    }
+    return( num );
 }
 
 int main()
@@ -33,45 +46,55 @@ int main()
         std::cerr << N <<  std::endl;
     }
     //  Read Ai
-    std::vector< int > A( N, 0 );
+    std::vector< int > A( N, 0 ), a( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
+        a.at( i ) = A.at( i );
     }
     if( Debug ) {
         std::cerr << A << std::endl;
     }
     //  Read Bi
-    std::vector< int > B( N, 0 );
+    std::vector< int > B( N, 0 ), b( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> B.at( i );
+        b.at( i ) = B.at( i );
     }
     if( Debug ) {
         std::cerr << B << std::endl;
     }
 
     //  Main
-    std::vector< bool > is_used( N, false );
-    std::vector< int > B_to_A( N, -1 );
-    //  B end
+    //  Preprocess: Contents check
+    std::sort( a.begin(), a.end() );
+    std::sort( b.begin(), b.end() );
     for( int i = 0; i < N; i ++ ) {
-        //  A end
-        for( int j = 0; j < N; j ++ ) {
-            if( !is_used.at( j ) && B.at( i ) == A.at( j ) ) {
-                is_used.at( j ) = true;
-                B_to_A.at( i ) = j;
-                break;
-            }
-        }
-    }
-    for( int i = 0; i < N; i ++ ) {
-        if( !is_used.at( i ) ) {
+        if( a.at( i ) != b.at( i )) {
             std::cout << "No" << std::endl;
             return( 0 );
         }
     }
-    std::cerr << B_to_A << std::endl;
 
-    //  Main
+    //  Preprocess: Distinct check
+    std::map< int, int > counters;
+    for( int i = 0; i < N; i ++ ) {
+        counters[ A.at( i ) ] ++;
+        if( counters[ A.at( i ) ] > 1 ) {
+            std::cout << "Yes" << std::endl;
+            return( 0 );
+        }
+    }
+
+    //  Judge
+    int inv_num_a = inversion_number( A );
+    int inv_num_b = inversion_number( B );
+    if( inv_num_a % 2 == inv_num_b % 2 )  {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;

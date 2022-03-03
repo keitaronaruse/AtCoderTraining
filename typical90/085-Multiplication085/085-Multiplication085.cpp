@@ -2,7 +2,7 @@
 * @file 085-Multiplication085.cpp
 * @brief 085 - Multiplication 085（★4）
 * @author Keitaro Naruse
-* @date 2022-02-08
+* @date 2022-02-08, 2022-03-02
 * @copyright MIT License
 * @details https://atcoder.jp/contests/typical90/tasks/typical90_cg
 */
@@ -13,7 +13,7 @@
 #include <vector>
 #include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 int main()
 {
@@ -25,6 +25,7 @@ int main()
     }
 
     //  Main
+    //  Diviors of K, not including K itself
     std::vector< long long > divisors;
     for( long long i = 1LL; i * i <= K; i ++ ) {
         if( K % i == 0LL )  {
@@ -35,7 +36,6 @@ int main()
         }
     }
     std::sort( divisors.begin(), divisors.end() );
-    
     if( Debug ) {
         for( auto d : divisors ) {
             std::cerr << d << " ";
@@ -43,6 +43,24 @@ int main()
         std::cerr << std::endl;
     }
 
+    //  Find solution
+    long long num_comb = 0LL;
+    for( size_t i = 0; i < divisors.size(); i ++ ) {
+        long long a = divisors.at( i );
+        for( size_t j = 0; j < divisors.size(); j ++ ) {
+            long long b = divisors.at( j );
+            if( K % a == 0LL && ( K / a ) % b == 0LL ) {
+                long long c = K / a / b;
+                if( a<= b && b <= c ) {
+                    num_comb ++;
+                    if( Debug ) {
+                        std::cerr << a << " " << b << " " << c << std::endl;
+                    }
+                }
+            }
+        }
+    }
+    std::cout << num_comb << std::endl;
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
