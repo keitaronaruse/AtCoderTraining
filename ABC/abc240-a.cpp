@@ -16,7 +16,8 @@
 
 const bool Debug = false;
 
-std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
+template< class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 {
     for( auto k : v ) {
         os << k << " ";
