@@ -4,15 +4,25 @@
 * @author Keitaro Naruse
 * @date 2022-02-03
 * @copyright MIT License
-* @details https://atcoder.jp/contests/arc134/tasks/arc133_b
+* @details https://atcoder.jp/contests/arc133/tasks/arc133_b
 */
 
 // # Solution
 
 #include <iostream>
 #include <vector>
+#include <utility>
 
-const bool Debug = false;
+const bool Debug = true;
+
+template< class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
+{
+    for( auto k : v ) {
+        os << k << " ";
+    }
+    return( os );
+}
 
 int main()
 {
@@ -46,14 +56,23 @@ int main()
     }
 
     //  Main
-    std::vector< std::vector< int > > PQ( N );
+    //  Preprocess
+    std::vector< int > q_index( N + 1, 0 );
     for( int i = 0; i < N; i ++ ) {
-        for( int j = 0; j < N; j++ ) {
-            if( Q.at( j ) % P.at(i) == 0 ) {
-                PQ.at( i ).push_back( j );
-            }
+        q_index.at( Q.at( i ) ) = i;
+    }
+    if( Debug ) {
+        std::cerr << q_index << std::endl;
+    }
+
+    //  Make pairs of multiples
+    std::vector< std::pair< int, int > > PQ;
+    for( int i = 0; i < N; i ++ ) {
+        for( int k = P.at( i ); k < N + 1; k += P.at( i ) ) {
+            std::cerr << i << " " << q_index.at( k ) << std::endl;
         }
     }
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
