@@ -24,6 +24,12 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
+template< class T1, class T2 >
+std::ostream& operator<<( std::ostream& os, const std::pair< T1, T2 >& p )
+{
+    os << "( " << p.first << ", " << p.second << " )";
+}
+
 int main()
 {
     //  Read N = [ 1, 2*10^5 ]
@@ -69,10 +75,12 @@ int main()
     std::vector< std::pair< int, int > > PQ;
     for( int i = 0; i < N; i ++ ) {
         for( int k = P.at( i ); k < N + 1; k += P.at( i ) ) {
-            std::cerr << i << " " << q_index.at( k ) << std::endl;
+            PQ.push_back( std::make_pair( i, q_index.at( k ) ) );
         }
     }
-
+    if( Debug ) {
+        std::cerr << PQ << std::endl;
+    }
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
