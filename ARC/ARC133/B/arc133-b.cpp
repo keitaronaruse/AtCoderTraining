@@ -12,8 +12,28 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
+
+int lis( const std::vector< std::pair< int, int > >& v, 
+    std::vector< int >& l ) 
+{
+    for( auto k : v ) {
+        auto it = std::lower_bound( l.begin(), l.end(), k.second );
+        //  k is not found in l, the longest increasing subsequence
+        if( it == l.end() ) {
+            //  add k to l
+            l.push_back( k.second );
+        }
+        else {
+            //  replace *it with k
+            *it = k.second;
+        }
+    }
+    return( l.size() );
+}
+
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -81,6 +101,25 @@ int main()
     if( Debug ) {
         std::cerr << PQ << std::endl;
     }
+    //  Sort
+    std::sort( PQ.begin(), PQ.end(), 
+        []( const std::pair< int, int >& a, const std::pair< int, int >& b) {
+            if( a.first == b.first ) {
+                return( a.second > b.second );
+            }
+            else {
+                return( a.first < b.first ); 
+            }
+        } 
+    );
+    if( Debug ) {
+        std::cerr << PQ << std::endl;
+    }
+
+    //  Longest Increaseing Subsequence
+    std::vector< int > Q_LIS; 
+    std::cout << lis( PQ, Q_LIS ) << std::endl;
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
