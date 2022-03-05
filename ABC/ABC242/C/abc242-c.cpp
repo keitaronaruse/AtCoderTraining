@@ -1,6 +1,6 @@
 /**
 * @file abc242-c.cpp
-* @brief ABC242 Problem C
+* @brief ABC242 Problem C - 1111gal password
 * @author Keitaro Naruse
 * @date 2022-03-05
 * @copyright MIT License
@@ -10,45 +10,57 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
 const bool Debug = false;
 
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
+    //  Constant
+    const long long P = 998244353LL;
+
+    //  Read N = [ 2, 10^6 ]
     int N = 0;
     std::cin >> N;
     if( Debug ) {
         std::cerr << N <<  std::endl;
     }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
-    }
 
     //  Main
+    const int K = 9;
+    std::vector< std::vector< long long > > comb( N, std::vector< long long >( K, 0LL ) ); 
+    for( int k = 0; k < K; k ++ ) {
+        comb.at( 0 ).at( k ) = 1LL;
+    }
+    for( int i = 1; i < N; i ++ ) {
+        for( int k = 0; k < K; k ++ ) {
+            if( k == 0 ) {
+                comb.at( i ).at( k ) = comb.at( i - 1 ).at( k ) 
+                    + comb.at( i - 1 ).at( k + 1 );
+            }
+            else if( k == 8 ) {
+                comb.at( i ).at( k ) = comb.at( i - 1 ).at( k - 1 ) 
+                    + comb.at( i - 1 ).at( k );
+            }
+            else {
+                comb.at( i ).at( k ) = comb.at( i - 1 ).at( k - 1 ) 
+                    + comb.at( i - 1 ).at( k ) 
+                    + comb.at( i - 1 ).at( k + 1 ) ;
+            }
+            if( comb.at( i ).at( k ) > P ) {
+                 comb.at( i ).at( k ) %= P;
+            }
+        }
+    }
+    long long num = 0LL;
+    for( int k = 0; k < K; k ++ ) {
+        num += comb.at( N - 1 ).at( k );
+        if( num > P ) {
+            num %= P;
+        }
+    }
+    std::cout << num << std::endl;
 
     //  Finalize
     if( Debug ) {

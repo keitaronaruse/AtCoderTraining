@@ -1,6 +1,6 @@
 /**
 * @file abc242-b.cpp
-* @brief ABC242 Problem B
+* @brief ABC242 Problem B - Minimize Ordering
 * @author Keitaro Naruse
 * @date 2022-03-05
 * @copyright MIT License
@@ -11,37 +11,13 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <algorithm>
 
 const bool Debug = false;
 
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
-    if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read S
+    //  Read | S | = [ 1, 2*10^5 ]
     std::string S = "";
     std::cin >> S;
     if( Debug ) {
@@ -49,6 +25,9 @@ int main()
     }
 
     //  Main
+    std::string s = S;
+    std::sort( s.begin(), s.end() );
+    std::cout << s << std::endl; 
 
     //  Finalize
     if( Debug ) {

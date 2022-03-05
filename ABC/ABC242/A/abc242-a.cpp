@@ -1,6 +1,6 @@
 /**
 * @file abc242-a.cpp
-* @brief ABC242 Problem A
+* @brief ABC242 Problem A - T-shirt
 * @author Keitaro Naruse
 * @date 2022-03-05
 * @copyright MIT License
@@ -10,45 +10,31 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
+#include <iomanip>
 
 const bool Debug = false;
 
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read A, B, C, X = [ 1, 1000 ]
+    int A = 0, B = 0, C = 0, X = 0;
+    std::cin >> A >> B >> C >> X;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
-    }
-    //  Read Ai
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read S
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S <<  std::endl;
+        std::cerr << A << " " << B << " " << C << " " << X << std::endl;
     }
 
     //  Main
+    double p = 0.0;
+    if( X <= A ) {
+        p = 1.0;
+    }
+    else if( B < X ) {
+        p = 0.0;
+    }
+    else {
+        p = ( double) C / ( ( double )B - ( double )A );
+    }
+    std::cout << std::fixed << std::setprecision( 12 ) << p << std::endl;
 
     //  Finalize
     if( Debug ) {
