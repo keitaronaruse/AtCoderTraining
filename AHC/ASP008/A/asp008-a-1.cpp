@@ -1,6 +1,6 @@
 /**
 * @file asp008-a-1.cpp
-* @brief Asprova 8 Problem A - Automated Painting Line / 
+* @brief Asprova 8 Problem A - Automated Painting Line
   @author Keitaro Naruse
 * @date 2022-03-06
 * @copyright MIT License

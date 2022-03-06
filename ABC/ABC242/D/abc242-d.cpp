@@ -14,7 +14,7 @@
 #include <vector>
 #include <algorithm>
 
-const bool Debug = true;
+const bool Debug = false;
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -25,21 +25,21 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
-char find_letter( const std::string& s, long long t0, long long k0 )
+int find_offset( const std::string& s, long long t, long long k )
 {
-    char c = ' ';
     int offset = 0;
 
-    long long k = k0;
-    for( long long t = 0; t < t0; t ++ ) {
-        offset += ( k % 2LL == 0 ) ? 1 : 2;
-        k /= 2LL;
+    if( t == 0LL ) {
+        offset = s.at( k ) - 'A'; 
+    }
+    else if( k == 0LL ) {
+        offset = ( ( int )( t % 3LL ) + ( s.at( 0 ) - 'A' ) ) % 3;
+    }
+    else {
+        offset = ( find_offset( s, t - 1, k / 2LL ) + ( int )( k % 2LL ) + 1 ) % 3;
     }
 
-    offset += s.at( k ) - 'A'; 
-    offset %= 3;
-    c = offset + 'A';
-    return( c );
+    return( offset );
 }
 
 int main()
@@ -75,7 +75,8 @@ int main()
         if( Debug ) {
             std::cerr << t.at( i ) << " " << k.at( i ) << " ";
         }
-        std::cout << find_letter( S, t.at( i ), k.at( i ) - 1 ) << std::endl;
+        char c = find_offset( S, t.at( i ), k.at( i ) - 1 ) + 'A';
+        std::cout << c << std::endl;
     }
 
     //  Finalize
