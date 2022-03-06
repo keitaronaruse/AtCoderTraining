@@ -8,6 +8,9 @@
 */
 
 // # Solution
+// - k = [ 1    ], C_{i+1}^k = C_i^k + C_i^{k+1}
+// - k = [ 2, 8 ], C_{i+1}^k = C_i^{k-1} + C_i^k + C_i^{k+1}
+// - k = [ 9    ], C_{i+1}^k = C_i^{k-1} + C_i^k
 
 #include <iostream>
 #include <vector>

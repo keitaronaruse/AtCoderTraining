@@ -1,10 +1,10 @@
 /**
-* @file abc242-a.cpp
-* @brief ABC242 Problem A
+* @file abc243-a.cpp
+* @brief ABC243 Problem A
 * @author Keitaro Naruse
-* @date 2022-03-05
+* @date 2022-03-12
 * @copyright MIT License
-* @details https://atcoder.jp/contests/abc242/tasks/abc242_a
+* @details https://atcoder.jp/contests/abc243/tasks/abc243_a
 */
 
 // # Solution
@@ -31,7 +31,7 @@ int main()
     int N = 0;
     std::cin >> N;
     if( Debug ) {
-        std::cerr << N <<  std::endl;
+        std::cerr << N << std::endl;
     }
     //  Read Ai
     std::vector< int > A( N, 0 );
@@ -41,11 +41,11 @@ int main()
     if( Debug ) {
         std::cerr << A << std::endl;
     }
-    //  Read S
+    //  Read | S | = [ 1, 10^5 ]
     std::string S = "";
     std::cin >> S;
     if( Debug ) {
-        std::cerr << S <<  std::endl;
+        std::cerr << S << std::endl;
     }
 
     //  Main
