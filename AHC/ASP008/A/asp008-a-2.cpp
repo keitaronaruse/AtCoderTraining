@@ -1,14 +1,15 @@
 /**
-* @file asp008-a-1.cpp
+* @file asp008-a-2.cpp
 * @brief Asprova 8 Problem A - Automated Painting Line
   @author Keitaro Naruse
-* @date 2022-03-06, 2022-03-09
+* @date 2022-03-09, 2022-03-09
 * @copyright MIT License
 * @details https://atcoder.jp/contests/asprocon8/tasks/asprocon8_a
 */
 
 // # Solution
-// - Clone of the sample code
+// - Determine the order of (s,c) as the minimum setup time 
+// - Solve the above problem by greedy + 2-opt
 
 #include <iostream>
 #include <vector>
