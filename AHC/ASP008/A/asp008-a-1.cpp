@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 const bool Debug = true;
 
@@ -65,6 +66,63 @@ void read_input()
 
 }
 
+void write_output( const std::vector< std::pair< int, int > > &ans ) {
+    std::cout << ans.size() << std::endl;
+    for( int i = 0; i < int(ans.size()); i++ ) {
+        if( ans[i].first >= 0 ) {
+            std::cout << ans[i].first + 1 << ' ' << ans[i].second + 1 << std::endl;
+        }
+        else {
+            std::cout << ans[i].first << std::endl;
+        }
+    }
+}
+
+void main_rtn( std::vector< std::pair< int, int > >& ans )
+{
+    std::vector< int > hanger_on_hook( H, -1 );
+    std::vector< int > hangers_available = K;
+    int pos = 0, prev_s = -1, prev_c = -1;
+
+    for( int s = 0; s < S; s ++ ) {
+        for( int c = 0; c < C; c ++ ) { // assign item (s, c)
+            if( N.at( s ).at( c ) == 0 ) {
+                continue;
+            }
+
+            // need this amount of empty hooks
+            const int setup = (prev_s == -1 ? 0 : std::max( A.at( prev_s ).at( s ), B.at( prev_c ).at( c )) );
+            for( int i = 0; i < setup; i ++ ) {
+                ans.push_back( std::make_pair( -2, 0 ) );
+                (++ pos) %= H;
+            }
+
+            // put (s, c)
+            for( int n = 0; n < N.at( s ).at( c ); ) {
+                if( hanger_on_hook.at( pos ) != s && hangers_available.at( s ) == 0 ) {
+                    // run out of hangers
+                    ans.push_back( std::make_pair( -2, 0 ) );
+                    (++ pos) %= H;
+                }
+                else {
+                    ans.push_back( std::make_pair( s, c ) );
+                    n ++;
+                    if( hanger_on_hook.at( pos ) != s ) {
+                        if( hanger_on_hook.at( pos ) >= 0 ) {
+                            hangers_available.at( hanger_on_hook.at( pos ) ) ++;
+                        }
+                        hangers_available.at( s ) --;
+                        hanger_on_hook.at( pos ) = s;
+                    }
+                    (++ pos) %= H;
+                }
+                prev_s = s;
+                prev_c = c;
+            }
+        }
+    }
+}
+
 int main()
 {
     //  Read input
@@ -99,6 +157,14 @@ int main()
     }
 
     //  Main
+    //  Same as sample.cpp
+    std::vector< std::pair< int, int > > ans;
+    main_rtn( ans );
+
+    // write answer
+    write_output( ans );
+
+
     //  Finalize
     if( Debug ) {
         std::cerr << "Normally terminated." << std::endl;
