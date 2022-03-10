@@ -249,33 +249,28 @@ void make_setup_time_matrix()
             }
         }
     }
-
-    if( Debug ) {
-        for( int s1 = 0; s1 < S; s1 ++ ) {
-            for( int c1 = 0; c1 < C; c1 ++ ) {
-                s_c p = std::make_pair( s1, c1 );
-                for( int s2 = 0; s2 < S; s2 ++ ) {
-                    for( int c2 = 0; c2 < C; c2 ++ ) {
-                        s_c q = std::make_pair( s2, c2 );
-                        s_c_s_c pq = std::make_pair( p, q );
-                        std::cerr << "( " << s1 << ", " << c1 << " ) ( " << s2 << ", " << c2 << " ) = " << W.at( pq ) << std::endl; 
-                    }
-                }
-            }
-        }
-    }
 }
 
-template< class T, class S >
-std::ostream& operator<<( std::ostream& os, const std::map< T, S >& m )
+// template< class T, class S >
+// std::ostream& operator<<( std::ostream& os, const std::map< T, S >& m )
+// {
+//     for( auto p : m ) {
+//         os << p.second << " ";
+//     }
+//     return( os );
+// }
+
+template< class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 {
-    for( auto p : m ) {
-        os << p.second << " ";
+    for( auto p : v ) {
+        os << p << " ";
     }
     return( os );
 }
 
-std::ostream& operator<<( std::ostream& os, const std::vector< s_c >& v )
+template< class T1, class T2 >
+std::ostream& operator<<( std::ostream& os, const std::vector< std::pair< T1, T2 > >& v )
 {
     for( auto p : v ) {
         os << "( " << p.first << ", " << p.second << " ) ";
@@ -340,6 +335,56 @@ std::vector< s_c > two_opt( const std::vector< s_c >& original_order, int l, int
     return( modified_order );
 }
 
+std::vector< s_c > analyze_setup_time()
+{
+    std::vector< int > Asum( S, 0 );
+    for( int s1 = 0; s1 < S; s1 ++ ) {
+        for( int s2 = 0; s2 < S; s2 ++ ) {
+            Asum.at( s1 ) += A.at( s1 ).at( s2 );
+        }
+    }
+    auto s_it = std::min_element( Asum.begin(), Asum.end() );
+    int s_min_A = s_it - Asum.begin();
+
+    std::vector< std::pair< int, int > > A_to_index;
+    for( int s = 0; s < A.at( s_min_A ).size(); s ++ ) {
+        A_to_index.push_back( std::make_pair( A.at( s_min_A ).at( s ), s ) );
+    }
+    std::sort( A_to_index.begin(), A_to_index.end() );
+    std::vector< int > s_order;
+    for( auto p : A_to_index ) {
+        s_order.push_back( p.second );
+    }
+
+    std::vector< int > Bsum( C, 0 );
+    for( int c1 = 0; c1 < C; c1 ++ ) {
+        for( int c2 = 0; c2 < C; c2 ++ ) {
+            Bsum.at( c1 ) += B.at( c1 ).at( c2 );
+        }
+    }
+    auto c_it = std::min_element( Bsum.begin(), Bsum.end() );
+    int c_min_B = c_it - Bsum.begin();
+
+    std::vector< std::pair< int, int > > B_to_index;
+    for( int c = 0; c < B.at( c_min_B ).size(); c ++ ) {
+        B_to_index.push_back( std::make_pair( B.at( c_min_B ).at( c ), c ) );
+    }
+    std::sort( B_to_index.begin(), B_to_index.end() );
+    std::vector< int > c_order;
+    for( auto p : B_to_index ) {
+        c_order.push_back( p.second );
+    }
+
+    std::vector< s_c > order;
+    for( auto c : c_order ) {
+        for( auto s : s_order ) {
+            order.push_back( std::make_pair( s, c ) );
+        }
+    }
+    
+    return( order );
+}
+
 int main()
 {
     //  Read input
@@ -349,43 +394,25 @@ int main()
     }
 
     //  Preprocess
-    make_setup_time_matrix();
+    // make_setup_time_matrix(); 
 
     //  Main
-    std::vector< s_c > order = make_C_S_order();
+    // std::vector< s_c > order = make_C_S_order();
+    std::vector< s_c > order = analyze_setup_time();
     std::vector< std::pair< int, int > > plan = make_plan( order ), best_plan = plan;
     int max_score = calculate_score( best_plan );
-    for( int s = 0; s < S; s ++ ) {
-        for( int c = 0; c < C; c ++ ) {
-            order = make_minimum_setup_order( s, c );
-            plan = make_plan( order );
+    for( int k = 16; k >= 0; k -= 1 ) {
+        for( int i = 1; i < S * C - k; i ++ ) {
+            std::vector< s_c > new_order = two_opt( order, i, i + k - 1 );
+            plan = make_plan( new_order );
             int score = calculate_score( plan );
             if( max_score < score ) {
                 max_score = score;
                 best_plan = plan;
+                order = new_order;
             }
-            for( int k = 0; k < S * C - 8; k += 6 ) {
-                std::vector< s_c > new_order = two_opt( order, k, k + 7 );
-                plan = make_plan( new_order );
-                score = calculate_score( plan );
-                if( max_score < score ) {
-                    max_score = score;
-                    best_plan = plan;
-                    order = new_order;
-                }
-            }
-            // for( int k = 0; k < S * C - 4; k += 3 ) {
-            //     std::vector< s_c > new_order = two_opt( order, k, k + 3 );
-            //     plan = make_plan( new_order );
-            //     score = calculate_score( plan );
-            //     if( max_score < score ) {
-            //         max_score = score;
-            //         best_plan = plan;
-            //         order = new_order;
-            //     }
-            // }
         }
-    } 
+    }
     
     // write answer
     write_output( best_plan );
