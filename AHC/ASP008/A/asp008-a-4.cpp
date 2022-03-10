@@ -1,19 +1,22 @@
 /**
-* @file asp008-a-2.cpp
+* @file asp008-a-4.cpp
 * @brief Asprova 8 Problem A - Automated Painting Line
   @author Keitaro Naruse
-* @date 2022-03-09, 2022-03-10
+* @date 2022-03-10
 * @copyright MIT License
 * @details https://atcoder.jp/contests/asprocon8/tasks/asprocon8_a
 */
 
 // # Solution
-// - Determine the order of (s,c) by C-first and S-second
+// - Determine the order of (s,c) as the minimum setup time 
+// - Solve the above problem by greedy + 2opt
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <utility>
+#include <map>
+#include <random>
 
 const bool Debug = false;
 
@@ -40,6 +43,7 @@ std::vector< std::vector< int > > B;
 //  Wn,n = [ 0/5, 40]
 typedef std::pair< int, int > s_c;
 typedef std::pair< s_c, s_c > s_c_s_c;
+std::map< s_c_s_c, int > W; 
 
 void read_input()
 {
@@ -230,14 +234,92 @@ std::vector< std::pair< int, int > > make_C_S_order()
     return( order );
 }
 
-int to_i( int s, int c )
+void make_setup_time_matrix()
 {
-    return( s * C + c );
+    for( int s1 = 0; s1 < S; s1 ++ ) {
+        for( int c1 = 0; c1 < C; c1 ++ ) {
+            s_c p = std::make_pair( s1, c1 );
+            for( int s2 = 0; s2 < S; s2 ++ ) {
+                for( int c2 = 0; c2 < C; c2 ++ ) {
+                    s_c q = std::make_pair( s2, c2 );
+                    s_c_s_c pq = std::make_pair( p, q );
+                    int cost = std::max( A.at( s1 ).at( s2 ), B.at( c1 ).at( c2 ) );
+                    W.insert( std::make_pair( pq, cost ) ); 
+                }
+            }
+        }
+    }
+
+    if( Debug ) {
+        for( int s1 = 0; s1 < S; s1 ++ ) {
+            for( int c1 = 0; c1 < C; c1 ++ ) {
+                s_c p = std::make_pair( s1, c1 );
+                for( int s2 = 0; s2 < S; s2 ++ ) {
+                    for( int c2 = 0; c2 < C; c2 ++ ) {
+                        s_c q = std::make_pair( s2, c2 );
+                        s_c_s_c pq = std::make_pair( p, q );
+                        std::cerr << "( " << s1 << ", " << c1 << " ) ( " << s2 << ", " << c2 << " ) = " << W.at( pq ) << std::endl; 
+                    }
+                }
+            }
+        }
+    }
 }
 
-std::pair< int, int > to_s_c( int i )
+template< class T, class S >
+std::ostream& operator<<( std::ostream& os, const std::map< T, S >& m )
 {
-    return( std::make_pair( i / C, i % C ) );
+    for( auto p : m ) {
+        os << p.second << " ";
+    }
+    return( os );
+}
+
+std::ostream& operator<<( std::ostream& os, const std::vector< s_c >& v )
+{
+    for( auto p : v ) {
+        os << "( " << p.first << ", " << p.second << " ) ";
+    }
+    return( os );
+}
+
+std::vector< std::pair< int, int > > make_minimum_setup_order( int s1, int c1 )
+{
+    std::vector< s_c > order;
+    std::map< s_c, bool > used;
+    for( int s = 0; s < S; s ++ ) {
+        for( int c = 0; c < C; c ++ ) {
+            s_c p = std::make_pair( s, c );
+            used.insert( std::make_pair( p, false ) );
+        }
+    }
+    int n = S * C;
+
+    //  Start values
+    s_c p = std::make_pair( s1, c1 );
+    used.at( p ) = true;
+    order.push_back( p );
+
+    //  Loop
+    for( int k = 1; k < n; k ++ ) {
+        int min_setup = 100;
+        s_c min_q;
+        for( auto r : used ) {
+            s_c q = r.first;
+            if( !r.second ) {
+                s_c_s_c pq = std::make_pair( p, q );
+                if( W.at( pq ) < min_setup ) {
+                    min_setup = W.at( pq );
+                    min_q = q;
+                }
+            }
+        }
+        used.at( min_q ) = true;
+        order.push_back( min_q );
+        p = min_q;
+    }
+
+    return( order );
 }
 
 int calculate_score( const std::vector< std::pair< int, int > >& plan )
@@ -248,6 +330,16 @@ int calculate_score( const std::vector< std::pair< int, int > >& plan )
     return( score );
 }
 
+std::vector< s_c > two_opt( const std::vector< s_c >& original_order, int l, int r )
+{
+    std::vector< s_c > modified_order = original_order;
+
+    for( int k = 0; k <= r - l; k ++ ) {
+        modified_order.at( l + k ) = original_order.at( r - k );
+    }
+    return( modified_order );
+}
+
 int main()
 {
     //  Read input
@@ -256,20 +348,47 @@ int main()
         print_input( std::cerr );
     }
 
+    //  Preprocess
+    make_setup_time_matrix();
+
     //  Main
-    //  Order 1
-    // std::vector< std::pair< int, int > > order1 = make_S_C_order();
-    // std::vector< std::pair< int, int > > plan1 = make_plan( order1 );
-    // int score1 = calculate_score( plan1 );
-
-    //  Order 2
-    std::vector< std::pair< int, int > > order2 = make_C_S_order();
-    std::vector< std::pair< int, int > > plan2 = make_plan( order2 );
-    int score2 = calculate_score( plan2 );
-
-    //  Accept plan2
-    write_output( plan2 );
-
+    std::vector< s_c > order = make_C_S_order();
+    std::vector< std::pair< int, int > > plan = make_plan( order ), best_plan = plan;
+    int max_score = calculate_score( best_plan );
+    for( int s = 0; s < S; s ++ ) {
+        for( int c = 0; c < C; c ++ ) {
+            order = make_minimum_setup_order( s, c );
+            plan = make_plan( order );
+            int score = calculate_score( plan );
+            if( max_score < score ) {
+                max_score = score;
+                best_plan = plan;
+            }
+            for( int k = 0; k < S * C - 8; k += 6 ) {
+                std::vector< s_c > new_order = two_opt( order, k, k + 7 );
+                plan = make_plan( new_order );
+                score = calculate_score( plan );
+                if( max_score < score ) {
+                    max_score = score;
+                    best_plan = plan;
+                    order = new_order;
+                }
+            }
+            for( int k = 0; k < S * C - 4; k += 3 ) {
+                std::vector< s_c > new_order = two_opt( order, k, k + 3 );
+                plan = make_plan( new_order );
+                score = calculate_score( plan );
+                if( max_score < score ) {
+                    max_score = score;
+                    best_plan = plan;
+                    order = new_order;
+                }
+            }
+        }
+    } 
+    
+    // write answer
+    write_output( best_plan );
 
     //  Finalize
     if( Debug ) {

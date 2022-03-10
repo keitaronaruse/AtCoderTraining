@@ -1,3 +1,5 @@
 add_executable( sample sample.cpp )
 add_executable( asp008-a-1 asp008-a-1.cpp )
 add_executable( asp008-a-2 asp008-a-2.cpp )
+add_executable( asp008-a-3 asp008-a-3.cpp )
+add_executable( asp008-a-4 asp008-a-4.cpp )
