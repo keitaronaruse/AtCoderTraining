@@ -40,7 +40,6 @@ std::vector< std::vector< int > > A;
 std::vector< std::vector< int > > B;
 
 //  Wn,n = [ 0/5, 40]
-std::map< std::pair< int, int >,  std::map< std::pair< int, int >, int > > W; 
 
 void read_input()
 {
@@ -230,16 +229,35 @@ std::pair< int, int > to_s_c( int i )
     return( std::make_pair( i / C, i % C ) );
 }
 
+typedef std::pair< int, int > s_c;
+typedef std::pair< std::pair< int, int >, std::pair< int, int > > s_c_s_c;
+std::map< s_c_s_c, int > W; 
+
 void make_setup_time_matrix()
 {
+
     for( int s1 = 0; s1 < S; s1 ++ ) {
         for( int c1 = 0; c1 < C; c1 ++ ) {
-            auto p = std::make_pair( s1, c1 );
+            s_c p = std::make_pair( s1, c1 );
             for( int s2 = 0; s2 < S; s2 ++ ) {
                 for( int c2 = 0; c2 < C; c2 ++ ) {
-                    auto q = std::make_pair( s2, c2 );
-                    W.insert( std::make_pair( p, 
-                    std::make_pair( q, std::max( A.at( s1 ).at( s2 ), B.at( c1 ).at( c2 ) ) )); 
+                    s_c q = std::make_pair( s2, c2 );
+                    s_c_s_c pq = std::make_pair( p, q );
+                    int cost = std::max( A.at( s1 ).at( s2 ), B.at( c1 ).at( c2 ) );
+                    W.insert( std::make_pair( pq, cost ) ); 
+                }
+            }
+        }
+    }
+
+    for( int s1 = 0; s1 < S; s1 ++ ) {
+        for( int c1 = 0; c1 < C; c1 ++ ) {
+            s_c p = std::make_pair( s1, c1 );
+            for( int s2 = 0; s2 < S; s2 ++ ) {
+                for( int c2 = 0; c2 < C; c2 ++ ) {
+                    s_c q = std::make_pair( s2, c2 );
+                    s_c_s_c pq = std::make_pair( p, q );
+                    std::cerr << "( " << s1 << ", " << c1 << " ) ( " << s2 << ", " << c2 << " ) = " << W.at( pq ) << std::endl; 
                 }
             }
         }
@@ -248,37 +266,7 @@ void make_setup_time_matrix()
 
 std::vector< std::pair< int, int > > make_minimum_setup_order( int s1, int c1 )
 {
-    std::map< std::pair< int, int >, bool > used;
-    for( int s = 0; s < S; s ++ ) {
-        for( int c = 0; c < C; c ++ ) {
-            used.insert( std::make_pair( std::make_pair( s, c ), false ) );
-        }
-    }
-
-    W.at( p ).at( q );
-    std::map< std::pair< int, int >, std::map< std::pair< int, int >, int > > M;
-
     std::vector< std::pair< int, int > > order;
-    std::pair< int, int > p = std::make_pair( s1, c1 );
-    order.push_back( p );
-    used.at( p ) = true;
-    for( auto q : used ) {
-        if( !q.second && ;  ) {
-            ;
-        }
-    }
-
-    int i = to_i( s1, c1 );
-    used.at( i ) = true;
-    int w = 100;
-    int k = -1;
-    for( j = 0; j < S * C; j ++ ) {
-        if( !used.at( j ) && W.at( j ) < w ) {
-            w = W.at( j );
-            k = j;
-        }
-    }
-
     for( int s = 0; s < S; s ++ ) {
         for( int c = 0; c < C; c ++ ) {
             order.push_back( std::make_pair( s, c ) );
