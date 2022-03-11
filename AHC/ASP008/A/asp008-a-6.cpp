@@ -1,8 +1,8 @@
 /**
-* @file asp008-a-5.cpp
+* @file asp008-a-6.cpp
 * @brief Asprova 8 Problem A - Automated Painting Line
   @author Keitaro Naruse
-* @date 2022-03-10
+* @date 2022-03-11
 * @copyright MIT License
 * @details https://atcoder.jp/contests/asprocon8/tasks/asprocon8_a
 */
@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <utility>
 #include <map>
-#include <random>
+#include <deque>
 
 const bool Debug = false;
 
@@ -40,10 +40,8 @@ std::vector< std::vector< int > > A;
 //  Bc,c = [ 0/5, 40 ]: The setting time of colors
 std::vector< std::vector< int > > B;
 
-//  Wn,n = [ 0/5, 40]
 typedef std::pair< int, int > s_c;
 typedef std::pair< s_c, s_c > s_c_s_c;
-std::map< s_c_s_c, int > W; 
 
 void read_input()
 {
@@ -162,56 +160,6 @@ int calc_Y( const std::vector< std::pair< int, int > >& ans )
     return( Y );
 }
 
-std::vector< std::pair< int, int > > make_plan( const std::vector< std::pair< int, int > >& s_c_order )
-{
-    std::vector< std::pair< int, int > > plan;
-
-    std::vector< int > hanger_on_hook( H, -1 );
-    std::vector< int > hangers_available = K;
-    int pos = 0, prev_s = -1, prev_c = -1;
-
-    for( auto p : s_c_order ) {
-        int s = p.first;
-        int c = p.second;
-
-        if( N.at( s ).at( c ) == 0 ) {
-            continue;
-        }
-
-        // need this amount of empty hooks
-        const int setup = (prev_s == -1 ? 0 : std::max( A.at( prev_s ).at( s ), B.at( prev_c ).at( c )) );
-        for( int i = 0; i < setup; i ++ ) {
-            plan.push_back( std::make_pair( -2, 0 ) );
-            (++ pos) %= H;
-        }
-
-        // put (s, c)
-        for( int n = 0; n < N.at( s ).at( c ); ) {
-            if( hanger_on_hook.at( pos ) != s && hangers_available.at( s ) == 0 ) {
-                // run out of hangers
-                plan.push_back( std::make_pair( -2, 0 ) );
-                (++ pos) %= H;
-            }
-            else {
-                plan.push_back( std::make_pair( s, c ) );
-                n ++;
-                if( hanger_on_hook.at( pos ) != s ) {
-                    if( hanger_on_hook.at( pos ) >= 0 ) {
-                        hangers_available.at( hanger_on_hook.at( pos ) ) ++;
-                    }
-                    hangers_available.at( s ) --;
-                    hanger_on_hook.at( pos ) = s;
-                }
-                (++ pos) %= H;
-            }
-            prev_s = s;
-            prev_c = c;
-        }
-    }
-
-    return( plan );
-}
-
 std::vector< std::pair< int, int > > make_S_C_order()
 {
     std::vector< std::pair< int, int > > order;
@@ -234,32 +182,6 @@ std::vector< std::pair< int, int > > make_C_S_order()
     return( order );
 }
 
-void make_setup_time_matrix()
-{
-    for( int s1 = 0; s1 < S; s1 ++ ) {
-        for( int c1 = 0; c1 < C; c1 ++ ) {
-            s_c p = std::make_pair( s1, c1 );
-            for( int s2 = 0; s2 < S; s2 ++ ) {
-                for( int c2 = 0; c2 < C; c2 ++ ) {
-                    s_c q = std::make_pair( s2, c2 );
-                    s_c_s_c pq = std::make_pair( p, q );
-                    int cost = std::max( A.at( s1 ).at( s2 ), B.at( c1 ).at( c2 ) );
-                    W.insert( std::make_pair( pq, cost ) ); 
-                }
-            }
-        }
-    }
-}
-
-// template< class T, class S >
-// std::ostream& operator<<( std::ostream& os, const std::map< T, S >& m )
-// {
-//     for( auto p : m ) {
-//         os << p.second << " ";
-//     }
-//     return( os );
-// }
-
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 {
@@ -276,45 +198,6 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::pair< T1, T2
         os << "( " << p.first << ", " << p.second << " ) ";
     }
     return( os );
-}
-
-std::vector< std::pair< int, int > > make_minimum_setup_order( int s1, int c1 )
-{
-    std::vector< s_c > order;
-    std::map< s_c, bool > used;
-    for( int s = 0; s < S; s ++ ) {
-        for( int c = 0; c < C; c ++ ) {
-            s_c p = std::make_pair( s, c );
-            used.insert( std::make_pair( p, false ) );
-        }
-    }
-    int n = S * C;
-
-    //  Start values
-    s_c p = std::make_pair( s1, c1 );
-    used.at( p ) = true;
-    order.push_back( p );
-
-    //  Loop
-    for( int k = 1; k < n; k ++ ) {
-        int min_setup = 100;
-        s_c min_q;
-        for( auto r : used ) {
-            s_c q = r.first;
-            if( !r.second ) {
-                s_c_s_c pq = std::make_pair( p, q );
-                if( W.at( pq ) < min_setup ) {
-                    min_setup = W.at( pq );
-                    min_q = q;
-                }
-            }
-        }
-        used.at( min_q ) = true;
-        order.push_back( min_q );
-        p = min_q;
-    }
-
-    return( order );
 }
 
 int calculate_score( const std::vector< std::pair< int, int > >& plan )
@@ -385,30 +268,188 @@ std::vector< s_c > analyze_setup_time()
     return( order );
 }
 
+std::vector< s_c > find_optimal_s_c_order()
+{
+    //  Find the optimal s-order
+    std::vector< int > s_order;
+    for( int s = 0; s < S; s ++ ) {
+        s_order.push_back( s );
+    }
+
+    int min_s_setup_time = 200;
+    std::vector< int > min_s_order;
+    do {
+        int setup_time = 0;
+        for( int s = 0; s < S - 1; s ++ ) {
+            setup_time += A.at( s_order.at( s ) ).at( s_order.at( s + 1 ) ); 
+        }
+        if( setup_time < min_s_setup_time ) {
+            min_s_setup_time = setup_time;
+            min_s_order = s_order;
+        }
+    } while( std::next_permutation( s_order.begin(), s_order.end() ) );
+
+    std::vector< int > c_order;
+    for( int c = 0; c < C; c ++ ) {
+        c_order.push_back( c );
+    }
+    int min_c_setup_time = 400;
+    std::vector< int > min_c_order;
+    do {
+        int setup_time = 0;
+        for( int c = 0; c < C - 1; c ++ ) {
+            setup_time += B.at( c_order.at( c ) ).at( c_order.at( c + 1 ) ); 
+        }
+        if( setup_time < min_c_setup_time ) {
+            min_c_setup_time = setup_time;
+            min_c_order = c_order;
+        }
+    } while( std::next_permutation( c_order.begin(), c_order.end() ) );
+
+    std::vector< s_c > order;
+    for( int c = 0; c < C; c ++ ) {
+        for( int s = 0; s < S; s ++ ) {
+            order.push_back( std::make_pair( s_order.at( s ), c_order.at( c ) ) );
+        }
+    }
+    return( order );
+}
+
+std::vector< std::pair< int, int > > make_min_X_plan( const std::vector< std::pair< int, int > >& s_c_order )
+{
+    std::vector< std::pair< int, int > > plan;
+
+    std::vector< int > hanger_on_hook( H, -1 );
+    std::vector< int > hangers_available = K;
+    int pos = 0, prev_s = -1, prev_c = -1;
+
+    for( auto p : s_c_order ) {
+        int s = p.first;
+        int c = p.second;
+
+        if( N.at( s ).at( c ) == 0 ) {
+            continue;
+        }
+
+        // need this amount of empty hooks
+        const int setup = (prev_s == -1 ? 0 : std::max( A.at( prev_s ).at( s ), B.at( prev_c ).at( c )) );
+        for( int i = 0; i < setup; i ++ ) {
+            plan.push_back( std::make_pair( -2, 0 ) );
+            (++ pos) %= H;
+        }
+
+        // put (s, c)
+        for( int n = 0; n < N.at( s ).at( c ); ) {
+            if( hanger_on_hook.at( pos ) != s && hangers_available.at( s ) == 0 ) {
+                // run out of hangers
+                plan.push_back( std::make_pair( -2, 0 ) );
+                (++ pos) %= H;
+            }
+            else {
+                plan.push_back( std::make_pair( s, c ) );
+                n ++;
+                if( hanger_on_hook.at( pos ) != s ) {
+                    if( hanger_on_hook.at( pos ) >= 0 ) {
+                        hangers_available.at( hanger_on_hook.at( pos ) ) ++;
+                    }
+                    hangers_available.at( s ) --;
+                    hanger_on_hook.at( pos ) = s;
+                }
+                (++ pos) %= H;
+            }
+            prev_s = s;
+            prev_c = c;
+        }
+    }
+
+    return( plan );
+}
+
+std::vector< std::pair< int, int > > make_min_L_plan( const std::vector< std::pair< int, int > >& s_c_order )
+{
+    //  Ns,c = [ 0, 5000 ]: The number of products
+    std::vector< std::vector< int > > n = N;
+
+    std::vector< std::pair< int, int > > plan;
+    std::vector< int > hanger_on_hook( H, -1 );
+    std::vector< int > hangers_available = K;
+    int pos = 0, prev_s = -1, prev_c = -1;
+
+    std::deque< s_c > s_c_memory;
+    for( auto sc : s_c_order ) {
+        s_c_memory.push_back( sc );
+    }
+
+    while( !s_c_memory.empty() ) {
+        s_c sc = s_c_memory.front();
+        int s = sc.first;
+        int c = sc.second;
+
+        //  No production required
+        if( n.at( s ).at( c ) == 0 ) {
+            s_c_memory.pop_front();
+            continue;
+        }
+
+        // need this amount of empty hooks
+        const int setup = ( prev_s == -1 ) ? 0 : std::max( A.at( prev_s ).at( s ), B.at( prev_c ).at( c ) );
+        for( int i = 0; i < setup; i ++ ) {
+            plan.push_back( std::make_pair( -2, 0 ) );
+            ( ++ pos ) %= H;
+        }
+
+        // put (s, c)
+        while( n.at( s ).at( c ) != 0 ) {
+            if( hanger_on_hook.at( pos ) != s && hangers_available.at( s ) == 0 ) {
+                //  Skip and go to next order
+                s_c_memory.pop_front();
+                s_c n_sc = s_c_memory.front();
+                s_c_memory.push_front( sc );
+                s_c_memory.push_front( n_sc );
+                s_c_memory.push_front( sc );
+            }
+            else {
+                plan.push_back( std::make_pair( s, c ) );
+                n.at( s ).at( c ) -- ;
+                if( hanger_on_hook.at( pos ) != s ) {
+                    if( hanger_on_hook.at( pos ) >= 0 ) {
+                        hangers_available.at( hanger_on_hook.at( pos ) ) ++;
+                    }
+                    hangers_available.at( s ) --;
+                    hanger_on_hook.at( pos ) = s;
+                }
+                (++ pos) %= H;
+            }
+            prev_s = s;
+            prev_c = c;
+        } 
+        s_c_memory.pop_front();
+    }
+
+    return( plan );
+}
+
 int main()
 {
     //  Read input
     read_input();
-    if( Debug ) {
-        print_input( std::cerr );
-    }
-
-    //  Preprocess
-    // make_setup_time_matrix(); 
 
     //  Main
     // std::vector< s_c > order = make_C_S_order();
-    std::vector< s_c > order = analyze_setup_time();
-    std::vector< std::pair< int, int > > plan = make_plan( order ), best_plan = plan;
+    std::vector< s_c > order = find_optimal_s_c_order();
+    std::vector< std::pair< int, int > > X_plan = make_min_X_plan( order );
+    // std::vector< std::pair< int, int > > L_plan = make_min_L_plan( order );
+    std::vector< std::pair< int, int > > best_plan = X_plan;
+    
     int max_score = calculate_score( best_plan );
-    for( int k = 16; k >= 0; k -= 1 ) {
+    for( int k = 10; k >= 2; k -= 1 ) {
         for( int i = 1; i < S * C - k; i ++ ) {
             std::vector< s_c > new_order = two_opt( order, i, i + k - 1 );
-            plan = make_plan( new_order );
-            int score = calculate_score( plan );
+            X_plan = make_min_X_plan( new_order );
+            int score = calculate_score( X_plan );
             if( max_score < score ) {
                 max_score = score;
-                best_plan = plan;
+                best_plan = X_plan;
                 order = new_order;
             }
         }
