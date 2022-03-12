@@ -1,9 +1,9 @@
-/*
-    nrs::adj_graph
-        The class of a graph structure by adjacent nodes 
-        Author: Keitaro Naruse
-        Date:   2021-12-31, 2022-01-12
-        MIT License
+/**
+* @file adj_graph.cpp
+* @brief The class of a graph structure by adjacent nodes
+* @author Keitaro Naruse
+* @date 2021-12-31, 2022-03-12
+* @copyright MIT License
 */
 
 #include <iostream>
@@ -32,9 +32,22 @@ namespace nrs {
             void add_d_edge( int b, int e ) {
                 adj_nodes.at( b ).push_back( e );
             }
+            void delete_d_edge( int b, int e ) {
+                adj_nodes.at( b ).erase( 
+                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                );
+            }
             void add_u_edge( int b, int e ) {
                 adj_nodes.at( b ).push_back( e );
                 adj_nodes.at( e ).push_back( b );
+            }
+            void delete_u_edge( int b, int e ) {
+                adj_nodes.at( b ).erase( 
+                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                );
+                adj_nodes.at( e ).erase( 
+                    std::find( adj_nodes.at( e ).begin(), adj_nodes.at( e ).end(), b ) 
+                );
             }
             bool has_d_edge( int b, int e ) {
                 return( 
@@ -120,39 +133,14 @@ const bool Debug = true;
 //  Test driver
 int main()
 {
-    //  An example of a graph
-    //   0  #  2  3  #  5
-    //   6  7  8  9 10 11
-    //  12  # 14 15  # 17
-    const int N = 18;
+    const int N = 4;
     
     //  Make a graph instance
     nrs::adj_graph g( N );
-    g.add_u_edge(  0,  6 ); 
+    g.add_u_edge(  0,  1 ); 
+    g.add_u_edge(  1,  2 ); 
     g.add_u_edge(  2,  3 ); 
-    g.add_u_edge(  2,  8 ); 
-    g.add_u_edge(  3,  9 ); 
-    g.add_u_edge(  5, 11 ); 
-    g.add_u_edge(  6,  7 ); 
-    g.add_u_edge(  6, 12 ); 
-    g.add_u_edge(  7,  8 ); 
-    g.add_u_edge(  8,  9 ); 
-    g.add_u_edge(  8, 14 ); 
-    g.add_u_edge(  9, 10 ); 
-    g.add_u_edge(  9, 15 ); 
-    g.add_u_edge( 10, 11 ); 
-    g.add_u_edge( 11, 17 ); 
     
-    //  Test edges
-    if( Debug ) {
-        for( int i = 0; i < N; i ++ ) {
-            std::cerr << i << ": ";
-            for( int v : g.adj_nodes.at( i ) ) {
-                std::cerr << v << " ";
-            }
-            std::cerr << std::endl;
-        }
-    }
     //  Make graph utilities
     std::vector< int > length;
     int b = 0, e = 0;
@@ -162,113 +150,46 @@ int main()
     length = std::vector< int > ( N, -1 );
     std::queue< int > q;
     //  BFS: Initial node
-    b = 0; e = 15; 
+    b = 0; e = 3; 
     length.at( b ) = 0;
     q.push( b );
     //  BFS: Main
-    std::cerr << "BFS: ";
+    bool is_connected = false;
     while( !q.empty() ) {
         int v = g.next_node_bfs( q, length );
-        if( Debug ) {
-            std::cerr << v << " ";
+        if( v == e ) {
+            is_connected = true;
         }
     }
-    if( Debug ) {
-        std::cerr << std::endl;
+    if( is_connected ) {
+        std::cerr << b << " is connected to " << e << std::endl;
     }
-    if( Debug ) {
-        for( auto d : length ) {
-            std::cerr << d << " ";
-        }
-        std::cerr << std::endl;
+    else {
+        std::cerr << b << " is not connected to " << e << std::endl;
     }
-    // BFS: 0 6 7 12 8 2 9 14 3 10 15 11 5 17
-    //   0  #  2  3  #  5
-    //   6  7  8  9 10 11
-    //  12  # 14 15  # 17
 
-    //  Length
-    //  0 -1  4  5 -1  7 
-    //  1  2  3  4  5  6 
-    //  2 -1  4  5 -1  7 
-    
-    //  DFS
-    //  DFS: Setup
+    g.delete_u_edge(  2,  3 ); 
+    //  BFS: Setup
     length = std::vector< int > ( N, -1 );
-    std::stack< int > s;
-    //  DFS: Initial node
-    b = 0; 
+    q = std::queue< int >();
+    //  BFS: Initial node
+    b = 0; e = 3; 
     length.at( b ) = 0;
-    s.push( b );
-    //  DFS: Main
-    std::cerr << "DFS: ";
-    while( !s.empty() ) {
-        int v = g.next_node_dfs( s, length );
-        if( Debug ) {
-            std::cerr << v << " ";
+    q.push( b );
+    //  BFS: Main
+    is_connected = false;
+    while( !q.empty() ) {
+        int v = g.next_node_bfs( q, length );
+        if( v == e ) {
+            is_connected = true;
         }
     }
-    if( Debug ) {
-        std::cerr << std::endl;
+    if( is_connected ) {
+        std::cerr << b << " is connected to " << e << std::endl;
     }
-    if( Debug ) {
-        for( auto d : length ) {
-            std::cerr << d << " ";
-        }
-        std::cerr << std::endl;
+    else {
+        std::cerr << b << " is not connected to " << e << std::endl;
     }
-    // DFS: 0 6 12 7 8 14 9 15 10 11 17 5 3 2 
-    //   0  #  2  3  #  5
-    //   6  7  8  9 10 11
-    //  12  # 14 15  # 17
 
-    //  Length
-    // 0 -1  4  5 -1 7 
-    // 1  2  3  4  5 6 
-    // 2 -1  4  5 -1 7 
-    
-    //  Dijkstra
-    //  Dijkstra: Setup
-    length = std::vector< int > ( N, -1 );
-    auto comp = [ & length ]( int a, int b ) { 
-        return( length.at( a ) > length.at( b ) ); 
-    }; 
-    std::priority_queue< 
-        int, 
-        std::vector< int >, 
-        decltype( comp ) 
-    > pq( comp );
-
-    //  Dijkstra: Initial node
-    b = 0; 
-    length.at( b ) = 0;
-    pq.push( b );
-    //  Dijkstra's algorithm: Main
-    std::cerr << "Dijkstra's algorithm: ";
-    while( !pq.empty() ) {
-        int v = g.next_node_dijkstra( pq, length );
-        if( Debug ) {
-            std::cerr << v << " ";
-        }
-    }
-    if( Debug ) {
-        std::cerr << std::endl;
-    }
-    if( Debug ) {
-        for( auto d : length ) {
-            std::cerr << d << " ";
-        }
-        std::cerr << std::endl;
-    }
-    //  Dijkstra's algorithm
-    //  0 6 7 12 8 2 9 14 10 3 15 11 5 17 
-    //   0  #  2  3  #  5
-    //   6  7  8  9 10 11
-    //  12  # 14 15  # 17
-
-    //  Length
-    //  0 -1  4  5 -1  7
-    //  1  2  3  4  5  6 
-    //  2 -1  4  5 -1  7 
     return( 0 );
 }
