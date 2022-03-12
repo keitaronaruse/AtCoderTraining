@@ -1,6 +1,6 @@
 /**
 * @file abc243-b.cpp
-* @brief ABC243 Problem B
+* @brief ABC243 Problem B - Hit and Blow
 * @author Keitaro Naruse
 * @date 2022-03-12
 * @copyright MIT License
@@ -14,45 +14,43 @@
 #include <vector>
 #include <algorithm>
 
-const bool Debug = false;
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 1000 ]
-    int N = 0;
+    //  Read N = [ 1, 10^3 ]
+    int N;
     std::cin >> N;
-    if( Debug ) {
-        std::cerr << N << std::endl;
-    }
-    //  Read Ai
+
+    //  Read Ai, Bi = [ 1, 10^9 ]
     std::vector< int > A( N, 0 );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
     }
-    if( Debug ) {
-        std::cerr << A << std::endl;
-    }
-    //  Read | S | = [ 1, 10^5 ]
-    std::string S = "";
-    std::cin >> S;
-    if( Debug ) {
-        std::cerr << S << std::endl;
+    //  Read Bi
+    std::vector< int > B( N, 0 );
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> B.at( i );
     }
 
     //  Main
+    //  Case 1.
+    int num_hits = 0;
+    for( int i = 0; i < N; i ++ ) {
+        if( A.at( i ) == B.at( i ) ) {
+            num_hits ++;
+        }
+    }
+    std::cout << num_hits << std::endl;
+    //  Case 2.
+    int num_blows = 0;
+    for( int i = 0; i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
+            if( i != j && A.at( i ) == B.at( j ) ) {
+                num_blows ++;
+            }
+        }
+    }
+    std::cout << num_blows << std::endl;
 
     //  Finalize
-    if( Debug ) {
-        std::cerr << "Normally terminated." << std::endl;
-    }    
     return( 0 );
 }
