@@ -10,8 +10,21 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 const bool Debug = true;
+
+template < class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > >& vv )
+{
+    for( const auto & v : vv ) {
+        for( const auto & e : v ) {
+            os << e << " ";
+        }
+        os << std::endl;
+    }
+    return( os );
+}
 
 int main()
 {
@@ -28,6 +41,16 @@ int main()
     for( int j = 0; j < m; j ++ ) {
         dp.at( 0 ).at( j ) = ( S.at( 0 ) == T.at( j ) ) ? 0 : 1;
     }
+    
+    for( int i = 1; i < n; i ++ ) {
+        for( int j = 1; j < m; j ++ ) {
+            dp.at( i ).at( j ) = std::max( 
+                dp.at( i - 1 ).at( j - 1 ) + ( ( S.at( i ) == T.at( j ) ) ? 0 : 1), 
+                dp.at( i ).at( j - 1 )
+            );
+        }
+    }
+    std::cout << dp.at( n - 1 ).at( m - 1 ) << std::endl;
 
     return( 0 );
 }
