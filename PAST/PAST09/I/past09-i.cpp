@@ -1,10 +1,10 @@
 /**
-* @file past09-h.cpp
-* @brief PAST 9 Problem H - 最長非共通部分列
+* @file past09-i.cpp
+* @brief PAST 9 Problem I - 直通エレベーター
   @author Keitaro Naruse
 * @date 2022-03-12
 * @copyright MIT License
-* @details https://atcoder.jp/contests/past202112-open/tasks/past202112_h
+* @details https://atcoder.jp/contests/past202112-open/tasks/past202112_i
 */
 
 #include <iostream>
