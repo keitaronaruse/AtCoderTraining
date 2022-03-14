@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <map>
 #include <stack>
 #include <queue>
 #include <utility>
@@ -18,17 +19,17 @@ namespace nrs {
     template < class T >
     class undirected_graph {
         public:
-        typedef std::pair< T, T > length_node_type;
+            typedef std::pair< T, T > length_node_type;
             //  The number of nodes
             int N;
             //  The adjacent nodes for each of the nodes { node, weight }
-            std::vector< std::map< int, int > > adj_nodes;
+            std::vector< std::map< T, T > > adj_nodes;
             //  The length from a node and/or visited table
-            std::vector< int > length;
+            std::vector< T > length;
             //  The working queue for BFS, the breadth first search
-            std::queue< int > visiting_queue;
+            std::queue< T > visiting_queue;
             //  The working stack for DFS, the depth first search
-            std::stack< int > visiting_stack;
+            std::stack< T > visiting_stack;
             //  The working priority queue for Dijkstra { length, node }
             std::priority_queue< length_node_type, 
                 std::vector< length_node_type >, 
@@ -38,8 +39,8 @@ namespace nrs {
             //  Default constructor
             undirected_graph() : N( 0 ) {};
             //  Constructor with the number of nodes
-            undirected_graph( int n ) : N( n ) {
-                adj_nodes = std::vector< std::map< int, int > >( N );
+            undirected_graph( T n ) : N( n ) {
+                adj_nodes = std::vector< std::map< T, T > >( N );
                 init_lenght();
             };
             //  Copy constructor
@@ -48,18 +49,18 @@ namespace nrs {
                 length = r.length;
             };
             //  Default w = 1
-            void add_weighted_edge( int u, int v, int w = 1 ) {
+            void add_weighted_edge( int u, int v, T w = 1 ) {
                 adj_nodes[ u ][ v ] = w;
                 adj_nodes[ v ][ u ] = w;
             }
             void init_lenght() {
-                length = std::vector< int >( N, -1 );
+                length = std::vector< T >( N, -1 );
             }
             void init_visiting_queue() {
-                visiting_queue = std::queue< int >( );
+                visiting_queue = std::queue< T >( );
             }
             void init_visiting_stack() {
-                visiting_stack = std::stack< int >( );
+                visiting_stack = std::stack< T >( );
             }
             void init_visiting_priority_queue() {
                 visiting_priority_queue = std::priority_queue< 
