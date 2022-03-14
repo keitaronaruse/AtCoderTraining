@@ -2,7 +2,7 @@
 * @file abc243-c.cpp
 * @brief ABC243 Problem C - Collision 2
 * @author Keitaro Naruse
-* @date 2022-03-12
+* @date 2022-03-12, 2022-03-14
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc243/tasks/abc243_c
 */
@@ -13,11 +13,12 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <algorithm>
 
 int main()
 {
     //  Read N = [ 2, 2 * 10^5 ]
-    int N = 0;
+    int N;
     std::cin >> N;
     //  Read Xi, Yi = [ 0, 10^9 ]
     std::vector< int > X( N, 0 ), Y( N, 0 );
@@ -41,14 +42,16 @@ int main()
 
     for( auto p : y_x_R ) {
         int y = p.first;
-        std::vector< int > x_R = y_x_R[ y ];
+        std::vector< int > x_R =  y_x_R[ y ];
+        std::sort( x_R.begin(), x_R.end() );
+
         std::vector< int > x_L = y_x_L[ y ];
-        for( int i = 0; i < x_R.size(); i ++ ) {
-            for( int j = 0; j < x_L.size(); j ++ ) {
-                if( x_R.at( i ) < x_L.at( j ) ) {
-                    std::cout << "Yes" << std::endl;
-                    return( 0 );
-                }
+        std::sort( x_L.begin(), x_L.end() );
+
+        if( x_R.size() != 0 && x_L.size() != 0 ) {
+            if( x_R.at( 0 ) < x_L.at( x_L.size() - 1 ) ) {
+                std::cout << "Yes" << std::endl;
+                return( 0 );
             }
         }
     }
