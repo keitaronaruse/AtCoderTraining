@@ -1,10 +1,9 @@
 /**
-* @file past09-i.cpp
-* @brief PAST 9 Problem I - 直通エレベーター
-  @author Keitaro Naruse
-* @date 2022-03-12, 2022-03-15
+* @file label_graph.cpp
+* @brief The class of a graph structure by adjacent nodes
+* @author Keitaro Naruse
+* @date 2022-03-15
 * @copyright MIT License
-* @details https://atcoder.jp/contests/past202112-open/tasks/past202112_i
 */
 
 #include <iostream>
@@ -74,46 +73,37 @@ namespace nrs {
     };
 }
 
-
-
+/*
+    test driver
+*/
 int main()
 {
-    //  N = [ 2, 10^18 ]
-    long long N;
-    //  M = [ 1, 10^5 ]
-    int M;
-    std::cin >> N >> M;
+    typedef long long Label;
+    typedef long long Weight;
 
-    //  A, B = [ 1, N ], C = [ 1, 10^18 ]
-    std::vector< long long > A( M ), B( M ), C( M ); 
-    for( int i = 0; i < M; i ++ ) {
-        std::cin >> A.at( i ) >> B.at( i ) >> C.at( i );
-    }
+    nrs::label_graph< Label, Weight > g;
 
-    //  Main
-    nrs::label_graph< long long, long long > g;
-    std::vector< long long > nodes;
-    nodes.push_back( 1L );
-    nodes.push_back( N );
-    for( int i = 0; i < M; i ++ ) {
-        g.add_edge( A.at( i ), B.at( i ), C.at( i ) );
-        nodes.push_back( A.at( i ) );
-        nodes.push_back( B.at( i ) );
-    }
+    g.add_edge(  2L,  5L,  1L );
+    g.add_edge(  4L, 10L,  3L );
+    g.add_edge(  1L,  2L,  1L );
+    g.add_edge(  1L,  2L,  1L );
+    g.add_edge(  2L,  4L,  2L );
+    g.add_edge(  5L, 10L,  5L );
+    g.add_edge(  4L,  5L,  2L );
+    g.add_edge(  5L, 10L,  5L );
+    g.add_edge(  5L, 10L,  5L );
+
+    g.add_edge(  1L, 10L,  10L );
+    std::cerr << g.has_edge( 1L, 10L ) << std::endl;
+
+    g.delete_edge(  1L, 10L );
+    std::cerr << g.has_edge( 1L, 10L ) << std::endl;
+
+    g.init_length();
+    
     g.print_weighted_edges( std::cerr );
+    g.print_lengths( std::cerr );
 
-    std::sort( nodes.begin(), nodes.end() );
-    for( int j = 0; j < ( int ) nodes.size() - 1; j ++ ) {
-        if( nodes.at( j ) != nodes.at( j + 1 ) ) {
-            long long w = nodes.at( j + 1 ) - nodes.at( j );
-            if( !g.has_edge( nodes.at( j ), nodes.at( j  + 1) ) 
-                || w < g.weight_edge( nodes.at( j ), nodes.at( j + 1) )
-            )  {
-                g.add_edge( nodes.at( j ), nodes.at( j + 1 ), w );
-            }
-        }
-    }
-    g.print_weighted_edges( std::cerr );
-
-    return( 0 );
+    std::cerr << "Normally terminated." << std::endl;
+    return( 0 ); 
 }
