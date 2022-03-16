@@ -2,7 +2,7 @@
 * @file past09-i.cpp
 * @brief PAST 9 Problem I - 直通エレベーター
   @author Keitaro Naruse
-* @date 2022-03-12, 2022-03-15
+* @date 2022-03-12, 2022-03-16
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_i
 */
@@ -16,147 +16,130 @@
 #include <utility>
 
 namespace nrs {
-    //  L: label type, W: weight type
-    template < class Label, class Weight >
-    class set_graph {
-        private:
-            typedef std::pair< Weight, Label > W_L;
-            //  A weight of an edge, weight[ u ][ v ] = w 
-            std::map< Label, std::map< Label, Weight > > weight;
-            //  A path length from a certain node, length[ u ] = l 
-            std::map< Label, Weight > length;
-            //  A previous node used in the dijkstra algorithm
-            std::map< Label, Label > prev_node;
-            //  A proproty queue for the dijkstra algorithm pq = ( w, u )
-            std::deque< W_L > pq;
+    template < class Weight >
+    class int_graph {
         public:
-            set_graph() : weight( std::map< Label, std::map< Label, Weight > >() )  {}
-            set_graph( const set_graph& r ) {
+            typedef int Node;
+            typedef std::pair< Weight, int > Weight_Node;
+            typedef std::pair< int, Weight > Node_Weight;
+        private:
+            int n;
+            Weight inf;
+            //  { v, w } = weight.at( u ).at( k )
+            std::vector< std::vector< Node_Weight > > weight;
+            //  A path length from a certain node, l = length.at( u )
+            std::vector< Weight > length;
+            //  A previous node used in the dijkstra algorithm, v = prev_node.at( u )
+            std::vector< Node > prev_node;
+            //  A proproty queue for the dijkstra algorithm p_que = ( w, u )
+            std::priority_queue< 
+                Weight_Node, 
+                std::vector< Weight_Node >,
+                std::greater< Weight_Node >
+            > p_que;
+        public:
+            int_graph() : n( 0 ) {}
+            int_graph( int N, Weight INF ) : n( N ), inf( INF ) {
+                init_weights();
+                init_lengths();
+                init_prev_nodes();
+            }
+            int_graph( const int_graph< Weight >& r ) {
                 weight = r.weight;
                 length = r.length;
+                prev_node = r.prev_node;
             }
-            void add_edge( const Label& u, const Label& v, Weight w = Weight( 1 ) ) {
-                weight[ u ][ v ] = w;
-                weight[ v ][ u ] = w;
+            void init_weights() {
+                weight = std::vector< std::vector< Node_Weight > >( n );
             }
-            void delete_edge( const Label& u, const Label& v ) {
-                weight.at( u ).erase( weight.at( u ).find( v ) );
-                weight.at( v ).erase( weight.at( v ).find( u ) );
+            void init_lengths() {
+                length = std::vector< Weight > ( n, inf );
             }
-            bool has_edge( const Label& u, const Label& v ) const {
-                if( weight.count( u ) != 0 && weight.at( u ).count( v ) != 0 
-                    && weight.count( v ) != 0 && weight.at( v ).count( u ) != 0 ) {
-                    return( true );
+            void init_prev_nodes() {
+                prev_node = std::vector< Node > ( n, -1 );
+            }
+            void add_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
+                weight.at( u ).push_back( std::make_pair( v, w ) );
+                weight.at( v ).push_back( std::make_pair( u, w ) );
+            }
+            bool has_edge( Node u, Node v ) {
+                for( const auto& p : weight.at( u ) ) {
+                    if( p.first == v ) {
+                        for( const auto& q : weight.at( v ) ) {
+                            if( q.first == u ) {
+                                return( true );
+                            }
+                        }
+                    }
                 }
                 return( false );
             }
-            Weight weight_edge( const Label& u, const Label& v ) const {
-                return( weight.at( u ).at( v ) ) ;
-            }
-            void init_length() {
-                length.clear();
-                for( const auto& p : weight ) {
-                    length[ p.first ] = Weight( -1 );
+            void delete_edge( Node u, Node v ) {
+                for( auto it = weight.at( u ).begin(); it < weight.at( u ).end(); it ++  ) {
+                    if( *it.first == v ) {
+                        weight.at( u ).erase( it );
+                    }
+                }
+                for( auto it = weight.at( v ).begin(); it < weight.at( v ).end(); it ++  ) {
+                    if( *it.first == u ) {
+                        weight.at( v ).erase( it );
+                    }
                 }
             }
-            void init_prev_node() {
-                prev_node.clear();
-                for( const auto& p : weight ) {
-                    prev_node[ p.first ] = p.first;
-                }
-            }
-            std::ostream& print_weighted_edges( std::ostream& os ) const {
-                for( const auto& p : weight ) {
-                    const Label& u = p.first;
-                    for( const auto& q : p.second ) {
-                        const Label& v = q.first;
-                        const Weight& w = q.second;
+            std::ostream& print_edges( std::ostream& os ) const {
+                for( int u = 0; u < weight.size(); u ++ ) {
+                    for( auto q : weight.at( u ) ) {
+                        int v = q.first;
+                        Weight w = q.second;
                         os << "( " << u << ", " << v << ", " << w << " ) ";
                     }
                 }
                 os << std::endl;
                 return( os );
             }
-            std::ostream& print_lengths( std::ostream& os ) const {
-                for( const auto& p : length ) {
-                    os << "( " << p.first << ", " << p.second << " ) ";     
-                }
-                os << std::endl;
-                return( os );
-            }
-            std::ostream& print_prev_nodes( std::ostream& os ) const {
-                for( const auto& p : prev_node ) {
-                    os << "( " << p.first << ", " << p.second << " ) ";     
-                }
-                os << std::endl;
-                return( os );
-            }
-            /**
-             * @brief find the shortest path from b to e by Dijkkstra's algorithm
-             * @param[in] b: a start node
-             * @param[in] e: a goal node
-             * @return w: the distance from b to e, returns -1 if a path is not found 
-             */
-            Weight find_shortest_path_dijkstra( const Label& b, const Label& e ) {
-                init_length();
-                init_prev_node();
+            Weight find_shortest_path_dijkstra( Node b, Node e ) {
+                init_lengths();
+                init_prev_nodes();
 
                 length.at( b ) = Weight( 0 );
-                prev_node.at( b ) = Label();
-                pq.push_back( std::make_pair( Weight( 0 ), b ) );
+                prev_node.at( b ) = Node( -1 );
+                p_que.push( std::make_pair( length.at( b ), b ) );
 
-                while( !pq.empty() ) {
-                    std::sort( pq.begin(), pq.end() );
-                    const Weight& w = pq.front().first;
-                    const Label& v = pq.front().second;
-                    pq.pop_front();
+                while( !p_que.empty() ) {
+                    auto p = p_que.top(); 
+                    Weight d = p.first;
+                    Node u = p.second;
+                    p_que.pop();
 
-                    //  Goal check
-                    if( v == e ) {
-                        return( length.at( v ) );
+                    //  When an edge with a larger weight is expanded, skip it
+                    if( length.at( u ) < d ) {
+                        continue;
                     }
                     //  Add a node to priority que
-                    for( const auto& q : weight.at( v ) ) {
-                        const Label& u = q.first;
-                        const Weight& w = q.second; 
-                        if( length.at( u ) == Weight( -1 ) ) {
-                            length.at( u ) = length.at( v ) + w;
-                            prev_node.at( u ) = v;
-                            pq.push_back( std::make_pair( length.at( u ), u ) );
-                        }
-                        else if( length.at( u ) > length.at( v ) + w ) {
-                            length.at( u ) = length.at( v ) + w;
-                            prev_node.at( u ) = v;
-                            for( auto& w_l : pq ) {
-                                if( w_l.second == u ) {
-                                    w_l.first = length.at( u );
-                                }
-                            }
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight c = q.second;
+                        if( length.at( v ) > d + c ) {
+                            length.at( v ) = d + c;
+                            prev_node.at( v ) = u;
+                            p_que.push( std::make_pair( length.at( v ), v ) );
                         }
                     }
                 }
-                return( Weight( -1 ) ); 
+                return( length.at( e ) ); 
             }
-            std::deque< Label > back_trace( const Label& b, const Label& e ) const {
-                std::deque< Label > path;
-                Label v = e;
+            std::vector< Node > back_trace( Node b, Node e ) {
+                std::vector< Node > path;
+                Node v = e;
                 while( v != b ) {
-                    path.push_front( v );
+                    path.push_back( v );
                     v = prev_node.at( v );
                 }
-                path.push_front( b );
+                path.push_back( b );
+                std::reverse( path.begin(), path.end() );
                 return( path );
             }
     };
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::deque< T >& v )
-{
-    for( const auto& e : v ) {
-        os << e << " ";
-    }
-    return( os );
 }
 
 template < class T >
@@ -168,10 +151,11 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
-const long long INF = 1000000000000000001L;
-
 int main()
 {
+    //  Constant
+    const long long INF = 1000000000000000001L;
+
     //  N = [ 2, 10^18 ]
     long long N;
     //  M = [ 1, 10^5 ]
@@ -185,73 +169,35 @@ int main()
     }
 
     //  Main
+    //  Preprocess of nodes
     std::vector< long long > nodes;
     nodes.reserve( 2 * M + 2 );
     nodes.push_back( 1L );
     nodes.push_back( N );
     for( int i = 0; i < M; i ++ ) {
-        // g.add_edge( A.at( i ), B.at( i ), C.at( i ) );
         nodes.push_back( A.at( i ) );
         nodes.push_back( B.at( i ) );
     }
     std::sort( nodes.begin(), nodes.end() );
     nodes.erase( std::unique( nodes.begin(), nodes.end() ), nodes.end() );
 
+    //  Make a graph instance
     const int V = ( int ) nodes.size();
-    std::vector< std::vector< std::pair< int, long long > > > graph( V );
+    nrs::int_graph< long long > g( V, INF );
     for( int i = 0; i < V - 1; i ++ ) {
         long long w = nodes.at( i + 1 ) - nodes.at( i );
-        graph.at( i ).push_back( std::make_pair( i + 1, w ) );
-        graph.at( i + 1 ).push_back( std::make_pair( i, w ) );
+        g.add_edge( i, i + 1, w );
     }
     for( int i = 0; i < M; i ++ ) {
-        const int u = std::lower_bound( nodes.begin(), nodes.end(), A.at( i ) ) - nodes.begin();
-        const int v = std::lower_bound( nodes.begin(), nodes.end(), B.at( i ) ) - nodes.begin();
-        graph.at( u ).push_back( std::make_pair( v, C.at( i ) ) );
-        graph.at( v ).push_back( std::make_pair( u, C.at( i ) ) );
+        int u = std::lower_bound( nodes.begin(), nodes.end(), A.at( i ) ) - nodes.begin();
+        int v = std::lower_bound( nodes.begin(), nodes.end(), B.at( i ) ) - nodes.begin();
+        g.add_edge( u, v, C.at( i ) );
     }
-
-    std::vector< long long > dist( V, INF );
-    std::priority_queue< 
-        std::pair< long long, int >, 
-        std::vector< std::pair< long long, int > >, 
-        std::greater< std::pair< long long, int > > 
-    > heap;
-    const auto push = [&]( const int u, const long long d ) {
-        if( dist.at( u ) > d ) {
-            dist.at( u ) = d;
-            heap.push( std::make_pair( d, u ) );
-        }
-    };
-    push( 0, 0 );
-    while( !heap.empty() ) {
-        const auto p = heap.top();
-        const long long d = p.first;
-        const int u = p.second;
-        heap.pop();
-        if( dist.at( u ) < d ) {
-            continue;
-        }
-        for( const auto& q : graph.at( u )  ) {
-            const int v = q.first;
-            const long long c = q.second;
-            push( v, d + c );
-        }
+    std::cout << g.find_shortest_path_dijkstra( 0, V - 1 ) << std::endl;
+    for( auto k : g.back_trace( 0, V - 1 ) ) {
+        std::cout << nodes.at( k ) << " ";
     }
-    std::cout << dist.at( V - 1 ) << std::endl;
-
-    // nrs::set_graph< long long, long long > g;
-    // for( int j = 0; j < ( int ) nodes.size() - 1; j ++ ) {
-    //     if( nodes.at( j ) != nodes.at( j + 1 ) ) {
-    //         long long w = nodes.at( j + 1 ) - nodes.at( j );
-    //         if( !g.has_edge( nodes.at( j ), nodes.at( j  + 1) ) 
-    //             || w < g.weight_edge( nodes.at( j ), nodes.at( j + 1) )
-    //         )  {
-    //             g.add_edge( nodes.at( j ), nodes.at( j + 1 ), w );
-    //         }
-    //     }
-    // }
-    // std::cout << g.find_shortest_path_dijkstra( 1, N ) << std::endl;
+    std::cout << std::endl;
 
     return( 0 );
 }
