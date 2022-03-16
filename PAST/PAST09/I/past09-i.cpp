@@ -2,7 +2,7 @@
 * @file past09-i.cpp
 * @brief PAST 9 Problem I - 直通エレベーター
   @author Keitaro Naruse
-* @date 2022-03-12, 2022-03-16
+* @date 2022-03-12, 2022-03-17
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_i
 */
@@ -111,18 +111,21 @@ namespace nrs {
                     Node u = p.second;
                     p_que.pop();
 
-                    //  When an edge with a larger weight is expanded, skip it
-                    if( length.at( u ) < d ) {
-                        continue;
-                    }
-                    //  Add a node to priority que
-                    for( auto q : weight.at( u ) ) {
-                        Node v = q.first;
-                        Weight c = q.second;
-                        if( length.at( v ) > d + c ) {
-                            length.at( v ) = d + c;
-                            prev_node.at( v ) = u;
-                            p_que.push( std::make_pair( length.at( v ), v ) );
+                    // //  When an edge with a larger weight is expanded, skip it
+                    // if( length.at( u ) < d ) {
+                    //     continue;
+                    // }
+                    //  When a node ( d, u ) in the priority que should be expanded
+                    if( length.at( u ) >= d ) {
+                        //  Add a node to priority que
+                        for( auto q : weight.at( u ) ) {
+                            Node v = q.first;
+                            Weight c = q.second;
+                            if( length.at( v ) > d + c ) {
+                                length.at( v ) = d + c;
+                                prev_node.at( v ) = u;
+                                p_que.push( std::make_pair( length.at( v ), v ) );
+                            }
                         }
                     }
                 }
@@ -194,10 +197,10 @@ int main()
         g.add_edge( u, v, C.at( i ) );
     }
     std::cout << g.find_shortest_path_dijkstra( 0, V - 1 ) << std::endl;
-    for( auto k : g.back_trace( 0, V - 1 ) ) {
-        std::cout << nodes.at( k ) << " ";
-    }
-    std::cout << std::endl;
+    // for( auto k : g.back_trace( 0, V - 1 ) ) {
+    //     std::cout << nodes.at( k ) << " ";
+    // }
+    // std::cout << std::endl;
 
     return( 0 );
 }
