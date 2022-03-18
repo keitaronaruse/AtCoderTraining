@@ -2,7 +2,7 @@
 * @file past09-j.cpp
 * @brief PAST 9 Problem J - 回転と反転
   @author Keitaro Naruse
-* @date 2022-03-17
+* @date 2022-03-18
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_j
 */
@@ -11,10 +11,25 @@
 #include <vector>
 #include <algorithm>
 
-void convert_position( int& h, int& w, int x, int y, int N,  int mode )
+void convert_to_board( int& h, int& w, int x, int y, int N, int mode )
 {
     switch( mode ) {
-        case 0: h = x;         w = y; break;
+        case 0: h = x;         w = y;         break;
+        case 1: h = N - 1 - y; w = x;         break;
+        case 2: h = N - 1 - x; w = N - 1 - y; break;
+        case 3: h = y;         w = N - 1 - x; break;
+        case 4: h = N - 1 - x; w = y;         break;
+        case 5: h = N - 1 - y; w = N - 1 - x; break;
+        case 6: h = x;         w = N - 1 - y; break;
+        case 7: h = y;         w = x;         break;
+        default: break;
+    }
+}
+
+void convert_to_screen( int& h, int& w, int x, int y, int N, int mode )
+{
+    switch( mode ) {
+        case 0: h = x;         w = y;         break;
         case 1: h = y;         w = N - 1 - x; break;
         case 2: h = N - 1 - x; w = N - 1 - y; break;
         case 3: h = N - 1 - y; w = x; break;
@@ -24,6 +39,18 @@ void convert_position( int& h, int& w, int x, int y, int N,  int mode )
         case 7: h = y;         w = x; break;
         default: break;
     }
+}
+
+template < class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > >& vv ) 
+{
+    for( const auto& v : vv ) {
+        for( auto k : v ) {
+            os << k;
+        }
+        os << std::endl;
+    }
+    return( os );
 }
 
 int main()
@@ -44,7 +71,7 @@ int main()
         if( q == 1 ) {
             int x, y, h, w;
             std::cin >> x >> y;
-            convert_position( h, w, x - 1, y - 1, N, mode );
+            convert_to_board( h, w, x - 1, y - 1, N, mode );
             board.at( h ).at( w ) = ( board.at( h ).at( w ) + 1 ) % 2;
         }
         else if( q == 2 ) {
@@ -107,23 +134,18 @@ int main()
                 }
             }
         }
-        std::cout << mode << std::endl;
-        for( int h = 0; h < N; h ++ ) {
-            for( int w = 0; w < N; w ++ ) {
-                std::cout << board.at( h ).at( w );
-            }
-            std::cout << std::endl;
-        }
     }
+
+    //  Output
     std::vector< std::vector< int > > screen = board;
     for( int h = 0; h < N; h ++ ) {
         for( int w = 0; w < N; w ++ ) {
             int v, u;
-            convert_position( v, u, h, w, N, mode );
+            convert_to_screen( v, u, h, w, N, mode );
             screen.at( v ).at( u ) = board.at( h ).at( w );
         }
     }
-
+    std::cout << screen;
 
     return( 0 );
 }
