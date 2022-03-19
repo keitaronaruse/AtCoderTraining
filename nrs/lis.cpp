@@ -77,7 +77,7 @@ namespace nrs {
 }
 
 template< class T >
-std::ostream& operator<<( std::ostream& os, std::vector< T > v )
+std::ostream& operator<<( std::ostream& os, std::vector< T >& v )
 {
     for( auto k : v ) {
         os << k << " "; 
