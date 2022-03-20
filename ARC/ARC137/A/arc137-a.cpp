@@ -1,6 +1,6 @@
 /**
 * @file arc137-a.cpp
-* @brief ABC137 Problem A
+* @brief ABC137 Problem A - Coprime Pair
 * @author Keitaro Naruse
 * @date 2022-03-19
 * @copyright MIT License
@@ -10,9 +10,35 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
+#include <queue>
+#include <utility>
+
+namespace nrs {
+    template < class T >
+    T gcd( T a, T b )
+    {
+        T dividend = ( a > b )? a : b;
+        T divisor  = ( a > b )? b : a;
+        T residue = dividend % divisor;
+
+        while( residue != 0 ) {
+            dividend = divisor;
+            divisor = residue;
+            residue = dividend % divisor;
+        }
+
+        return( divisor );
+    }
+
+    template < class T >
+    T lcm( T a, T b )
+    {
+        long long g = nrs::gcd( a, b );
+        return( std::max( a, b ) / g * std::min( a, b ) );  
+    }
+}
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -25,21 +51,32 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
+    //  Read L, R = [ 1, 10^18 ]
+    long long L, R;
+    std::cin >> L >> R;
 
     //  Main
+    std::queue< std::pair< long long, long long > > q;
+    long long x = L, y = R;
+    q.push( std::make_pair( x, y ) );
+    while( !q.empty() ) {
+        auto p = q.front(); q.pop(); 
+        x = p.first;
+        y = p.second;
+        if( nrs::gcd( x, y ) == 1L ) {
+            std::cout << y - x << std::endl;
+            return( 0 );
+        }
+        else {
+            if( x + 1L < y ) {
+                q.push( std::make_pair( x + 1L, y ) );
+            }
+            if( x < y - 1L) {
+                q.push( std::make_pair( x, y - 1L ) );
+            }
+        }
+    }
+    std::cout << "1" << std::endl;
 
     //  Finalize
     return( 0 );
