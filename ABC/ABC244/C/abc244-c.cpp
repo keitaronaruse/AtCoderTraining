@@ -1,6 +1,6 @@
 /**
 * @file abc244-c.cpp
-* @brief ABC244 Problem C
+* @brief ABC244 Problem C - Yamanote Line Game
 * @author Keitaro Naruse
 * @date 2022-03-20
 * @copyright MIT License
@@ -10,18 +10,7 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {
@@ -29,17 +18,26 @@ int main()
     int N = 0;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
 
     //  Main
+    //  Table of used numbers, 1-index 
+    std::vector< bool > used( 2 * N + 1 + 1, false );
+    int m = 0;
+    do {
+        //  Takahashi's turn
+        //  Return the minumum unused number and update the table 
+        for( int i = 1; i <= 2 * N + 1; i ++ ) {
+            if( !used.at( i ) ) {
+                used.at( i ) = true;
+                std::cout << i << std::endl;
+                break;
+            }
+        }
+        //  Opponent's turn
+        //  read and update the table
+        std::cin >> m;
+        used.at( m ) = true; 
+    } while( m != 0 );
 
     //  Finalize
     return( 0 );

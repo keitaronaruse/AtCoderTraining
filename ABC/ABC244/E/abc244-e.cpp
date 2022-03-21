@@ -1,12 +1,13 @@
 /**
-* @file int_graph.cpp
-* @brief class nrs::int_graph
-  @author Keitaro Naruse
-* @date 2022-03-18
+* @file abc244-e.cpp
+* @brief ABC244 Problem E
+* @author Keitaro Naruse
+* @date 2022-03-20
 * @copyright MIT License
-* @details 
+* @details https://atcoder.jp/contests/abc244/tasks/abc244_e
 */
 
+// # Solution
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -216,21 +217,39 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
+const int INF = 1000000007;
+const int Prime = 998244353;
+
 int main()
 {
-    //  Const
-    const int inf = 1000000007;
-    //  N = [ 2, 2 * 10^5 ]
-    int N = 3;
+    //  Read N = [ 2, 2 * 10^3 ]
+    int N, M, K, S, T, X;
+    std::cin >> N >> M >> K >> S >> T >> X;
+
+    //  Read Ui, Vi
+    std::vector< int > U( M ), V( M );
+    for( int i = 0; i < M; i ++ ) {
+        std::cin >> U.at( i ) >> V.at( i );
+    }
+    //  graph instance
+    nrs::int_graph< int > g( N, INF );
+    for( int i = 0; i < M; i ++ ) {
+        g.add_edge( U.at( i ) - 1, V.at( i ) - 1 );
+    }
+    //  Preprocess
+    std::vector< std::vector< int > > length;
+    g.find_path_bfs( X - 1, 0 );
 
     //  Main
-    //  Preprocess
-    nrs::int_graph< int > g( N, inf );
-    g.add_edge( 0, 1, 1 );
-    g.add_edge( 1, 2, 1 );
-    g.add_edge( 2, 0, 1 );
-    std::cout << g.find_path_bfs( 0, 2 ) << std::endl;
-    std::cout << g.back_trace( 0, 2 ) << std::endl;
+    for( int j = 0; j < N; j ++ ) {
+        int L = g.length.at( S - 1 ) 
+            + 2 * g.length.at( j )
+            + g.length.at( T - 1 );
+        if( L <= K ) {
+            std::cerr << L << std::endl; 
+        }
+    }
 
+    //  Finalize
     return( 0 );
 }

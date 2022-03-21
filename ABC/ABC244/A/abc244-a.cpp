@@ -1,8 +1,8 @@
 /**
 * @file abc244-a.cpp
-* @brief ABC244 Problem A
+* @brief ABC244 Problem A - Last Letter
 * @author Keitaro Naruse
-* @date 2022-03-20
+* @date 2022-03-20, 2022-03-21
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc244/tasks/abc244_a
 */
@@ -11,17 +11,6 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {
@@ -29,17 +18,13 @@ int main()
     int N = 0;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
+    //  Read | S | = N
     std::string S = "";
     std::cin >> S;
 
     //  Main
+    // std::cout << S.at( S.size() - 1 ) << std::endl;
+    std::cout << S.back() << std::endl;
 
     //  Finalize
     return( 0 );
