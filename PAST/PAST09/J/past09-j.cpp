@@ -7,6 +7,10 @@
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_j
 */
 
+//  m0  m1  m2  m3  m4  m5  m6  m7
+//  43  14  21  32  34  41  12  23
+//  12  23  34  41  21  32  43  14
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -99,6 +103,7 @@ int main()
     //  Main
     std::vector< std::vector< int > > board( N, std::vector< int > ( N, 0 ) );
     //  Modes
+    int m = 0;
     //  r == 0 if nothing, 1 if A or BBB, 2 if AA or BB, 3 if AAA or B
     int r = 0;
     //  ud == 0 if normal, 1 == up-down flipped
@@ -117,21 +122,61 @@ int main()
             char c;
             std::cin >> c;
             if( c == 'A' ) {
-                r ++;
+                switch( m ) {
+                    case 0: m = 1; break;
+                    case 1: m = 2; break;
+                    case 2: m = 3; break;
+                    case 3: m = 0; break;
+                    case 4: m = 7; break;
+                    case 5: m = 4; break;
+                    case 6: m = 5; break;
+                    case 7: m = 6; break;
+                    default: break;
+                }
             }
             else if( c == 'B' ) {
-                r --;
+                switch( m ) {
+                    case 0: m = 3; break;
+                    case 1: m = 0; break;
+                    case 2: m = 1; break;
+                    case 3: m = 2; break;
+                    case 4: m = 5; break;
+                    case 5: m = 6; break;
+                    case 6: m = 7; break;
+                    case 7: m = 4; break;
+                    default: break;
+                }
             }
-            r = ( r + 4 ) % 4;
         }
+        //  q == 3, next
         else if( q == 3 ) {
             char c;
             std::cin >> c;
             if( c == 'A' ) {
-                ud = ( ud + 1 ) % 2; 
+                switch( m ) {
+                    case 0: m = 4; break;
+                    case 1: m = 5; break;
+                    case 2: m = 6; break;
+                    case 3: m = 7; break;
+                    case 4: m = 0; break;
+                    case 5: m = 1; break;
+                    case 6: m = 2; break;
+                    case 7: m = 3; break;
+                    default: break;
+                }
             }
             else if( c == 'B' ) {
-                lr = ( lr + 1 ) % 2; 
+                switch( m ) {
+                    case 0: m = 6; break;
+                    case 1: m = 7; break;
+                    case 2: m = 4; break;
+                    case 3: m = 5; break;
+                    case 4: m = 1; break;
+                    case 5: m = 3; break;
+                    case 6: m = 0; break;
+                    case 7: m = 1; break;
+                    default: break;
+                }
             }
         }
     }
