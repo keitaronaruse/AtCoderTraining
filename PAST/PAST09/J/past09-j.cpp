@@ -2,7 +2,7 @@
 * @file past09-j.cpp
 * @brief PAST 9 Problem J - 回転と反転
   @author Keitaro Naruse
-* @date 2022-03-17
+* @date 2022-03-18
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_j
 */
@@ -15,81 +15,46 @@
 #include <vector>
 #include <algorithm>
 
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
+void convert_to_board( int& h, int& w, int x, int y, int N, int mode )
 {
-    for( const auto& e : v ) {
-        os << e << " ";
+    switch( mode ) {
+        case 0: h = x;         w = y;         break;
+        case 1: h = N - 1 - y; w = x;         break;
+        case 2: h = N - 1 - x; w = N - 1 - y; break;
+        case 3: h = y;         w = N - 1 - x; break;
+        case 4: h = N - 1 - x; w = y;         break;
+        case 5: h = N - 1 - y; w = N - 1 - x; break;
+        case 6: h = x;         w = N - 1 - y; break;
+        case 7: h = y;         w = x;         break;
+        default: break;
+    }
+}
+
+void convert_to_screen( int& h, int& w, int x, int y, int N, int mode )
+{
+    switch( mode ) {
+        case 0: h = x;         w = y;         break;
+        case 1: h = y;         w = N - 1 - x; break;
+        case 2: h = N - 1 - x; w = N - 1 - y; break;
+        case 3: h = N - 1 - y; w = x; break;
+        case 4: h = N - 1 - x; w = y; break;
+        case 5: h = N - 1 - y; w = N - 1 - x; break;
+        case 6: h = x;         w = N - 1 - y; break;
+        case 7: h = y;         w = x; break;
+        default: break;
+    }
+}
+
+template < class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > >& vv ) 
+{
+    for( const auto& v : vv ) {
+        for( auto k : v ) {
+            os << k;
+        }
+        os << std::endl;
     }
     return( os );
-}
-
-void paint_point( std::vector< std::vector< int > >& board, int x, int y, int r, int ud, int lr ) 
-{
-    int N = board.size();
-    int h, w;
-    if( r == 0 ) {
-        h = x; 
-        w = y;
-    }
-    else if( r == 1 ) {
-        h = N - 1 - y; 
-        w = x;
-    }
-    else if( r == 2 ) {
-        h = N - 1 - x; 
-        w = N - 1 - y; 
-    }
-    else if( r == 3 ) {
-        h = y; 
-        w = N - 1 - x; 
-    }
-
-    if( ud == 1 ) {
-        h = N - 1 - h;
-    }
-
-    if( lr == 1 ) {
-        w = N - 1 - w;
-    }
-
-    board.at( h ).at( w ) = ( board.at( h ).at( w ) + 1 ) % 2;
-}
-
-std::vector< std::vector< int > > rotate_board( const std::vector< std::vector< int > >& board, int r, int ud, int lr )
-{
-    int N = board.size();
-    std::vector< std::vector< int > > screen = board;
-    for( int x = 0; x < N; x ++ ) {
-        for( int y = 0; y < N; y ++ ) {
-            int h, w;
-            if( r == 0 ) {
-                h = x; 
-                w = y;
-            }
-            else if( r == 1 ) {
-                h = y; 
-                w = N - 1 - x; 
-            }
-            else if( r == 2 ) {
-                h = N - 1 - x; 
-                w = N - 1 - y; 
-            }
-            else if( r == 3 ) {
-                h = N - 1 - y; 
-                w = x;
-            }
-
-            if( ud == 1 ) {
-                h = N - 1 - h;
-            }
-            if( lr == 1 ) {
-                w = N - 1 - w;
-            }
-            screen.at( h ).at( w ) = board.at( x ).at( y ) ;
-        }
-    }
-    return( screen );
 }
 
 int main()
@@ -101,6 +66,7 @@ int main()
     std::cin >> N >> Q;
 
     //  Main
+<<<<<<< HEAD
     std::vector< std::vector< int > > board( N, std::vector< int > ( N, 0 ) );
     //  Modes
     int m = 0;
@@ -110,18 +76,25 @@ int main()
     int ud = 0;
     //  lr == 0 if normal, 1 == left-right flipped
     int lr = 0;
+=======
+    int mode = 0;
+    std::vector< std::vector< int > > board( N, std::vector< int >( N, 0 ) );
+
+>>>>>>> ca412ff228b385b9d07c93d59d6d8ba2e532c805
     for( int i = 0; i < Q; i ++ ) {
         int q;
         std::cin >> q;
         if( q == 1 ) {
-            int x, y;
+            int x, y, h, w;
             std::cin >> x >> y;
-            paint_point( board, x - 1, y - 1, r, ud, lr );
+            convert_to_board( h, w, x - 1, y - 1, N, mode );
+            board.at( h ).at( w ) = ( board.at( h ).at( w ) + 1 ) % 2;
         }
         else if( q == 2 ) {
             char c;
             std::cin >> c;
             if( c == 'A' ) {
+<<<<<<< HEAD
                 switch( m ) {
                     case 0: m = 1; break;
                     case 1: m = 2; break;
@@ -131,10 +104,22 @@ int main()
                     case 5: m = 4; break;
                     case 6: m = 5; break;
                     case 7: m = 6; break;
+=======
+                switch( mode ) {
+                    case 0: mode = 1; break;
+                    case 1: mode = 2; break;
+                    case 2: mode = 3; break;
+                    case 3: mode = 0; break;
+                    case 4: mode = 7; break;
+                    case 5: mode = 4; break;
+                    case 6: mode = 5; break;
+                    case 7: mode = 6; break;
+>>>>>>> ca412ff228b385b9d07c93d59d6d8ba2e532c805
                     default: break;
                 }
             }
             else if( c == 'B' ) {
+<<<<<<< HEAD
                 switch( m ) {
                     case 0: m = 3; break;
                     case 1: m = 0; break;
@@ -144,6 +129,17 @@ int main()
                     case 5: m = 6; break;
                     case 6: m = 7; break;
                     case 7: m = 4; break;
+=======
+                switch( mode ) {
+                    case 0: mode = 3; break;
+                    case 1: mode = 0; break;
+                    case 2: mode = 1; break;
+                    case 3: mode = 2; break;
+                    case 4: mode = 5; break;
+                    case 5: mode = 6; break;
+                    case 6: mode = 7; break;
+                    case 7: mode = 4; break;
+>>>>>>> ca412ff228b385b9d07c93d59d6d8ba2e532c805
                     default: break;
                 }
             }
@@ -153,6 +149,7 @@ int main()
             char c;
             std::cin >> c;
             if( c == 'A' ) {
+<<<<<<< HEAD
                 switch( m ) {
                     case 0: m = 4; break;
                     case 1: m = 5; break;
@@ -162,10 +159,22 @@ int main()
                     case 5: m = 1; break;
                     case 6: m = 2; break;
                     case 7: m = 3; break;
+=======
+                switch( mode ) {
+                    case 0: mode = 4; break;
+                    case 1: mode = 5; break;
+                    case 2: mode = 6; break;
+                    case 3: mode = 7; break;
+                    case 4: mode = 0; break;
+                    case 5: mode = 1; break;
+                    case 6: mode = 2; break;
+                    case 7: mode = 3; break;
+>>>>>>> ca412ff228b385b9d07c93d59d6d8ba2e532c805
                     default: break;
                 }
             }
             else if( c == 'B' ) {
+<<<<<<< HEAD
                 switch( m ) {
                     case 0: m = 6; break;
                     case 1: m = 7; break;
@@ -175,6 +184,17 @@ int main()
                     case 5: m = 3; break;
                     case 6: m = 0; break;
                     case 7: m = 1; break;
+=======
+                switch( mode ) {
+                    case 0: mode = 6; break;
+                    case 1: mode = 7; break;
+                    case 2: mode = 4; break;
+                    case 3: mode = 5; break;
+                    case 4: mode = 2; break;
+                    case 5: mode = 3; break;
+                    case 6: mode = 0; break;
+                    case 7: mode = 1; break;
+>>>>>>> ca412ff228b385b9d07c93d59d6d8ba2e532c805
                     default: break;
                 }
             }
@@ -182,14 +202,15 @@ int main()
     }
 
     //  Output
-    board = rotate_board( board, r, ud, lr );
-    for( int i = 0; i < N; i ++ ) {
-        for( int j = 0; j < N; j ++ ) {
-            std::cout << board.at( i ).at( j );
+    std::vector< std::vector< int > > screen = board;
+    for( int h = 0; h < N; h ++ ) {
+        for( int w = 0; w < N; w ++ ) {
+            int v, u;
+            convert_to_screen( v, u, h, w, N, mode );
+            screen.at( v ).at( u ) = board.at( h ).at( w );
         }
-        std::cout << std::endl;
     }
-    std::cout << r << " " << ud << " " << lr << std::endl;
+    std::cout << screen;
 
     return( 0 );
 }

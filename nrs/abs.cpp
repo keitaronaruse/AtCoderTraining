@@ -1,16 +1,21 @@
-/*
-    nrs::abs()
-        returns the absolute value of the arugument, implmented by template
-        Author: Keitaro Naruse
-        Date:   2021-12-26
-        MIT License
+/**
+* @file abs.cpp
+* @brief returns the absolute value of the arugument, implmented by template
+* @author Keitaro Naruse
+* @date 2021-12-26, 2022-03-20
+* @copyright MIT License
 */
 
 namespace nrs {
+    /**
+    * @brief absolute value
+    * @param[in] an integer
+    * @return T absolute value of a given integer
+    */    
     template < class T >
     T abs( T a )
     {
-        return( ( a > 0 )? a : -a );
+        return( ( a > 0 ) ? a : -a );
     }
 }
 
