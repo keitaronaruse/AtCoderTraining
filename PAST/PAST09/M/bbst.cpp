@@ -15,7 +15,20 @@
 #include <utility>
 
 namespace nrs {
-    ;
+    template < class T >
+    class Node {
+        public:
+            typedef Node* iterator; 
+        public:
+            T d;
+            iterator l;
+            iterator r;
+        public:
+            Node() {};
+            Node( const T& d_, iterator l_, iterator r_ ) : d( d_ ), l( l_ ), r( r_ ) {};
+            Node( const Node& r ) : d( r.d ), l( r.l ), r( r.r ) {};
+            ~Node() {};
+    };
 }
 
 template < class T >
@@ -30,6 +43,8 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
+    nrs::Node< int > v;
+
     //  Read N, Q = [ 1, 10^5 ]
     int N, Q;
     std::cin >> N >> Q;
