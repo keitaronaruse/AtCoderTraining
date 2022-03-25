@@ -21,17 +21,24 @@ namespace nrs {
             T value;
             Node* left;
             Node* right;
-            int size;
             int height;
+            int size;
         public:
             Node() {};
-            Node( const T& v, Node* l = nullptr, Node* r = nullptr, int s = 1 )
-             : value( v ), left( l ), right( r ), size( s ) {
+            Node( const T& v, Node* l = nullptr, Node* r = nullptr )
+             : value( v ), left( l ), right( r ) {
                 height = 1 + std::max( find_height( left ), find_height( right ) );
+                size = 1 + find_size( left ) + find_size( right );
             }
             ~Node() {}
             std::ostream& write( std::ostream& os ) {
-                os << this << " " << value << " " << left << " " << right << " " << height << std::endl;
+                if( this ) {
+                    os << value << " " << height << " " << size << " "
+                        << " " << this << " " << " " << left << " " << right << std::endl;
+                }
+                else {
+                    os << "nullptr" << std::endl;
+                }
                 return( os );
             }
     };
@@ -39,37 +46,82 @@ namespace nrs {
     template < class T >
     class BBST {
         public:
-            Node< T >* root;
+            typedef Node< T >* Tree;
+        public:
+            Tree root;
         public:
             BBST() : root( nullptr ) {};
             ~BBST() {};
             bool find( const T& x ) {
                 return( find( x, root ) );
             }
-            bool find( const T& x, Node< T >* tree ) {
-                Node< T >* sub_tree = tree;
-                while( sub_tree != nullptr ) {
-                    if( x == sub_tree -> value ) {
-                        return( true );
+            void insert( const T& x ) {
+                insert( x, root );
+            }
+            std::ostream& print( std::ostream& os ) {
+                print( os, root );
+                return( os );
+            }
+        public:
+            bool find( const T& x, Tree tree ) {
+                if( tree == NULL ) {
+                    return( false );
+                }
+                else if( x == tree -> value ) {
+                    return( true );
+                }
+                else if( x < tree -> value ) {
+                    return( find( x, tree-> left ) );
+                }
+                else {
+                    return( find( x, tree -> right ) );
+                }
+            }
+            void insert( const T& x, Tree& tree ) {
+                if( tree == nullptr ) {
+                    tree = new Node< T > ( x, nullptr, nullptr );
+                }
+                else if( x < tree -> value ) {
+                    insert( x, tree -> left );
+                }
+                else if( x > tree -> value ) {
+                    insert( x, tree -> right );
+                }
+                else {
+                    //  x == tree -> value
+                    //  duplicated, do nothing
+                }
+            }
+            void print( std::ostream& os, Tree tree ) {
+                if( tree ) {
+                    tree -> write( os );
+                    if( tree -> left ) {
+                        print( os, tree -> left );
                     }
-                    else if( x < sub_tree -> value ) {
-                        sub_tree = sub_tree -> left;
-                    }
-                    else {
-                        sub_tree = sub_tree -> right;
+                    if( tree -> right ) {
+                        print( os, tree -> right );
                     }
                 }
-                return( false );
             }
     };
 
     template < class T >
-    int find_height( Node< T >* n ) {
-        if( n == nullptr ) {
+    int find_height( Node< T >* tree ) {
+        if( tree == nullptr ) {
             return( 0 );
         }
         else {
-            return( n -> height );
+            return( tree -> height );
+        }
+    }
+
+    template < class T >
+    int find_size( Node< T >* tree ) {
+        if( tree == nullptr ) {
+            return( 0 );
+        }
+        else {
+            return( tree -> size );
         }
     }
 }
@@ -87,19 +139,16 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 int main()
 {
     //  Under development
-    nrs::Node< int >* n3 = new nrs::Node< int >( 3 );
-    nrs::Node< int >* n1 = new nrs::Node< int >( 1 );
-    nrs::Node< int >* n2 = new nrs::Node< int >( 2, n1, n3 );
-    n1 -> write( std::cerr );
-    n2 -> write( std::cerr );
-    n3 -> write( std::cerr );
+    // n2 -> write( std::cerr );
+    // n3 -> write( std::cerr );
 
     nrs::BBST< int > t;
-    t.root = n2;
-    for( int i = 0; i < 5; i ++ ) {
-        std::cerr << i << ": " << t.find( i ) << std::endl;
+    t.print( std::cerr );
+    for( int i = 0; i < 3; i ++ ) {
+        t.insert( i );
+        std::cerr << "Insert " << i << std::endl;
+        t.print( std::cerr );
     }
-
     
     //  Read N, Q = [ 1, 10^5 ]
     int N, Q;
