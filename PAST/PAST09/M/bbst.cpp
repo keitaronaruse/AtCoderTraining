@@ -18,17 +18,59 @@ namespace nrs {
     template < class T >
     class Node {
         public:
-            typedef Node* iterator; 
-        public:
-            T d;
-            iterator l;
-            iterator r;
+            T value;
+            Node* left;
+            Node* right;
+            int size;
+            int height;
         public:
             Node() {};
-            Node( const T& d_, iterator l_, iterator r_ ) : d( d_ ), l( l_ ), r( r_ ) {};
-            Node( const Node& r ) : d( r.d ), l( r.l ), r( r.r ) {};
-            ~Node() {};
+            Node( const T& v, Node* l = nullptr, Node* r = nullptr, int s = 1 )
+             : value( v ), left( l ), right( r ), size( s ) {
+                height = 1 + std::max( find_height( left ), find_height( right ) );
+            }
+            ~Node() {}
+            std::ostream& write( std::ostream& os ) {
+                os << this << " " << value << " " << left << " " << right << " " << height << std::endl;
+                return( os );
+            }
     };
+
+    template < class T >
+    class BBST {
+        public:
+            Node< T >* root;
+        public:
+            BBST() : root( nullptr ) {};
+            ~BBST() {};
+            bool find( const T& x ) {
+                return( find( x, root ) );
+            }
+            bool find( const T& x, Node< T >* tree ) {
+                if( tree == nullptr ) {
+                    return( false );
+                }
+                else if( x == tree -> value ) {
+                    return( true );
+                }
+                else if( x < tree -> value ) {
+                    return( find( x, tree -> left ) );
+                }
+                else {
+                    return( find( x, tree -> right ) );
+                }
+            }
+    };
+
+    template < class T >
+    int find_height( Node< T >* n ) {
+        if( n == nullptr ) {
+            return( 0 );
+        }
+        else {
+            return( n -> height );
+        }
+    }
 }
 
 template < class T >
@@ -43,8 +85,21 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    nrs::Node< int > v;
+    //  Under development
+    nrs::Node< int >* n3 = new nrs::Node< int >( 3 );
+    nrs::Node< int >* n1 = new nrs::Node< int >( 1 );
+    nrs::Node< int >* n2 = new nrs::Node< int >( 2, n1, n3 );
+    n1 -> write( std::cerr );
+    n2 -> write( std::cerr );
+    n3 -> write( std::cerr );
 
+    nrs::BBST< int > t;
+    t.root = n2;
+    for( int i = 0; i < 5; i ++ ) {
+        std::cerr << i << ": " << t.find( i ) << std::endl;
+    }
+
+    
     //  Read N, Q = [ 1, 10^5 ]
     int N, Q;
     std::cin >> N >> Q;
