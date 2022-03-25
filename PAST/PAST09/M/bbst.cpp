@@ -47,18 +47,19 @@ namespace nrs {
                 return( find( x, root ) );
             }
             bool find( const T& x, Node< T >* tree ) {
-                if( tree == nullptr ) {
-                    return( false );
+                Node< T >* sub_tree = tree;
+                while( sub_tree != nullptr ) {
+                    if( x == sub_tree -> value ) {
+                        return( true );
+                    }
+                    else if( x < sub_tree -> value ) {
+                        sub_tree = sub_tree -> left;
+                    }
+                    else {
+                        sub_tree = sub_tree -> right;
+                    }
                 }
-                else if( x == tree -> value ) {
-                    return( true );
-                }
-                else if( x < tree -> value ) {
-                    return( find( x, tree -> left ) );
-                }
-                else {
-                    return( find( x, tree -> right ) );
-                }
+                return( false );
             }
     };
 
