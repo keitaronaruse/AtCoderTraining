@@ -1,5 +1,5 @@
 /**
-* @file ahc009-a-1.cpp
+* @file ahc009-a-3.cpp
 * @brief AHC009 Problem A - Robust Memory of Commuting Routes
 * @author Keitaro Naruse
 * @date 2022-03-26
@@ -67,8 +67,8 @@ int main()
     // std::cerr << si << " " << sj << " " << ti << " " << tj << " " << p << std::endl;
     // std::cerr << h << std::endl;
     // std::cerr << v << std::endl;
-    int r_num = ( int )( ( 1.0 + 2.0 + p ) * ( double )( tj - sj + 1 ) );
-    int d_num = ( int )( ( 1.0 + 2.0 + p ) * ( double )( ti - si + 1 ) );
+    int r_num = ( int )( ( 1.0 + 1.0 + p ) * ( double )( tj - sj + 1 ) );
+    int d_num = ( int )( ( 1.0 + 1.0 + p ) * ( double )( ti - si + 1 ) );
     // std::cerr << r_num << " " << d_num << std::endl;
 
     int k = 0, K = 200;
