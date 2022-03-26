@@ -2,7 +2,7 @@
 * @file bbst.cpp
 * @brief PAST 9 Problem M - 名前の変更
   @author Keitaro Naruse
-* @date 2022-03-22
+* @date 2022-03-22, 2022-03-26
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_m
 */
@@ -36,9 +36,6 @@ namespace nrs {
                     os << value << " " << height << " " << size << " "
                         << " " << this << " " << " " << left << " " << right << std::endl;
                 }
-                else {
-                    os << "nullptr" << std::endl;
-                }
                 return( os );
             }
     };
@@ -58,8 +55,8 @@ namespace nrs {
             void insert( const T& x ) {
                 insert( x, root );
             }
-            std::ostream& print( std::ostream& os ) {
-                print( os, root );
+            std::ostream& write( std::ostream& os ) {
+                write( os, root );
                 return( os );
             }
         public:
@@ -92,14 +89,14 @@ namespace nrs {
                     //  duplicated, do nothing
                 }
             }
-            void print( std::ostream& os, Tree tree ) {
+            void write( std::ostream& os, Tree tree ) {
                 if( tree ) {
                     tree -> write( os );
                     if( tree -> left ) {
-                        print( os, tree -> left );
+                        write( os, tree -> left );
                     }
                     if( tree -> right ) {
-                        print( os, tree -> right );
+                        write( os, tree -> right );
                     }
                 }
             }
@@ -138,16 +135,12 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    //  Under development
-    // n2 -> write( std::cerr );
-    // n3 -> write( std::cerr );
-
     nrs::BBST< int > t;
-    t.print( std::cerr );
+    t.write( std::cerr );
     for( int i = 0; i < 3; i ++ ) {
         t.insert( i );
         std::cerr << "Insert " << i << std::endl;
-        t.print( std::cerr );
+        t.write( std::cerr );
     }
     
     //  Read N, Q = [ 1, 10^5 ]
