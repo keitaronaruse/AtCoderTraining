@@ -44,7 +44,6 @@ namespace nrs {
     class BBST {
         public:
             typedef Node< T >* Tree;
-        public:
             Tree root;
         public:
             BBST() : root( nullptr ) {};
@@ -55,13 +54,16 @@ namespace nrs {
             void insert( const T& x ) {
                 insert( x, root );
             }
+            void erase( const T& x ) {
+                erase( x, root );
+            }
             std::ostream& write( std::ostream& os ) {
                 write( os, root );
                 return( os );
             }
         public:
             bool find( const T& x, Tree tree ) {
-                if( tree == NULL ) {
+                if( tree == nullptr ) {
                     return( false );
                 }
                 else if( x == tree -> value ) {
@@ -89,8 +91,45 @@ namespace nrs {
                     //  duplicated, do nothing
                 }
             }
+            void erase( const T& x, Tree& tree ) {
+                if( tree != nullptr ) {
+                    if( x < tree -> value ) {
+                        erase( x, tree -> left );
+                    }
+                    else if( x > tree -> value ) {
+                        erase( x, tree -> right );
+                    }
+                    else if( x == tree -> value ) {
+                        if( tree -> left == nullptr ) {
+                            Tree p = tree;
+                            tree = tree -> right;
+                            delete p;
+                        }
+                        else if( tree -> right == nullptr) {
+                            Tree p = tree;
+                            tree = tree -> left;
+                            delete p;
+                        }
+                        else {
+                            tree -> value = erase_smallest( tree -> right );
+                        }
+                    }
+                }
+            }
+            T erase_smallest( Tree& tree ) {
+                if( tree -> left == nullptr ) {
+                    T value = tree -> value;
+                    Tree p = tree;
+                    tree = tree -> right;
+                    delete p;
+                    return( value );
+                }
+                else {
+                    return( erase_smallest( tree -> left ) ); 
+                }
+            }
             void write( std::ostream& os, Tree tree ) {
-                if( tree ) {
+                if( tree != nullptr ) {
                     tree -> write( os );
                     if( tree -> left ) {
                         write( os, tree -> left );
@@ -136,12 +175,19 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 int main()
 {
     nrs::BBST< int > t;
+    t.insert( 2 );
+    t.insert( 0 );
+    t.insert( 4 );
+    t.insert( 1 );
+    t.insert( 3 );
     t.write( std::cerr );
-    for( int i = 0; i < 3; i ++ ) {
-        t.insert( i );
-        std::cerr << "Insert " << i << std::endl;
-        t.write( std::cerr );
-    }
+
+    int i;
+    i = 0; t.erase( i ); std::cerr << "Erase " << i << std::endl; t.write( std::cerr );
+    i = 4; t.erase( i ); std::cerr << "Erase " << i << std::endl; t.write( std::cerr );
+    i = 2; t.erase( i ); std::cerr << "Erase " << i << std::endl; t.write( std::cerr );
+    i = 3; t.erase( i ); std::cerr << "Erase " << i << std::endl; t.write( std::cerr );
+    i = 1; t.erase( i ); std::cerr << "Erase " << i << std::endl; t.write( std::cerr );
     
     //  Read N, Q = [ 1, 10^5 ]
     int N, Q;
