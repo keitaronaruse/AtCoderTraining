@@ -2,7 +2,7 @@
 * @file abc245-d.cpp
 * @brief ABC245 Problem D - Polynomial division
 * @author Keitaro Naruse
-* @date 2022-03-26
+* @date 2022-03-26, 2022-03-27
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc245/tasks/abc245_d
 */
@@ -10,9 +10,7 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )

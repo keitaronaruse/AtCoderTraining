@@ -10,9 +10,7 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
 
 namespace nrs {
     /**
@@ -25,15 +23,6 @@ namespace nrs {
     {
         return( ( a > 0 ) ? a : -a );
     }
-}
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
 }
 
 int main()

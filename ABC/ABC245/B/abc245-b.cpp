@@ -11,16 +11,6 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {

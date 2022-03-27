@@ -17,21 +17,6 @@ int main()
     int A, B, C, D;
     std::cin >> A >> B >> C >> D;
 
-    //  Main
-    // if( A < C ) {
-    //     std::cout << "Takahashi" << std::endl;
-    // }
-    // else if( A == C ) {
-    //     if( B <= D ) {
-    //         std::cout << "Takahashi" << std::endl;
-    //     }
-    //     else {
-    //         std::cout << "Aoki" << std::endl;
-    //     }
-    // }
-    // else {
-    //     std::cout << "Aoki" << std::endl;
-    // }
     if( ( A < C ) || ( ( A == C ) && ( B <= D ) ) ) {
         std::cout << "Takahashi" << std::endl;
     }
