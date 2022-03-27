@@ -1,6 +1,6 @@
 /**
 * @file abc245-a.cpp
-* @brief ABC245 Problem A
+* @brief ABC245 Problem A - Good morning
 * @author Keitaro Naruse
 * @date 2022-03-26
 * @copyright MIT License
@@ -10,36 +10,34 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
+    //  Read A, B, C, D
+    int A, B, C, D;
+    std::cin >> A >> B >> C >> D;
 
     //  Main
+    // if( A < C ) {
+    //     std::cout << "Takahashi" << std::endl;
+    // }
+    // else if( A == C ) {
+    //     if( B <= D ) {
+    //         std::cout << "Takahashi" << std::endl;
+    //     }
+    //     else {
+    //         std::cout << "Aoki" << std::endl;
+    //     }
+    // }
+    // else {
+    //     std::cout << "Aoki" << std::endl;
+    // }
+    if( ( A < C ) || ( ( A == C ) && ( B <= D ) ) ) {
+        std::cout << "Takahashi" << std::endl;
+    }
+    else {
+        std::cout << "Aoki" << std::endl;
+    }
 
     //  Finalize
     return( 0 );

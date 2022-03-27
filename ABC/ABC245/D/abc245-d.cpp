@@ -1,6 +1,6 @@
 /**
 * @file abc245-d.cpp
-* @brief ABC245 Problem D
+* @brief ABC245 Problem D - Polynomial division
 * @author Keitaro Naruse
 * @date 2022-03-26
 * @copyright MIT License
@@ -25,22 +25,34 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
-    std::cin >> N;
+    //  Read N. M = [ 1, 10^2 ]
+    int N, M;
+    std::cin >> N >> M;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
+    //  Read Ai = [ -10^2, 10^2 ]
+    std::vector< int > A( N + 1, 0 );
+    for( int i = 0; i <= N; i ++ ) {
         std::cin >> A.at( i );
     }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
+    //  Read Ci = [ -10^6, 10^6 ]
+    std::vector< int > C( N + M + 1, 0 );
+    for( int j = 0; j <= N + M; j ++ ) {
+        std::cin >> C.at( j );
+    }
 
     //  Main
-
+    std::vector< int > B( M + 1, 0 );
+    for( int k = M; k >= 0; k -- ) {
+        int AB_sum = 0;
+        for( int i = 1; i <= M - k; i ++ ) {
+            if( 0 <= N - i && k + i <= M ) {
+                AB_sum += A.at( N - i ) * B.at( k + i );
+            }
+        }
+        B.at( k ) = ( C.at( N + k ) - AB_sum ) / A.at( N );
+    }
+    std::cout << B << std::endl;
+    
     //  Finalize
     return( 0 );
 }
