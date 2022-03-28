@@ -2,7 +2,7 @@
 * @file arc132-a.cpp
 * @brief ARC132 Problem A - Permutation Grid
 * @author Keitaro Naruse
-* @date 2022-03-27
+* @date 2022-03-27, 2022-03-28
 * @copyright MIT License
 * @details https://atcoder.jp/contests/arc132/tasks/arc132_a
 */
@@ -29,13 +29,13 @@ int main()
     int n;
     std::cin >> n;
     //  Read Ri = [ 1, n ]
-    std::vector< int > R( n, 0 );
-    for( int i = 0; i < n; i ++ ) {
+    std::vector< int > R( n + 1, 0 );
+    for( int i = 1; i <= n; i ++ ) {
         std::cin >> R.at( i );
     }
     //  Read Ci = [ 1, n ]
-    std::vector< int > C( n, 0 );
-    for( int i = 0; i < n; i ++ ) {
+    std::vector< int > C( n + 1, 0 );
+    for( int i = 1; i <= n; i ++ ) {
         std::cin >> C.at( i );
     }
 
@@ -49,10 +49,18 @@ int main()
     }
 
     //  Main
-    std::cerr << R << std::endl;
-    std::cerr << C << std::endl;
-    std::cerr << r << std::endl;
-    std::cerr << c << std::endl;
+    std::string ans( q, ' ' );
+    for( int j = 0; j < q; j ++ ) {
+        int num_R_blocks = R.at( r.at( j ) );
+        int num_C_blocks = C.at( c.at( j ) );
+        if( num_R_blocks + num_C_blocks > n ) {
+            ans.at( j ) = '#';
+        }
+        else {
+            ans.at( j ) = '.';
+        }
+    }
+    std::cout << ans << std::endl;
 
     //  Finalize
     return( 0 );
