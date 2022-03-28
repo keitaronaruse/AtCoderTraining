@@ -54,30 +54,44 @@ int main()
     }
 
     //  search
-    int num_operation = 0;
-    std::queue< std::pair< int , bool > > q;
-    q.push( std::make_pair( pos_one, is_ascending ) );
-    while( !q.empty() ) {
-        auto p = q.front();
-        int pos_one = p.first;
-        bool is_ascending = p.second; 
-        q.pop();
-        if( pos_one == 0 && is_ascending ) {
-            break;
-        }
-        else {
-            //  Operation 1
-            q.push( std::make_pair( n - 1 - pos_one, !is_ascending ) );
-            num_operation ++;
-
-            //  Operation 2
-            if( pos_one != 0 ) {
-                q.push( std::make_pair( pos_one - 1, is_ascending ) );
-                num_operation ++;
-            }
-        }
+    int num_operations = 0;
+    if( is_ascending && pos_one <= n / 2 ) {
+        num_operations = pos_one;
     }
-    std::cout << num_operation << std::endl;
+    else if( is_ascending && pos_one > n / 2 ) {
+        num_operations = n - pos_one + 2; 
+    }
+    else if( !is_ascending && pos_one <= n / 2  ) {
+        num_operations = n - pos_one + 2; 
+    }
+    else if( !is_ascending && pos_one > n / 2  ) {
+        num_operations = n - pos_one + 1; 
+    }
+
+    // std::queue< std::pair< std::pair< int, bool >, int > > q;
+    // q.push( std::make_pair( std::make_pair( pos_one, is_ascending ), 0 ) );
+    // while( !q.empty() ) {
+    //     auto p = q.front();
+    //     int pos_one = p.first.first;
+    //     bool is_ascending = p.first.second;
+    //     num_operations = p.second;
+    //     q.pop();
+    //     if( pos_one == 0 && is_ascending ) {
+    //         break;
+    //     }
+    //     else {
+    //         //  Operation 1
+    //         q.push( std::make_pair( std::make_pair( n - 1 - pos_one, !is_ascending ), num_operations + 1 ) );
+    //         //  Operation 2
+    //         if( pos_one == 0 ) {
+    //             q.push( std::make_pair( std::make_pair( n - 1, is_ascending ), num_operations + 1 ) );
+    //         }
+    //         else {
+    //             q.push( std::make_pair( std::make_pair( pos_one - 1, is_ascending ), num_operations + 1 ) );
+    //         }
+    //     }
+    // }
+    std::cout << num_operations << std::endl;
 
     //  Finalize
     return( 0 );
