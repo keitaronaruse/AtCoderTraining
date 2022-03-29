@@ -2,7 +2,7 @@
 * @file arc132-b.cpp
 * @brief ARC132 Problem B - Shift and Reverse
 * @author Keitaro Naruse
-* @date 2022-03-28
+* @date 2022-03-28, 2022-03-29
 * @copyright MIT License
 * @details https://atcoder.jp/contests/arc132/tasks/arc132_b
 */
@@ -11,18 +11,6 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <utility>
-#include <queue>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {
@@ -38,59 +26,82 @@ int main()
     //  Main
     //  Judge if we should reverse it
     int pos_one = 0;
-    bool is_ascending = true;
+    bool ascending = true;
     if( p.at( n - 1 ) == 1 ) {
         pos_one = n - 1;
-        is_ascending = ( p.at( 0 ) == 2 ) ? true : false;
+        ascending = ( p.at( 0 ) == 2 ) ? true : false;
     }
     else {
         for( int i = 0; i < n - 1; i ++ ) {
             if( p.at( i ) == 1 ) {
                 pos_one = i;
-                is_ascending = ( p.at( i + 1 ) == 2 ) ? true : false;
+                ascending = ( p.at( i + 1 ) == 2 ) ? true : false;
                 break;
             }
         }
     }
 
-    //  search
+    //  Find the number of operations
     int num_operations = 0;
-    if( is_ascending && pos_one <= n / 2 ) {
-        num_operations = pos_one;
+    if( n == 2 ) {
+        //  Bounrady case
+        num_operations = ( pos_one == 0 ) ? 0 : 1; 
     }
-    else if( is_ascending && pos_one > n / 2 ) {
-        num_operations = n - pos_one + 2; 
+    else if( n == 3 ) {
+        //  Another bounrady case
+        if( ascending ) {
+            num_operations = pos_one;
+        }
+        else {
+            num_operations = ( pos_one == 2 ) ? 1 : 2;
+        }
     }
-    else if( !is_ascending && pos_one <= n / 2  ) {
-        num_operations = n - pos_one + 2; 
+    if( n % 2 == 0 ) {
+        //  Even cases
+        if( ascending ) {
+            if( pos_one <= n / 2 ) {
+                //  R...R case
+                num_operations = pos_one;
+            }
+            else {
+                //  FR...RF case
+                num_operations =  1 + ( n - pos_one ) + 1;
+            }
+        }
+        else {
+            if( pos_one < n / 2 ) {
+                //  R...RF case
+                num_operations = ( pos_one + 1 ) + 1;
+            }
+            else {
+                //  FR...R case
+                num_operations =  1 + ( n - 1 - pos_one );
+            }
+        }
     }
-    else if( !is_ascending && pos_one > n / 2  ) {
-        num_operations = n - pos_one + 1; 
+    else {
+        //  Odd cases
+        if( ascending ) {
+            if( pos_one <= n / 2 + 1 ) {
+                //  R...R case
+                num_operations = pos_one;
+            }
+            else {
+                //  FR...RF case
+                num_operations =  1 + ( n - pos_one ) + 1;
+            }
+        }
+        else {
+            if( pos_one < n / 2 ) {
+                //  R...RF case
+                num_operations = ( pos_one + 1 ) + 1;
+            }
+            else {
+                //  FR...R case
+                num_operations =  1 + ( n - 1 - pos_one );
+            }
+        }
     }
-
-    // std::queue< std::pair< std::pair< int, bool >, int > > q;
-    // q.push( std::make_pair( std::make_pair( pos_one, is_ascending ), 0 ) );
-    // while( !q.empty() ) {
-    //     auto p = q.front();
-    //     int pos_one = p.first.first;
-    //     bool is_ascending = p.first.second;
-    //     num_operations = p.second;
-    //     q.pop();
-    //     if( pos_one == 0 && is_ascending ) {
-    //         break;
-    //     }
-    //     else {
-    //         //  Operation 1
-    //         q.push( std::make_pair( std::make_pair( n - 1 - pos_one, !is_ascending ), num_operations + 1 ) );
-    //         //  Operation 2
-    //         if( pos_one == 0 ) {
-    //             q.push( std::make_pair( std::make_pair( n - 1, is_ascending ), num_operations + 1 ) );
-    //         }
-    //         else {
-    //             q.push( std::make_pair( std::make_pair( pos_one - 1, is_ascending ), num_operations + 1 ) );
-    //         }
-    //     }
-    // }
     std::cout << num_operations << std::endl;
 
     //  Finalize

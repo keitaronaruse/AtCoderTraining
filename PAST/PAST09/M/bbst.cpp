@@ -2,7 +2,7 @@
 * @file bbst.cpp
 * @brief PAST 9 Problem M - 名前の変更
   @author Keitaro Naruse
-* @date 2022-03-22, 2022-03-26
+* @date 2022-03-22, 2022-03-29
 * @copyright MIT License
 * @details https://atcoder.jp/contests/past202112-open/tasks/past202112_m
 */
@@ -18,9 +18,10 @@ namespace nrs {
     template < class T >
     class Node {
         public:
+            typedef Node* Tree;
             T value;
-            Node* left;
-            Node* right;
+            Tree left;
+            Tree right;
             int height;
             int size;
         public:
@@ -28,7 +29,7 @@ namespace nrs {
             Node( const T& v, Node* l = nullptr, Node* r = nullptr )
              : value( v ), left( l ), right( r ) {
                 height = 1 + std::max( find_height( left ), find_height( right ) );
-                size = 1 + find_size( left ) + find_size( right );
+                size = 1 + find_size(left) + find_size( right );
             }
             ~Node() {}
             std::ostream& write( std::ostream& os ) {
@@ -139,10 +140,21 @@ namespace nrs {
                     }
                 }
             }
+            void singleRotateLeft( Tree& tree ) {
+                Tree right = tree -> right;
+                tree -> right = right -> left;
+                set_height( tree );
+
+                right -> left = tree;
+                tree = right;
+                installHeight( tree );
+                set_height( tree );
+
+            }    
     };
 
     template < class T >
-    int find_height( Node< T >* tree ) {
+    int find_height( Node<T>* tree ) {
         if( tree == nullptr ) {
             return( 0 );
         }
@@ -150,7 +162,16 @@ namespace nrs {
             return( tree -> height );
         }
     }
-
+    template < class T >
+    bool set_height( Node<T>*  tree ) {
+        if( tree == nullptr ) {
+            return( false );
+        }
+        else {
+            tree -> height = 1 * std::max( find_height( tree -> left ), find_height( tree -> right ) );
+            return( true );
+        }
+    }
     template < class T >
     int find_size( Node< T >* tree ) {
         if( tree == nullptr ) {
