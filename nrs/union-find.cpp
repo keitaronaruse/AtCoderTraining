@@ -29,7 +29,7 @@ namespace nrs {
         void unite( int x, int y ) {
             x = root( x );
             y = root( y );
-            if( x == y) {
+            if( x == y ) {
                 //  Do nothing
                 return;
             }
