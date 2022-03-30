@@ -10,9 +10,9 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -34,21 +34,52 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > 
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
-    std::cin >> N;
+    //  Constant
+    const long long N = 1048576L;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+    //  Read Q = [ 2, 2*10^5 ]
+    int Q;
+    std::cin >> Q;
+    
+    //  Read t = [ 0, 1 ], x = [ 0, 10^18 ]
+    std::vector< int > t( Q, 0 );
+    std::vector< long long > x( Q, 0L );
+    for( int i = 0; i < Q; i ++ ) {
+        std::cin >> t.at( i ) >> x.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
-
     //  Main
+    std::vector< long long > A( N, -1L );
+    std::map< int, int > next_available;
+    for( int i = 0; i < Q; i ++ ) {
+        int h = ( int )( x.at( i ) % N );
+        if( t.at( i ) == 1 ) {
+            auto curr = next_available.lower_bound( h );
+            if( curr != next_available.end() ) {
+                int k = curr -> second;
+                A.at( k ) = x.at( i );
+                curr -> second ++;
+                // next_available[ h ] = k + 1;
+                // it ++;
+                auto next = curr;
+                next ++;
+                if( next != next_available.end() ) {
+                    if( next -> first == k + 1 ) {
+                        curr -> second = next -> second;
+                        next_available.erase( next );
+                    }
+                }
+            }
+            else {
+                A.at( h ) = x.at( i );
+                next_available[ h ] = h + 1;
+            }
+        }
+        else if( t.at( i ) == 2 ) {
+            std::cout << A.at( h ) << std::endl;;
+        }
+    }
+
 
     //  Finalize
     return( 0 );
