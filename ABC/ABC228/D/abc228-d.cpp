@@ -32,6 +32,15 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > 
     return( os );
 }
 
+template< class T, class S >
+std::ostream& operator<<( std::ostream& os, const std::map< T, S > & m )
+{
+    for( const auto& p : m )  {
+        os << "( " << p.first << ", " << p.second << " ) ";
+    }
+    return( os );
+}
+
 int main()
 {
     //  Constant
@@ -54,26 +63,66 @@ int main()
     for( int i = 0; i < Q; i ++ ) {
         int h = ( int )( x.at( i ) % N );
         if( t.at( i ) == 1 ) {
-            auto curr = next_available.lower_bound( h );
-            if( curr != next_available.end() ) {
-                int k = curr -> second;
-                A.at( k ) = x.at( i );
-                curr -> second ++;
-                // next_available[ h ] = k + 1;
-                // it ++;
-                auto next = curr;
-                next ++;
-                if( next != next_available.end() ) {
-                    if( next -> first == k + 1 ) {
-                        curr -> second = next -> second;
-                        next_available.erase( next );
-                    }
-                }
+            auto curr_it = next_available.lower_bound( h );
+            auto prev_it = curr_it;
+            if( curr_it != next_available.begin() ) {
+                prev_it --;
             }
-            else {
+
+            if( curr_it == next_available.begin() && curr_it == next_available.end() ) {
+                //  No element
                 A.at( h ) = x.at( i );
                 next_available[ h ] = h + 1;
             }
+            else if( curr_it == prev_it ) {
+                //  Single element
+                if( curr_it -> first <= h && h <= curr_it -> second ) {
+                    curr_it -> second ++;
+                    A.at( curr_it -> second ) = x.at( i );
+                }
+                else if( curr_it -> first - 1 == h ) {
+                    next_available[ h ] = curr_it -> second;
+                    A.at( curr_it -> second ) = x.at( i );
+                    next_available.erase( curr_it );
+                }
+                else {
+                    next_available[ h ] = h + 1;
+                    A.at( h ) = x.at( i );
+                }
+            }
+            else {
+                //  Multiple element
+                if( prev_it -> first <= h && h <= prev_it -> second ) {
+                    prev_it -> second ++ ;
+                    if( prev_it -> second == curr_it -> first ) {
+                        prev_it -> second = curr_it -> second;
+                        A.at( curr_it -> second ) = x.at( i );
+                        next_available.erase( curr_it );
+                    }
+                    else {
+                        A.at( prev_it -> second ) = x.at( i );;
+                    }
+                }
+                else if( prev_it -> first - 1 == h ) {
+                    next_available[ h ] = prev_it -> second;
+                    next_available.erase( prev_it );
+                    A.at( prev_it -> second ) = x.at( i );                    ;
+                }
+                else if( curr_it -> first <= h && h <= curr_it -> second ){
+                    curr_it -> second ++ ;
+                    A.at( curr_it -> second ) = x.at( i );                    ;
+                }
+                else if( curr_it -> first - 1 == h ) {
+                    next_available[ h ] = curr_it -> second;
+                    next_available.erase( curr_it );
+                    A.at( curr_it -> second ) = x.at( i );                    ;
+                }
+                else {
+                    next_available[ h ] = h + 1;
+                    A.at( h ) = x.at( i );
+                }
+            }
+            std::cerr << next_available << std::endl;
         }
         else if( t.at( i ) == 2 ) {
             std::cout << A.at( h ) << std::endl;;
