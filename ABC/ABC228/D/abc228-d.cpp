@@ -77,52 +77,48 @@ int main()
             else if( curr_it == prev_it ) {
                 //  Single element
                 if( curr_it -> first <= h && h <= curr_it -> second ) {
-                    curr_it -> second ++;
                     A.at( curr_it -> second ) = x.at( i );
+                    curr_it -> second ++;
                 }
                 else if( curr_it -> first - 1 == h ) {
+                    A.at( h ) = x.at( i );
                     next_available[ h ] = curr_it -> second;
-                    A.at( curr_it -> second ) = x.at( i );
                     next_available.erase( curr_it );
                 }
                 else {
-                    next_available[ h ] = h + 1;
                     A.at( h ) = x.at( i );
+                    next_available[ h ] = h + 1;
                 }
             }
             else {
                 //  Multiple element
                 if( prev_it -> first <= h && h <= prev_it -> second ) {
+                    A.at( prev_it -> second ) = x.at( i );;
                     prev_it -> second ++ ;
                     if( prev_it -> second == curr_it -> first ) {
                         prev_it -> second = curr_it -> second;
-                        A.at( curr_it -> second ) = x.at( i );
                         next_available.erase( curr_it );
-                    }
-                    else {
-                        A.at( prev_it -> second ) = x.at( i );;
                     }
                 }
                 else if( prev_it -> first - 1 == h ) {
+                    A.at( h ) = x.at( i );                    ;
                     next_available[ h ] = prev_it -> second;
                     next_available.erase( prev_it );
-                    A.at( prev_it -> second ) = x.at( i );                    ;
                 }
                 else if( curr_it -> first <= h && h <= curr_it -> second ){
+                    A.at( curr_it -> second ) = x.at( i );
                     curr_it -> second ++ ;
-                    A.at( curr_it -> second ) = x.at( i );                    ;
                 }
                 else if( curr_it -> first - 1 == h ) {
+                    A.at( h ) = x.at( i );
                     next_available[ h ] = curr_it -> second;
                     next_available.erase( curr_it );
-                    A.at( curr_it -> second ) = x.at( i );                    ;
                 }
                 else {
                     next_available[ h ] = h + 1;
                     A.at( h ) = x.at( i );
                 }
             }
-            std::cerr << next_available << std::endl;
         }
         else if( t.at( i ) == 2 ) {
             std::cout << A.at( h ) << std::endl;;
