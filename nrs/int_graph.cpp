@@ -42,7 +42,7 @@ namespace nrs {
             > dijkstra_queue;
         public:
             int_graph() : n( 0 ) {}
-            int_graph( int N, Weight INF ) : n( N ), inf( INF ) {
+            int_graph( int N, Weight INF = 1000000007 ) : n( N ), inf( INF ) {
                 init_weights();
                 init_lengths();
                 init_prev_nodes();
