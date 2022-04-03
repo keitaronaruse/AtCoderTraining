@@ -1,6 +1,6 @@
 /**
 * @file abc246-b.cpp
-* @brief ABC246 Problem b
+* @brief ABC246 Problem B - Get Closer
 * @author Keitaro Naruse
 * @date 2022-04-02
 * @copyright MIT License
@@ -10,36 +10,20 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
+#include <iomanip>
+#include <cmath>
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
+    //  Read A, B
+    double A, B;
+    std::cin >> A >> B;
 
     //  Main
+    double d = std::sqrt( std::pow( A, 2.0) + std::pow( B, 2.0 ) );
+    double x = A / d;
+    double y = B / d;
+    std::cout << std::fixed << std::setprecision( 12 ) << x << " " << y << std::endl; 
 
     //  Finalize
     return( 0 );

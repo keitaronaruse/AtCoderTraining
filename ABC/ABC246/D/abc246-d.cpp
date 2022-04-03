@@ -1,6 +1,6 @@
 /**
 * @file abc246-d.cpp
-* @brief ABC246 Problem D
+* @brief ABC246 Problem D - 2-variable Function
 * @author Keitaro Naruse
 * @date 2022-04-02
 * @copyright MIT License
@@ -10,36 +10,30 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( auto k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
+    //  Read N = [ 0, 10^18 ]
+    long long N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
-
     //  Main
+    long long K = 0L;
+    for( K = 0L; K * K * K <= N; K ++ ) {
+        ;
+    }
+    std::cerr << K << std::endl;
+    long long D = K * K * K - N;
+    std::cerr << D << std::endl;
+    for( long long a = 0L; a <= K / 2; a ++ ) {
+        if( 2*K*a*a - 2*K*K*a + D > 0L ) {
+            long long b = K - a;
+            long long X = a*a*a + a*a*b + a*b*b + b*b*b;
+            std::cerr << X << std::endl;
+            break; 
+        }
+    }
 
     //  Finalize
     return( 0 );
