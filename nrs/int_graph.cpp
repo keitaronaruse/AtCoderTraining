@@ -2,7 +2,7 @@
 * @file int_graph.cpp
 * @brief class nrs::int_graph
   @author Keitaro Naruse
-* @date 2022-03-18
+* @date 2022-03-18, 2022-04-04
 * @copyright MIT License
 * @details 
 */
@@ -71,11 +71,11 @@ namespace nrs {
             {
                 dijkstra_queue = std::priority_queue< Weight_Node, std::vector< Weight_Node >, std::greater< Weight_Node > > ();
             }
-            void add_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
+            void add_u_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
                 weight.at( u ).push_back( std::make_pair( v, w ) );
                 weight.at( v ).push_back( std::make_pair( u, w ) );
             }
-            bool has_edge( Node u, Node v ) {
+            bool has_u_edge( Node u, Node v ) {
                 for( const auto& p : weight.at( u ) ) {
                     if( p.first == v ) {
                         for( const auto& q : weight.at( v ) ) {
@@ -87,7 +87,7 @@ namespace nrs {
                 }
                 return( false );
             }
-            void delete_edge( Node u, Node v ) {
+            void delete_u_edge( Node u, Node v ) {
                 for( auto it = weight.at( u ).begin(); it < weight.at( u ).end(); it ++  ) {
                     if( *it.first == v ) {
                         weight.at( u ).erase( it );
@@ -96,6 +96,24 @@ namespace nrs {
                 for( auto it = weight.at( v ).begin(); it < weight.at( v ).end(); it ++  ) {
                     if( *it.first == u ) {
                         weight.at( v ).erase( it );
+                    }
+                }
+            }
+            void add_d_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
+                weight.at( u ).push_back( std::make_pair( v, w ) );
+            }
+            bool has_d_edge( Node u, Node v ) {
+                for( const auto& p : weight.at( u ) ) {
+                    if( p.first == v ) {
+                        return( true );
+                    }
+                }
+                return( false );
+            }
+            void delete_d_edge( Node u, Node v ) {
+                for( auto it = weight.at( u ).begin(); it < weight.at( u ).end(); it ++  ) {
+                    if( *it.first == v ) {
+                        weight.at( u ).erase( it );
                     }
                 }
             }
@@ -136,6 +154,33 @@ namespace nrs {
                 }
                 return( length.at( e ) ); 
             }
+            void init_next_bfs( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_bfs_queue();
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                bfs_queue.push( b );
+            }
+            Node find_next_bfs() {
+                if( !bfs_queue.empty() ) {
+                    auto u = bfs_queue.front(); 
+                    bfs_queue.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == inf ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            bfs_queue.push( v );
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
+            }
             Weight find_path_dfs( Node b, Node e ) {
                 init_lengths();
                 init_prev_nodes();
@@ -161,6 +206,34 @@ namespace nrs {
                     }
                 }
                 return( length.at( e ) ); 
+            }
+            void init_next_dfs( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dfs_stack();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dfs_stack.push( b );
+            }
+            Node find_next_dfs() {
+                if( !dfs_stack.empty() ) {
+                    auto u = dfs_stack.top(); 
+                    dfs_stack.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == inf ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            dfs_stack.push( v );
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
             }
             Weight find_path_dijkstra( Node b, Node e ) {
                 init_lengths();
@@ -192,6 +265,39 @@ namespace nrs {
                     }
                 }
                 return( length.at( e ) ); 
+            }
+            void init_next_dijkstra( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dijkstra_priority_queue();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dijkstra_queue.push( std::make_pair( length.at( b ), b ) );
+            }
+            Node find_next_dijkstra() {
+                if( !dijkstra_queue.empty() ) {
+                    auto p = dijkstra_queue.top(); 
+                    Weight d = p.first;
+                    Node u = p.second;
+                    dijkstra_queue.pop();
+
+                    //  When a node ( d, u ) in the priority que should be expanded
+                    if( length.at( u ) >= d ) {
+                        //  Add a node to priority que
+                        for( auto q : weight.at( u ) ) {
+                            Node v = q.first;
+                            Weight c = q.second;
+                            if( length.at( v ) > d + c ) {
+                                length.at( v ) = d + c;
+                                prev_node.at( v ) = u;
+                                dijkstra_queue.push( std::make_pair( length.at( v ), v ) );
+                            }
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
             }
             std::vector< Node > back_trace( Node b, Node e ) {
                 std::vector< Node > path;
@@ -226,9 +332,9 @@ int main()
     //  Main
     //  Preprocess
     nrs::int_graph< int > g( N, inf );
-    g.add_edge( 0, 1, 1 );
-    g.add_edge( 1, 2, 1 );
-    g.add_edge( 2, 0, 1 );
+    g.add_u_edge( 0, 1, 1 );
+    g.add_u_edge( 1, 2, 1 );
+    g.add_u_edge( 2, 0, 1 );
     std::cout << g.find_path_bfs( 0, 2 ) << std::endl;
     std::cout << g.back_trace( 0, 2 ) << std::endl;
 
