@@ -24,14 +24,25 @@ int main()
     }
     
     //  Main
-    std::vector< int > degree( N, 0 );
+    std::vector< int > degree( N + 1, 0 );
     for( int i = 0; i < N - 1; i ++ ) {
         degree.at( a.at( i ) ) ++;
         degree.at( b.at( i ) ) ++;
     }
-    for( int i = 0; i < N - 1; i ++ ) {
+
+    bool isYes = false;
+    for( int i = 1; i <= N; i ++ ) {
+        if( degree.at( i ) == N - 1 ) {
+            isYes = true;
+            break;
+        }
     }
-    std::cout << std::endl;
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return( 0 );
