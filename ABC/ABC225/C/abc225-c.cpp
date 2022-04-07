@@ -26,7 +26,34 @@ int main()
     }
     
     //  Main
-    bool isYes = false;
+    bool isYes = true;
+    for( int k = 0; k < M - 1; k ++ ) {
+        if( B.at( 0 ).at( 0 ) % 7 == ( 7 - k ) % 7 ) {
+            isYes = false;
+            break;
+        }
+    }
+
+    if( isYes ) {
+        for( int j = 0; j < M - 1; j ++ ) {
+            if( B.at( 0 ).at( j + 1 ) != B.at( 0 ).at( j ) + 1 ) {
+                isYes = false;
+                break;
+            }
+        }
+    }
+
+    if( isYes ) {
+        for( int i = 0; i < N - 1; i ++ ) {
+            for( int j = 0; j < M; j ++ ) {
+                if( B.at( i + 1 ).at( j ) != B.at( i ).at( j ) + 7 ) {
+                    isYes = false;
+                    break;
+                }
+            }
+        }
+    }
+
     if( isYes ) {
         std::cout << "Yes" << std::endl;
     }
