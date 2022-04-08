@@ -1,0 +1,1 @@
+add_executable( abc220-a abc220-a.cpp )
