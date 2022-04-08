@@ -2,7 +2,7 @@
 * @file abc239-e.cpp
 * @brief ABC239 Problem E - Subtree K-th Max
 * @author Keitaro Naruse
-* @date 2022-02-20
+* @date 2022-02-20, 2022-04-08
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc239/tasks/abc239_e
 */
@@ -15,6 +15,7 @@
 #include <stack>
 #include <queue>
 #include <utility>
+#include <functional>
 
 namespace nrs {
     class adj_graph {
@@ -32,9 +33,61 @@ namespace nrs {
             adj_graph( const adj_graph& r ) : n( r.n ) {
                 adj_nodes = r.adj_nodes;
             }
+            void add_d_edge( int b, int e ) {
+                adj_nodes.at( b ).push_back( e );
+            }
+            void delete_d_edge( int b, int e ) {
+                adj_nodes.at( b ).erase( 
+                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                );
+            }
             void add_u_edge( int b, int e ) {
                 adj_nodes.at( b ).push_back( e );
                 adj_nodes.at( e ).push_back( b );
+            }
+            void delete_u_edge( int b, int e ) {
+                adj_nodes.at( b ).erase( 
+                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                );
+                adj_nodes.at( e ).erase( 
+                    std::find( adj_nodes.at( e ).begin(), adj_nodes.at( e ).end(), b ) 
+                );
+            }
+            bool has_d_edge( int b, int e ) {
+                return( 
+                    std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                    != adj_nodes.at( b ).end()
+                );
+            }
+            bool has_u_edge( int b, int e ) {
+                return( 
+                    ( std::find( adj_nodes.at( b ).begin(), adj_nodes.at( b ).end(), e ) 
+                    != adj_nodes.at( b ).end() ) &&
+                    ( std::find( adj_nodes.at( e ).begin(), adj_nodes.at( e ).end(), b ) 
+                    != adj_nodes.at( e ).end() )
+                );
+            }
+            /**
+             * @brief find the next node from the given stack by DFS
+             * @param[in] s: working stack for DFS
+             * @param[in] length: distance from a source node
+             * @return v: the found next node
+             */
+            int next_node_dfs( std::stack< int >& s, std::vector< int >& length ) {
+                int v = s.top(); 
+                s.pop();
+                //  Common procedure
+                for( auto u : adj_nodes.at( v ) ) {
+                    if( length.at( u ) == -1 ) {
+                        length.at( u ) = length.at( v ) + 1;
+                        s.push( u );
+                    }
+                    else if( length.at( u ) > length.at( v ) + 1 ) {
+                        length.at( u ) = length.at( v ) + 1;
+                        s.push( u );
+                    }
+                }
+                return( v );
             }
             /**
              * @brief find the next node from the stack by BFS
@@ -54,12 +107,24 @@ namespace nrs {
                 }
                 return( v );
             }
-            int next_node_deeper( std::queue< int >& s, const std::vector< int >& length ) {
-                int v = s.front(); s.pop();
+            /**
+             * @brief find the next node from the given priority que by Dijkkstra's algorithm
+             * @param[in] pq: working priority que stack for Dijkstra's algorithm
+             * @param[in] length: distance from a source node
+             * @return v: the found next node
+             */
+            template < class T, class Container, class Compare >
+            int next_node_dijkstra( std::priority_queue< T, Container, Compare >& pq, std::vector< int >& length ) {
+                int v = pq.top(); 
+                pq.pop();
                 //  Common procedure
                 for( auto u : adj_nodes.at( v ) ) {
-                    if( length.at( u ) > length.at( v ) ) {
-                        s.push( u );
+                    if( length.at( u ) == -1 ) {
+                        length.at( u ) = length.at( v ) + 1;
+                        pq.push( u );
+                    }
+                    else if( length.at( u ) > length.at( v ) + 1 ) {
+                        length.at( u ) = length.at( v ) + 1;
                     }
                 }
                 return( v );
@@ -75,81 +140,55 @@ std::ostream& operator<<( std::ostream& os, const std::vector< int >& v )
     return( os );
 }
 
-const bool Debug = false;
-
 int main()
 {
     //  Read N = [ 2, 10^5 ], Q = [ 1, 10^5 ]
-    int N = 0, Q = 0;
+    int N, Q;
     std::cin >> N >> Q;
-    if( Debug ) {
-        std::cerr << N << " " << Q << std::endl;
-    }
 
     //  Read Xi = [ 0, 10^9 ]
-    std::vector< int > X( N, -1 ); 
+    std::vector< int > X( N ); 
     for( int i = 0; i < N; i ++ ) {
         std::cin >> X.at( i );
     }
-    if( Debug ) {
-        std::cerr << X << std::endl;
-    }
 
     //  Read Ai, Bi = [ 1, N ]
-    std::vector< int > A( N - 1, -1 ), B( N - 1, -1 ); 
+    std::vector< int > A( N - 1 ), B( N - 1 ); 
     for( int i = 0; i < N - 1; i ++ ) {
         std::cin >> A.at( i ) >> B.at( i );
     }
-    if( Debug ) {
-        for( int i = 0; i < N - 1; i ++ ) {
-            std::cerr << A.at( i ) << " " << B.at( i ) << std::endl;
-        }
-    }
 
     //  Read Vj = [ 1, N ], Kj = [ 1, 20 ]
-    std::vector< int > V( Q, -1 ), K( Q, -1 ); 
+    std::vector< int > V( Q ), K( Q ); 
     for( int j = 0; j < Q; j ++ ) {
         std::cin >> V.at( j ) >> K.at( j );
-    }
-    if( Debug ) {
-        for( int j = 0; j < Q; j ++ ) {
-            std::cerr << V.at( j ) << " " << K.at( j ) << std::endl;
-        }
     }
 
     //  Main
     //  Make tree
     nrs::adj_graph tree( N );
     for( int i = 0; i < N - 1; i ++ ) {
-        tree.add_u_edge( A.at( i ) - 1, B.at( i ) - 1 );
-    }
-    //  Find the distance from the root to each of the nodes 
-    std::vector< int > length( N, -1 );
-    std::queue< int > s;
-    s.push( 0 ); length.at( 0 ) = 0;
-    while( !s.empty() ) {
-        int v = tree.next_node_bfs( s, length );
-    }
-    
-    //  Queries
-    for( int j = 0; j < Q; j ++ ) {
-        std::vector< int > l;
-        std::queue< int > s;
-        s.push( V.at( j ) - 1 );
-        while( !s.empty() ) {
-            int v = tree.next_node_deeper( s, length );
-            l.push_back( X.at( v ) );
-        }
-        std::sort( l.begin(), l.end(), std::greater< int >{} );
-        if( Debug ) {
-            std::cerr << l << std::endl;
-        }
-        std::cout << l.at( K.at( j ) - 1 ) << std::endl;
+        tree.add_d_edge( A.at( i ) - 1, B.at( i ) - 1 );
     }
 
+    //  Preprocess
+    const int M = 20;
+    std::vector< std::vector< int > > P( N, std::vector< int > ( M, 0 ) );
+    
+    std::function< int ( int ) > reccursive_trace = [ & ] ( int v ) {
+        if( tree.adj_nodes.at( v ).empty() ) {
+            return( X.at( v ) );
+        }
+        else {
+            for( int u : tree.adj_nodes.at( v ) ) {
+                reccursive_trace( u );
+            }
+        }
+    };
+
+    //  DFS
+    reccursive_trace( 0 ); 
+
     //  Finalize
-    if( Debug ) {
-        std::cerr << "Normally terminated." << std::endl;
-    }    
     return( 0 );
 }
