@@ -23,7 +23,6 @@ namespace nrs {
             typedef std::pair< int, Weight > Node_Weight;
         public:
             int n;
-            Weight inf;
             //  { v, w } = weight.at( u ).at( k )
             std::vector< std::vector< Node_Weight > > weight;
             //  A path length from a certain node, l = length.at( u )
@@ -40,9 +39,11 @@ namespace nrs {
                 std::vector< Weight_Node >,
                 std::greater< Weight_Node >
             > dijkstra_queue;
+            //  Time stamp
+            std::vector< Node > pre_order, post_order;
         public:
             int_graph() : n( 0 ) {}
-            int_graph( int N, Weight INF = 1000000007 ) : n( N ), inf( INF ) {
+            int_graph( int N ) : n( N ) {
                 init_weights();
                 init_lengths();
                 init_prev_nodes();
@@ -56,7 +57,7 @@ namespace nrs {
                 weight = std::vector< std::vector< Node_Weight > >( n );
             }
             void init_lengths() {
-                length = std::vector< Weight > ( n, inf );
+                length = std::vector< Weight > ( n, -1 );
             }
             void init_prev_nodes() {
                 prev_node = std::vector< Node > ( n, -1 );
@@ -70,6 +71,10 @@ namespace nrs {
             void init_dijkstra_priority_queue()
             {
                 dijkstra_queue = std::priority_queue< Weight_Node, std::vector< Weight_Node >, std::greater< Weight_Node > > ();
+            }
+            void init_time_stamp() {
+                pre_order = std::vector< Node > ( n, -1 );
+                post_order = std::vector< Node > ( n, -1 );
             }
             void add_u_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
                 weight.at( u ).push_back( std::make_pair( v, w ) );
@@ -145,7 +150,7 @@ namespace nrs {
                     for( auto q : weight.at( u ) ) {
                         Node v = q.first;
                         Weight w = q.second;
-                        if( length.at( v ) == inf ) {
+                        if( length.at( v ) == -1 ) {
                             length.at( v ) = length.at( u ) + w;
                             prev_node.at( v ) = u;
                             bfs_queue.push( v );
@@ -171,7 +176,7 @@ namespace nrs {
                     for( auto q : weight.at( u ) ) {
                         Node v = q.first;
                         Weight w = q.second;
-                        if( length.at( v ) == inf ) {
+                        if( length.at( v ) == -1 ) {
                             length.at( v ) = length.at( u ) + w;
                             prev_node.at( v ) = u;
                             bfs_queue.push( v );
@@ -198,7 +203,7 @@ namespace nrs {
                     for( auto q : weight.at( u ) ) {
                         Node v = q.first;
                         Weight w = q.second;
-                        if( length.at( v ) == inf ) {
+                        if( length.at( v ) == -1 ) {
                             length.at( v ) = length.at( u ) + w;
                             prev_node.at( v ) = u;
                             dfs_stack.push( v );
@@ -225,7 +230,7 @@ namespace nrs {
                     for( auto q : weight.at( u ) ) {
                         Node v = q.first;
                         Weight w = q.second;
-                        if( length.at( v ) == inf ) {
+                        if( length.at( v ) == -1 ) {
                             length.at( v ) = length.at( u ) + w;
                             prev_node.at( v ) = u;
                             dfs_stack.push( v );
@@ -310,6 +315,30 @@ namespace nrs {
                 std::reverse( path.begin(), path.end() );
                 return( path );
             }
+
+            void init_recursive_dfs() {
+                init_lengths();
+                init_prev_nodes();
+                init_time_stamp();
+            }
+            Weight recursive_dfs( Node u, Weight w, Node& time_stamp ) {
+                std::cerr << "( " << u << ", " << time_stamp << " ) " << std::endl;
+                //  Update the node u
+                length.at( u ) = w;
+                pre_order.at( u ) = time_stamp;
+                time_stamp ++ ;
+                //  Recursive call
+                for( auto q : weight.at( u ) ) {
+                    Node v = q.first;
+                    Weight w = q.second;
+                    //  when the node v is not visited yet
+                    if( length.at( v ) == -1 ) {
+                        prev_node.at( v ) = u;
+                        recursive_dfs( v, length.at( u ) + w, time_stamp );
+                    }
+                }
+                post_order.at( u ) = time_stamp ++ ;
+            }
     };
 }
 
@@ -324,19 +353,22 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    //  Const
-    const int inf = 1000000007;
-    //  N = [ 2, 2 * 10^5 ]
-    int N = 3;
-
     //  Main
-    //  Preprocess
-    nrs::int_graph< int > g( N, inf );
-    g.add_u_edge( 0, 1, 1 );
-    g.add_u_edge( 1, 2, 1 );
-    g.add_u_edge( 2, 0, 1 );
-    std::cout << g.find_path_bfs( 0, 2 ) << std::endl;
-    std::cout << g.back_trace( 0, 2 ) << std::endl;
+    const int N = 7;
+    nrs::int_graph< int > g( N );
+    g.add_u_edge( 0, 1 );
+    g.add_u_edge( 0, 2 );
+    g.add_u_edge( 0, 3 );
+    g.add_u_edge( 1, 4 );
+    g.add_u_edge( 1, 5 );
+    g.add_u_edge( 2, 6 );
+    g.add_u_edge( 3, 5 );
+
+    int time_stamp = 0;
+    g.init_recursive_dfs();
+    g.recursive_dfs( 0, 0, time_stamp ); 
+    std::cout << g.pre_order << std::endl;
+    std::cout << g.post_order << std::endl;
 
     return( 0 );
 }

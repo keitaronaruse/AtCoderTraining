@@ -133,13 +133,17 @@ const bool Debug = true;
 //  Test driver
 int main()
 {
-    const int N = 4;
+    const int N = 7;
     
     //  Make a graph instance
     nrs::adj_graph g( N );
-    g.add_u_edge(  0,  1 ); 
-    g.add_u_edge(  1,  2 ); 
-    g.add_u_edge(  2,  3 ); 
+    g.add_u_edge(  0,  1 );
+    g.add_u_edge(  0,  2 );
+    g.add_u_edge(  0,  3 );
+    g.add_u_edge(  1,  4 );
+    g.add_u_edge(  1,  5 );
+    g.add_u_edge(  2,  6 );
+    g.add_u_edge(  3,  5 );
     
     //  Make graph utilities
     std::vector< int > length;
