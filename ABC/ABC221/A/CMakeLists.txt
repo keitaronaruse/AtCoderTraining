@@ -1,0 +1,1 @@
+add_executable( abc221-a abc221-a.cpp )

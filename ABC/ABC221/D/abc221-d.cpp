@@ -2,7 +2,7 @@
 * @file abc221-d.cpp
 * @brief ABC221 Problem D - Online games
 * @author Keitaro Naruse
-* @date 2022-04-09
+* @date 2022-04-09, 2022-04-11
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc221/tasks/abc221_d
 */
@@ -13,6 +13,26 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <utility>
+
+template< class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
+{
+    for( const auto& k : v ) {
+        os << k << " ";
+    }
+    return( os );
+}
+
+template< class K, class V >
+std::ostream& operator<<( std::ostream& os, const std::map< K, V >& m )
+{
+    for( const auto& p : m ) {
+        os << "( " << p.first << ", " << p.second << " ) ";
+    }
+    return( os );
+}
+
 
 int main()
 {
@@ -24,24 +44,38 @@ int main()
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i ) >> B.at( i );
     }
-    
+
     //  Main
     //  Preprocess
-    const int M = 2000000001;
-    std::vector< long long > tick( M, 0L );
-    int K = 0;
+    std::map< int, int > delta_person;
     for( int i = 0; i < N; i ++ ) {
-        tick.at( A.at( i ) ) ++;
-        int k = A.at( i ) + B.at( i );
-        tick.at( k ) --;
-        K = std::max( k, K );
+        delta_person[ A.at( i ) ] ++;
+        if( delta_person.at( A.at( i ) ) == 0 ) {
+            delta_person.erase( delta_person.find( A.at( i ) ) );
+        }
+
+        delta_person[ A.at( i ) + B.at( i ) ] --;
+        if( delta_person.at( A.at( i ) + B.at( i ) ) == 0 ) {
+            delta_person.erase( delta_person.find( A.at( i ) + B.at( i ) ) );
+        }
     }
+
     //  Find solution
     std::map< int, int > person_day;
-    int accum = 0L;
-    for( int k = 0; k <= K; k ++ ) {
-        ;
+    auto it = delta_person.begin();
+    int prev_day = it -> first;
+    int num_persons = it -> second;
+    it ++;
+    for( ; it != delta_person.end(); it ++ ) {
+        person_day[ num_persons ] += it -> first - prev_day;
+        //  Update
+        prev_day = it -> first;
+        num_persons += it -> second;
     }
+    for( int i = 1; i <= N; i ++ ) {
+        std::cout << person_day[ i ] << " ";
+    }
+    std::cout << std::endl;
 
     //  Finalize
     return( 0 );
