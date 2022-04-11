@@ -29,19 +29,53 @@ int main()
 
     //  Main
     //  Preprocess
-    std::map< std::string, int > counters;
-    for( int i = 0; i < N; i ++ ) {
-        counters[ s.at( i ) ] ++;
-        counters[ t.at( i ) ] ++;
-    }
-    //  Find the solution
-    int num_duplicates = 0;
-    for( auto p : counters ) {
-        if( p.second >= 2 ) {
-            num_duplicates ++;
+    // std::map< std::string, int > counters;
+    // for( int i = 0; i < N; i ++ ) {
+    //     counters[ s.at( i ) ] ++;
+    //     counters[ t.at( i ) ] ++;
+    // }
+    // //  Find the solution
+    // int num_duplicates = 0;
+    // for( auto p : counters ) {
+    //     if( p.second >= 2 ) {
+    //         num_duplicates ++;
+    //     }
+    // }
+    // if( num_duplicates <= 1 ) {
+    //     std::cout << "Yes" << std::endl;
+    // }
+    // else {
+    //     std::cout << "No" << std::endl;        ;
+    // }
+
+    //  Check for s.at( i )
+    bool is_s_nickname = true;
+    for( int i = 0; is_s_nickname && i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
+            if( i != j ) {
+                if( s.at( i ) == s.at( j ) || s.at( i ) == t.at( j ) ) {
+                    //  Same name, cannot put a nickname
+                    is_s_nickname = false;
+                    break;
+                }
+            }
         }
     }
-    if( num_duplicates <= 1 ) {
+
+    //  Check for t.at( i )
+    bool is_t_nickname = true;
+    for( int i = 0; is_t_nickname && i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
+            if( i != j ) {
+                if( t.at( i ) == s.at( j ) || t.at( i ) == t.at( j ) ) {
+                    //  Same name, cannot put a nickname
+                    is_t_nickname = false;
+                    break;
+                }
+            }
+        }
+    }
+    if( is_s_nickname || is_t_nickname ) {
         std::cout << "Yes" << std::endl;
     }
     else {
