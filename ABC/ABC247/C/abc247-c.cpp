@@ -1,6 +1,6 @@
 /**
 * @file abc247-c.cpp
-* @brief ABC247 Problem C
+* @brief ABC247 Problem C - 1 2 1 3 1 2 1
 * @author Keitaro Naruse
 * @date 2022-04-10
 * @copyright MIT License
@@ -10,7 +10,6 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
@@ -23,32 +22,21 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > > & vv )
-{
-    for( const auto& v : vv )  {
-        os << v << std::endl;
-    }
-    return( os );
-}
-
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
+    //  Read N = [ 1, 16 ]
+    int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
-
     //  Main
+    std::vector< std::vector< int > > s( N + 1 );
+    s.at( 1 ).push_back( 1 );
+    for( int i = 2; i <= N; i ++ ) {
+        std::copy( s.at( i - 1 ).begin(), s.at( i - 1 ).end(), std::back_inserter( s.at( i ) ) );
+        s.at( i ).push_back( i );
+        std::copy( s.at( i - 1 ).begin(), s.at( i - 1 ).end(), std::back_inserter( s.at( i ) ) );
+    }
+    std::cout << s.at( N ) << std::endl;
 
     //  Finalize
     return( 0 );

@@ -1,6 +1,6 @@
 /**
 * @file abc247-b.cpp
-* @brief ABC247 Problem B
+* @brief ABC247 Problem B - Unique Nicknames
 * @author Keitaro Naruse
 * @date 2022-04-10
 * @copyright MIT License
@@ -13,42 +13,40 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > > & vv )
-{
-    for( const auto& v : vv )  {
-        os << v << std::endl;
-    }
-    return( os );
-}
+#include <map>
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
+    //  Read N = [ 2, 10^2 ]
+    int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
+    //  Read si, ti
+    std::vector< std::string > s( N ), t( N );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
+        std::cin >> s.at( i ) >> t.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
-
     //  Main
+    //  Preprocess
+    std::map< std::string, int > counters;
+    for( int i = 0; i < N; i ++ ) {
+        counters[ s.at( i ) ] ++;
+        counters[ t.at( i ) ] ++;
+    }
+    //  Find the solution
+    int num_duplicates = 0;
+    for( auto p : counters ) {
+        if( p.second >= 2 ) {
+            num_duplicates ++;
+        }
+    }
+    if( num_duplicates <= 1 ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;        ;
+    }
 
     //  Finalize
     return( 0 );
