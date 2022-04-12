@@ -11,16 +11,17 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 int main()
 {
-    //  Read N = [ 1, 10^5 ], P = [ 1, 100 ]
-    int N, P;
-    std::cin >> N >> P;
-    //  Read ai = [ 0, 100 ]
-    std::vector< int > a( N );
-    for( auto& p : a ) {
-        std::cin >> p;
+    //  Read N = [ 1, 50 ], M = [ 1, 100 ]
+    int N, M;
+    std::cin >> N >> M;
+    //  Read Aij = [ 0, 100 ]
+    std::vector< std::string > A( 2 * N );
+    for( auto& a : A ) {
+        std::cin >> a;
     } 
 
     //  Main
