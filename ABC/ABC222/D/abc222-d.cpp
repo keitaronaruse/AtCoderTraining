@@ -50,6 +50,14 @@ int main()
     //  the number of combinations of the value of Ci = k at the time instance i
     std::vector< std::vector< int > > dp( N + 1, std::vector< int >( N + 1, 0 ) );
     dp.at( 0 ).at( 0 ) = 1;
+    for( int i = 1; i <= N; i ++ ) {
+        for( int k = 0; k <= N; k ++ ) {
+            if( A.at( i - 1) <= k && k <= B.at( i - 1 ) ) {
+                ;
+            }
+            ;
+        }
+    }
 
     //  Finalize
     return( 0 );
