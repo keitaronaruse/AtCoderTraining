@@ -2,7 +2,7 @@
 * @file abc222-d.cpp
 * @brief ABC222 Problem D - Between Two Arrays
 * @author Keitaro Naruse
-* @date 2022-04-13
+* @date 2022-04-13, 2022-04-14
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc222/tasks/abc222_d
 */
@@ -51,46 +51,35 @@ int main()
     int N;
     std::cin >> N;
     //  Read Ai = [ 0, Bi ], Bi = [ Ai, 3*10^3 ]
-    std::vector< int > A( N ), B( N );
-    for( int i = 0; i < N; i ++ ) {
+    std::vector< int > A( N + 1 ), B( N + 1 );
+    for( int i = 1; i <= N; i ++ ) {
         std::cin >> A.at( i );
     } 
-    for( int i = 0; i < N; i ++ ) {
+    for( int i = 1; i <= N; i ++ ) {
         std::cin >> B.at( i );
     } 
     
     //  Main
     //  dp.at( i ).at( k )
-    //  the number of combinations of the value of Ci = k at the i-th iteration
-    std::vector< std::vector< int > > dp( N, std::vector< int >( M + 1, 0 ) );
+    //  the accumurated number of combinations of the value of Ci = k at the i-th iteration
+    std::vector< std::vector< int > > dp( N + 1, std::vector< int >( M + 1, 0 ) );
     //  Initial boundary condition
-    for( int k = A.at( 0 ); k <= B.at( 0 ); k ++ ) {
+    for( int k = 0; k <= M; k ++ ) {
         dp.at( 0 ).at( k ) = 1;
     }
-    for( int i = 1; i < N; i ++ ) {
+    for( int i = 1; i <= N; i ++ ) {
         for( int k = A.at( i ); k <= B.at( i ); k ++ ) {
-            for( int j = k; j >= 0; j -- ) {
-                if( j < A.at( i ) && dp.at( i - 1 ).at( j ) == 0 ) {
-                    break;
-                }
-                else {
-                    dp.at( i ).at( k ) += dp.at( i - 1 ).at( j );
-                    if( dp.at( i ).at( k ) >= P ) {
-                        dp.at( i ).at( k ) %= P;
-                    }
-                }                
+            dp.at( i ).at( k ) = dp.at( i - 1 ).at( k );
+            if( k >= 1 ) {
+                dp.at( i ).at( k ) += dp.at( i ).at( k - 1 );
             }
+            dp.at( i ).at( k ) %= P;
+        }
+        for( int k = B.at( i ) + 1; k <= M; k ++ ) {
+            dp.at( i ).at( k ) = dp.at( i ).at( k - 1 );
         }
     }
-
-    int answer = 0;
-    for( int k = 0; k <= M; k ++ ) {
-        answer += dp.at( N - 1 ).at( k );
-        if( answer >= P ) {
-            answer %= P;
-        }
-    }
-    std::cout << answer << std::endl;
+    std::cout << dp.at( N ).at( M ) << std::endl;
 
     //  Finalize
     return( 0 );
