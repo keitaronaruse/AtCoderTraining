@@ -86,6 +86,9 @@ int main()
     int answer = 0;
     for( int k = 0; k <= M; k ++ ) {
         answer += dp.at( N - 1 ).at( k );
+        if( answer >= P ) {
+            answer %= P;
+        }
     }
     std::cout << answer << std::endl;
 
