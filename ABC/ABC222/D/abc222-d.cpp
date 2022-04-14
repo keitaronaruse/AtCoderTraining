@@ -32,32 +32,62 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
     return( os );
 }
 
+template < class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > >& vv )
+{
+    for( const auto& v : vv ) {
+        os << v << std::endl;
+    }
+    return( os );
+}
+
 int main()
 {
-    //  P
+    //  const 
     const int P = 998244353;
+    const int M = 3000;
+
     //  Read N = [ 1, 3*10^3 ]
     int N;
     std::cin >> N;
     //  Read Ai = [ 0, Bi ], Bi = [ Ai, 3*10^3 ]
-    std::vector< std::string > A( N ), B( N );
+    std::vector< int > A( N ), B( N );
     for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i ) >> B.at( i );
+        std::cin >> A.at( i );
+    } 
+    for( int i = 0; i < N; i ++ ) {
+        std::cin >> B.at( i );
     } 
     
     //  Main
-    //  dp.at( k ).at( i )
-    //  the number of combinations of the value of Ci = k at the time instance i
-    std::vector< std::vector< int > > dp( N + 1, std::vector< int >( N + 1, 0 ) );
-    dp.at( 0 ).at( 0 ) = 1;
-    for( int i = 1; i <= N; i ++ ) {
-        for( int k = 0; k <= N; k ++ ) {
-            if( A.at( i - 1) <= k && k <= B.at( i - 1 ) ) {
-                ;
+    //  dp.at( i ).at( k )
+    //  the number of combinations of the value of Ci = k at the i-th iteration
+    std::vector< std::vector< int > > dp( N, std::vector< int >( M + 1, 0 ) );
+    //  Initial boundary condition
+    for( int k = A.at( 0 ); k <= B.at( 0 ); k ++ ) {
+        dp.at( 0 ).at( k ) = 1;
+    }
+    for( int i = 1; i < N; i ++ ) {
+        for( int k = A.at( i ); k <= B.at( i ); k ++ ) {
+            for( int j = k; j >= 0; j -- ) {
+                if( j < A.at( i ) && dp.at( i - 1 ).at( j ) == 0 ) {
+                    break;
+                }
+                else {
+                    dp.at( i ).at( k ) += dp.at( i - 1 ).at( j );
+                    if( dp.at( i ).at( k ) >= P ) {
+                        dp.at( i ).at( k ) %= P;
+                    }
+                }                
             }
-            ;
         }
     }
+
+    int answer = 0;
+    for( int k = 0; k <= M; k ++ ) {
+        answer += dp.at( N - 1 ).at( k );
+    }
+    std::cout << answer << std::endl;
 
     //  Finalize
     return( 0 );
