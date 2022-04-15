@@ -2,7 +2,7 @@
 * @file abc223-d.cpp
 * @brief ABC223 Problem D - Restricted Permutation
 * @author Keitaro Naruse
-* @date 2022-04-14
+* @date 2022-04-14, 2022-04-15
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc223/tasks/abc223_d
 */
@@ -10,9 +10,339 @@
 // # Solution
 
 #include <iostream>
-#include <iomanip>
 #include <vector>
 #include <algorithm>
+#include <stack>
+#include <queue>
+#include <utility>
+
+namespace nrs {
+    template < class Weight >
+    class int_graph {
+        public:
+            typedef int Node;
+            typedef std::pair< Weight, int > Weight_Node;
+            typedef std::pair< int, Weight > Node_Weight;
+        public:
+            int n;
+            //  { v, w } = weight.at( u ).at( k )
+            std::vector< std::vector< Node_Weight > > weight;
+            //  A path length from a certain node, l = length.at( u )
+            std::vector< Weight > length;
+            //  A previous node used in the dijkstra algorithm, v = prev_node.at( u )
+            std::vector< Node > prev_node;
+            //  A queue for the breadth first search
+            std::queue< Node > bfs_queue;
+            //  A stack for the depth first search
+            std::stack< Node > dfs_stack;
+            //  A proproty queue for the dijkstra algorithm ( w, u )
+            std::priority_queue< 
+                Weight_Node, 
+                std::vector< Weight_Node >,
+                std::greater< Weight_Node >
+            > dijkstra_queue;
+            //  Time stamp
+            std::vector< Node > pre_order, post_order;
+        public:
+            int_graph() : n( 0 ) {}
+            int_graph( int N ) : n( N ) {
+                init_weights();
+                init_lengths();
+                init_prev_nodes();
+            }
+            int_graph( const int_graph< Weight >& r ) {
+                weight = r.weight;
+                length = r.length;
+                prev_node = r.prev_node;
+            }
+            void init_weights() {
+                weight = std::vector< std::vector< Node_Weight > >( n );
+            }
+            void init_lengths() {
+                length = std::vector< Weight > ( n, -1 );
+            }
+            void init_prev_nodes() {
+                prev_node = std::vector< Node > ( n, -1 );
+            }
+            void init_bfs_queue() {
+                bfs_queue = std::queue< Node > ( );
+            }
+            void init_dfs_stack() {
+                dfs_stack = std::stack< Node > ( );
+            }
+            void init_dijkstra_priority_queue()
+            {
+                dijkstra_queue = std::priority_queue< Weight_Node, std::vector< Weight_Node >, std::greater< Weight_Node > > ();
+            }
+            void init_time_stamp() {
+                pre_order = std::vector< Node > ( n, -1 );
+                post_order = std::vector< Node > ( n, -1 );
+            }
+            void add_u_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
+                weight.at( u ).push_back( std::make_pair( v, w ) );
+                weight.at( v ).push_back( std::make_pair( u, w ) );
+            }
+            bool has_u_edge( Node u, Node v ) {
+                for( const auto& p : weight.at( u ) ) {
+                    if( p.first == v ) {
+                        for( const auto& q : weight.at( v ) ) {
+                            if( q.first == u ) {
+                                return( true );
+                            }
+                        }
+                    }
+                }
+                return( false );
+            }
+            void delete_u_edge( Node u, Node v ) {
+                for( auto it = weight.at( u ).begin(); it < weight.at( u ).end(); it ++  ) {
+                    if( *it.first == v ) {
+                        weight.at( u ).erase( it );
+                    }
+                }
+                for( auto it = weight.at( v ).begin(); it < weight.at( v ).end(); it ++  ) {
+                    if( *it.first == u ) {
+                        weight.at( v ).erase( it );
+                    }
+                }
+            }
+            void add_d_edge( Node u, Node v, Weight w = Weight( 1 ) ) {
+                weight.at( u ).push_back( std::make_pair( v, w ) );
+            }
+            bool has_d_edge( Node u, Node v ) {
+                for( const auto& p : weight.at( u ) ) {
+                    if( p.first == v ) {
+                        return( true );
+                    }
+                }
+                return( false );
+            }
+            void delete_d_edge( Node u, Node v ) {
+                for( auto it = weight.at( u ).begin(); it < weight.at( u ).end(); it ++  ) {
+                    if( *it.first == v ) {
+                        weight.at( u ).erase( it );
+                    }
+                }
+            }
+            std::ostream& print_edges( std::ostream& os ) const {
+                for( int u = 0; u < weight.size(); u ++ ) {
+                    for( auto q : weight.at( u ) ) {
+                        int v = q.first;
+                        Weight w = q.second;
+                        os << "( " << u << ", " << v << ", " << w << " ) ";
+                    }
+                }
+                os << std::endl;
+                return( os );
+            }
+            Weight find_path_bfs( Node b, Node e ) {
+                init_lengths();
+                init_prev_nodes();
+                init_bfs_queue();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                bfs_queue.push( b );
+
+                while( !bfs_queue.empty() ) {
+                    auto u = bfs_queue.front(); 
+                    bfs_queue.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == -1 ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            bfs_queue.push( v );
+                        }
+                    }
+                }
+                return( length.at( e ) ); 
+            }
+            void init_next_bfs( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_bfs_queue();
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                bfs_queue.push( b );
+            }
+            Node find_next_bfs() {
+                if( !bfs_queue.empty() ) {
+                    auto u = bfs_queue.front(); 
+                    bfs_queue.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == -1 ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            bfs_queue.push( v );
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
+            }
+            Weight find_path_dfs( Node b, Node e ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dfs_stack();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dfs_stack.push( b );
+
+                while( !dfs_stack.empty() ) {
+                    auto u = dfs_stack.top(); 
+                    dfs_stack.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == -1 ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            dfs_stack.push( v );
+                        }
+                    }
+                }
+                return( length.at( e ) ); 
+            }
+            void init_next_dfs( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dfs_stack();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dfs_stack.push( b );
+            }
+            Node find_next_dfs() {
+                if( !dfs_stack.empty() ) {
+                    auto u = dfs_stack.top(); 
+                    dfs_stack.pop();
+
+                    //  Add a node to queue
+                    for( auto q : weight.at( u ) ) {
+                        Node v = q.first;
+                        Weight w = q.second;
+                        if( length.at( v ) == -1 ) {
+                            length.at( v ) = length.at( u ) + w;
+                            prev_node.at( v ) = u;
+                            dfs_stack.push( v );
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
+            }
+            Weight find_path_dijkstra( Node b, Node e ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dijkstra_priority_queue();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dijkstra_queue.push( std::make_pair( length.at( b ), b ) );
+
+                while( !dijkstra_queue.empty() ) {
+                    auto p = dijkstra_queue.top(); 
+                    Weight d = p.first;
+                    Node u = p.second;
+                    dijkstra_queue.pop();
+
+                    //  When a node ( d, u ) in the priority que should be expanded
+                    if( length.at( u ) >= d ) {
+                        //  Add a node to priority que
+                        for( auto q : weight.at( u ) ) {
+                            Node v = q.first;
+                            Weight c = q.second;
+                            if( length.at( v ) > d + c ) {
+                                length.at( v ) = d + c;
+                                prev_node.at( v ) = u;
+                                dijkstra_queue.push( std::make_pair( length.at( v ), v ) );
+                            }
+                        }
+                    }
+                }
+                return( length.at( e ) ); 
+            }
+            void init_next_dijkstra( Node b ) {
+                init_lengths();
+                init_prev_nodes();
+                init_dijkstra_priority_queue();
+
+                length.at( b ) = Weight( 0 );
+                prev_node.at( b ) = Node( -1 );
+                dijkstra_queue.push( std::make_pair( length.at( b ), b ) );
+            }
+            Node find_next_dijkstra() {
+                if( !dijkstra_queue.empty() ) {
+                    auto p = dijkstra_queue.top(); 
+                    Weight d = p.first;
+                    Node u = p.second;
+                    dijkstra_queue.pop();
+
+                    //  When a node ( d, u ) in the priority que should be expanded
+                    if( length.at( u ) >= d ) {
+                        //  Add a node to priority que
+                        for( auto q : weight.at( u ) ) {
+                            Node v = q.first;
+                            Weight c = q.second;
+                            if( length.at( v ) > d + c ) {
+                                length.at( v ) = d + c;
+                                prev_node.at( v ) = u;
+                                dijkstra_queue.push( std::make_pair( length.at( v ), v ) );
+                            }
+                        }
+                    }
+                    return( u );
+                }
+                return( Node( -1 ) ); 
+            }
+            std::vector< Node > back_trace( Node b, Node e ) {
+                std::vector< Node > path;
+                Node v = e;
+                while( v != b ) {
+                    path.push_back( v );
+                    v = prev_node.at( v );
+                }
+                path.push_back( b );
+                std::reverse( path.begin(), path.end() );
+                return( path );
+            }
+
+            void init_recursive_dfs() {
+                init_lengths();
+                init_prev_nodes();
+                init_time_stamp();
+            }
+            Weight recursive_dfs( Node u, Weight w, Node& time_stamp ) {
+                std::cerr << "( " << u << ", " << time_stamp << " ) " << std::endl;
+                //  Update the node u
+                length.at( u ) = w;
+                pre_order.at( u ) = time_stamp;
+                time_stamp ++ ;
+                //  Recursive call
+                for( auto q : weight.at( u ) ) {
+                    Node v = q.first;
+                    Weight w = q.second;
+                    //  when the node v is not visited yet
+                    if( length.at( v ) == -1 ) {
+                        prev_node.at( v ) = u;
+                        recursive_dfs( v, length.at( u ) + w, time_stamp );
+                    }
+                }
+                post_order.at( u ) = time_stamp ++ ;
+            }
+    };
+}
 
 template < class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -25,37 +355,21 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 
 int main()
 {
-    //  Read N [ 1, 10^5 ]
-    int N;
-    std::cin >> N;
-    //  Read Ai, Bi = [ 1, 1000 ]
-    std::vector< int > A( N ), B( N );
-    for( int i = 0; i < N; i ++ ) {
+    //  Read N [ 2, 2*10^5 ], M = [ 1, 2*10^5 ]
+    int N, M;
+    std::cin >> N >> M;
+    //  Read Ai, Bi = [ 1, N ]
+    std::vector< int > A( M ), B( M );
+    for( int i = 0; i < M; i ++ ) {
         std::cin >> A.at( i ) >> B.at( i );
     }
 
     //  Main
-    double total_time = 0.0;
-    std::vector< double > C( N );
-    C.at( 0 ) = ( double ) A.at( 0 ) / ( double ) B.at( 0 );
-    for( int i = 1; i < N; i ++ ) {
-        C.at( i ) = C.at( i - 1 ) + ( double ) A.at( i ) / ( double ) B.at( i );
+    //  Preprocess
+    nrs::int_graph< int > g( N );
+    for( int i = 0; i < M; i ++ ) {
+        g.add_d_edge( A.at( i ) - 1, B.at( i ) - 1 );
     }
-    double half_time = C.at( N - 1 ) / 2.0;
-
-    double length = 0.0;
-    if( N == 1 ) {
-        length = ( double ) A.at( 0 ) / 2.0;
-    }
-    else {
-        auto it = std::lower_bound( C.begin(), C.end(), half_time );
-        int k = it - C.begin() - 1;
-        for( int i = 0; i <= k; i ++ ) {
-            length += ( double ) A.at( i );
-        }
-        length += ( half_time - ( double ) C.at( k ) ) * ( double ) B.at( k + 1 );
-    }
-    std::cout << std::fixed << std::setprecision(12) << length << std::endl;
     
     //  Finalize
     return( 0 );
