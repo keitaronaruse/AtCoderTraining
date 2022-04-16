@@ -1,6 +1,6 @@
 /**
 * @file abc248-d.cpp
-* @brief ABC248 Problem D
+* @brief ABC248 Problem D - Range Count Query
 * @author Keitaro Naruse
 * @date 2022-04-16
 * @copyright MIT License
@@ -10,16 +10,9 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
-
-template< class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p )
-{
-    os << "( " << p.first << ", " << p.second << " )";
-    return( os );
-}
+#include <map>
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -41,21 +34,47 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > 
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N = 0;
+    //  Read N = [ 1, 2*10^5 ]
+    int N;
     std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N, 0 );
+    //  Read Ai = [ 1, N ]
+    std::vector< int > A( N );
     for( int i = 0; i < N; i ++ ) {
         std::cin >> A.at( i );
     }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S = "";
-    std::cin >> S;
+    //  Read Q = [ 1, 2*10^5 ]
+    int Q;
+    std::cin >> Q;
+    //  Read Li, Ri, Xi
+    std::vector< int > L( Q ), R( Q ), X( Q );
+    for( int j = 0; j < Q; j ++ ) {
+        std::cin >> L.at( j ) >> R.at( j ) >> X.at( j );
+    }
 
     //  Main
+    //  Preprocess
+    std::vector< std::map< int, int > > seg( N + 1 );
+    for( int i = 0; i <= N / 2 ; i ++ ) {
+        if( 2 * i < N ) {
+            seg.at( i )[ A.at( 2 * i ) ] ++;
+        }
+        if( 2 * i + 1 < N ) {
+            seg.at( i )[ A.at( 2 * i + 1 ) ]++;
+        }
+        for( const auto& p : seg.at( i ) ) {
+            std::cerr << "( " << p.first << ", " << p.second << " ) ";
+        }
+        std::cerr << std::endl;
+    }
+
+    int depth = 0;
+    int n = N;
+    while( n != 0 ) {
+        n /= 2;
+        depth ++;
+    }
+    std::cerr << depth << std::endl;
+    
 
     //  Finalize
     return( 0 );
