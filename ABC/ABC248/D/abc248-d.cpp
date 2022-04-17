@@ -2,7 +2,7 @@
 * @file abc248-d.cpp
 * @brief ABC248 Problem D - Range Count Query
 * @author Keitaro Naruse
-* @date 2022-04-16
+* @date 2022-04-16, 2022-04-17
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc248/tasks/abc248_d
 */
@@ -12,7 +12,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <map>
 
 template< class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
@@ -53,28 +52,20 @@ int main()
 
     //  Main
     //  Preprocess
-    std::vector< std::map< int, int > > seg( N + 1 );
-    for( int i = 0; i <= N / 2 ; i ++ ) {
-        if( 2 * i < N ) {
-            seg.at( i )[ A.at( 2 * i ) ] ++;
-        }
-        if( 2 * i + 1 < N ) {
-            seg.at( i )[ A.at( 2 * i + 1 ) ]++;
-        }
-        for( const auto& p : seg.at( i ) ) {
-            std::cerr << "( " << p.first << ", " << p.second << " ) ";
-        }
-        std::cerr << std::endl;
+    //  Stores appearance positions i of value Ai, 1-index
+    std::vector< std::vector< int > > val_pos( N + 1 );
+    for( int i = 0; i < N; i ++ ) {
+        val_pos.at( A.at( i ) ).push_back( i + 1 );
     }
-
-    int depth = 0;
-    int n = N;
-    while( n != 0 ) {
-        n /= 2;
-        depth ++;
+    //  Find the solution
+    for( int j = 0; j < Q; j ++ ) {
+        //  0, 1, 2, 3
+        //  [ 1, 2 ] -> lower_bound( L ), upper_bound( R ) -> [ 0, 2 ] -> 2 - 0 = 2
+        std::cout 
+            << std::upper_bound( val_pos.at( X.at( j ) ).begin(), val_pos.at( X.at( j ) ).end(), R.at( j ) )
+             - std::lower_bound( val_pos.at( X.at( j ) ).begin(), val_pos.at( X.at( j ) ).end(), L.at( j ) )
+            << std::endl;
     }
-    std::cerr << depth << std::endl;
-    
 
     //  Finalize
     return( 0 );
