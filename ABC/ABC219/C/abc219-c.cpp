@@ -1,6 +1,6 @@
 /**
-* @file abc219-a.cpp
-* @brief ABC219 Problem D - Between Two Arrays
+* @file abc219-c.cpp
+* @brief ABC219 Problem C - Neo-lexicographic Ordering
 * @author Keitaro Naruse
 * @date 2022-04-14
 * @copyright MIT License
