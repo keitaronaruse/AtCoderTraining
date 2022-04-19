@@ -2,7 +2,7 @@
 * @file abc219-d.cpp
 * @brief ABC219 Problem D - Strange Lunchbox
 * @author Keitaro Naruse
-* @date 2022-04-14, 2022-04-18
+* @date 2022-04-14, 2022-04-19
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc219/tasks/abc219_d
 */
@@ -11,35 +11,7 @@
 
 #include <iostream>
 #include <vector>
-#include <map>
 #include <algorithm>
-#include <utility>
-#include <functional>
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( const auto& e : v ) {
-        os << e << " ";
-    }
-    return( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::pair< const std::pair< T, T >, std::vector< T > >& pp )
-{
-    os << "( " << pp.first.first << ", " << pp.first.second << " )" << "{ "<< pp.second << "}";
-    return( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::map< std::pair< T, T >, std::vector< T > > & m )
-{
-    for( const auto& e : m ) {
-        os << e << " ";
-    }
-    return( os );
-}
 
 int main()
 {
@@ -47,42 +19,41 @@ int main()
     int N, X, Y;
     std::cin >> N >> X >> Y;
     //  Read Ai, Bi = [ 1, 300 ]
-    std::vector< int > A( N ), B( N );
-    for( int i = 0; i < N; i ++ ) {
+    std::vector< int > A( N + 1 ), B( N + 1 );
+    for( int i = 1; i <= N; i ++ ) {
         std::cin >> A.at( i ) >> B.at( i );
     } 
 
     //  Main
-    std::map< std::pair< int, int >, std::vector< int > > q;
-    //  Initial values
-    for( int k = 0; k < N; k ++ ) {
-        std::vector< int > v = { k };
-        q.insert(
-            std::make_pair( std::make_pair( A.at( k ), B.at( k ) ), v )
-        );
-    }
-    //  Iterations
-    int answer = -1;
-    for( auto it = q.begin(); it != q.end(); ) {
-        int k = it -> second.back() + 1;
-        if( k < N ) {
-            std::pair< int, int > p( it -> first.first + A.at( k ),  it -> first.second + B.at( k ) );
-            if( p.first >= X && p.second >= Y ) {
-                answer = it -> second.size() + 1;
-                break;
-            }
-            //  Insert or update 
-            auto it_p = q.find( p );
-            if( it_p == q.end() ) {
-                std::vector< int > v = it -> second; 
-                v.push_back( k );
-                q.insert( std::make_pair( p, v ) );
-            }
-            else {
-                it_p -> second.push_back( k );
+    //  dp.at( i = N ).at( j = X ).at( l = Y )
+    const int inf = N + 1;
+    std::vector< std::vector< std::vector< int > > > dp( N + 1, 
+        std::vector< std::vector< int > >( X + 1, std::vector< int >( Y + 1, inf ) ) );
+    
+    //  Initial boundary
+    dp.at( 0 ).at( 0 ).at( 0 ) = 0;
+    //  Loop
+    for( int i = 1; i <= N; i ++ ) {
+        for( int j = 0; j <= X; j ++ ) {
+            for( int k = 0; k <= Y; k ++ ) {
+                //  If he buys the i-th lunch box
+                int u = std::min( j + A.at( i ), X );
+                int v = std::min( k + B.at( i ), Y );
+                dp.at( i ).at( u ).at( v ) = std::min( 
+                    dp.at( i ).at( u ).at( v ), 
+                    dp.at( i - 1 ).at( j ).at( k ) + 1 
+                ); 
+                //  If he does not
+                dp.at( i ).at( j ).at( k ) = std::min( 
+                    dp.at( i ).at( j ).at( k ), 
+                    dp.at( i - 1 ).at( j ).at( k ) 
+                ); 
             }
         }
-        it = q.erase( it );
+    }
+    int answer = dp.at( N ).at( X ).at( Y );
+    if( answer == inf ) {
+        answer = -1;
     }
     std::cout << answer << std::endl;
 
