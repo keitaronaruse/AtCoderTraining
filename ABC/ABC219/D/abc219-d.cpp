@@ -54,23 +54,37 @@ int main()
 
     //  Main
     std::map< std::pair< int, int >, std::vector< int > > q;
+    //  Initial values
     for( int k = 0; k < N; k ++ ) {
         std::vector< int > v = { k };
         q.insert(
             std::make_pair( std::make_pair( A.at( k ), B.at( k ) ), v )
         );
     }
+    //  Iterations
+    int answer = -1;
     for( auto it = q.begin(); it != q.end(); ) {
-        std::cerr << *it << " ";
         int k = it -> second.back() + 1;
         if( k < N ) {
             std::pair< int, int > p( it -> first.first + A.at( k ),  it -> first.second + B.at( k ) );
-            std::vector< int > v = it -> second; v.push_back( k );
-            q.insert( std::make_pair( p, v ) );
+            if( p.first >= X && p.second >= Y ) {
+                answer = it -> second.size() + 1;
+                break;
+            }
+            //  Insert or update 
+            auto it_p = q.find( p );
+            if( it_p == q.end() ) {
+                std::vector< int > v = it -> second; 
+                v.push_back( k );
+                q.insert( std::make_pair( p, v ) );
+            }
+            else {
+                it_p -> second.push_back( k );
+            }
         }
         it = q.erase( it );
     }
-    std::cerr << std::endl;
+    std::cout << answer << std::endl;
 
     //  Finalize
     return( 0 );
