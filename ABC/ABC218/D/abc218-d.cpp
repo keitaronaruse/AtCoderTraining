@@ -34,7 +34,12 @@ int main()
     int answer = 0;
     for( auto it = x_pos.begin(); it != x_pos.end(); it ++ ) {
         if( it -> second.size() >= 2 ) {
-            ;
+            auto jt = it; jt ++;
+            for( ; jt != x_pos.end(); jt ++ ) {
+                if( jt -> second.size() >= 2 ) {
+                    ;
+                }
+            }
         }
     }
     std::cout << answer << std::endl;
