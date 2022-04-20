@@ -14,11 +14,10 @@
 #include <vector>
 #include <algorithm>
 
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
+std::ostream& operator<<( std::ostream& os, const std::vector< std::string >& v )
 {
     for( const auto& e : v ) {
-        os << e << " ";
+        os << e << std::endl;
     }
     return( os );
 }
@@ -30,6 +29,15 @@ std::ostream& operator<<( std::ostream& os, const std::vector< std::vector < T >
         os << v << std::endl;
     }
     return( os );
+}
+
+bool match( const std::vector< std::string >& T, const std::vector< std::string >& P )
+{
+    const int N = T.size();
+    const int H = P.size();
+    const int W = P.at( 0 ).size();
+
+    return( true );
 }
 
 int main()
@@ -78,17 +86,79 @@ int main()
             D = i; break;
         }
     } 
-    std::vector< std::string > P( D - U + 1, std::string( '.', R - L + 1 ) );
-    for( int i = 0; i <= D - U; i ++ ) {
-        for( int j = 0; j <= R - L; j ++ ) {
-            P.at( i ).at( j ) = S.at( i + U ).at( j + L );
-        }
-    }
-    std::cerr << P << std::endl;
 
-    //  Find the solution    
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Make patters
+    bool isYes = false;
+    for( int k = 0; k < 4; k ++ ) {
+        if( k == 0 ) {
+            std::vector< std::string > P( D - U + 1, std::string( '.', R - L + 1 ) );
+            for( int i = 0; i <= D - U; i ++ ) {
+                for( int j = 0; j <= R - L; j ++ ) {
+                    P.at( i ).at( j ) = S.at( i + U ).at( j + L );
+                }
+            }
+            for( int v = 0; v < N - ( D - U + 1 ); v ++ ) {
+                for( int u = 0; u < N - ( R - L + 1 ); u ++ ) {
+                    if( isYes = match( T, P ) ) {
+                        break;
+                    }
+                }
+            }
+        }
+        else if( k == 1 ) {
+            std::vector< std::string > P( R - L + 1, std::string( '.', D - U + 1 ) );
+            for( int i = 0; i <= D - U; i ++ ) {
+                for( int j = 0; j <= R - L; j ++ ) {
+                    P.at( R - L - j ).at( i ) = S.at( i + U ).at( j + L );
+                }
+            }
+            for( int v = 0; v < N - ( R - L + 1 ); v ++ ) {
+                for( int u = 0; u < N - ( D - U + 1 ); u ++ ) {
+                    if( isYes = match( T, P ) ) {
+                        break;
+                    }
+                }
+            }
+        }
+        else if( k == 2 ) {
+            std::vector< std::string > P( D - U + 1, std::string( '.', R - L + 1 ) );
+            for( int i = 0; i <= D - U; i ++ ) {
+                for( int j = 0; j <= R - L; j ++ ) {
+                    P.at( D - U - i ).at( R - L - j ) = S.at( i + U ).at( j + L );
+                }
+            }
+            for( int v = 0; v < N - ( D - U + 1 ); v ++ ) {
+                for( int u = 0; u < N - ( R - L + 1 ); u ++ ) {
+                    if( isYes = match( T, P ) ) {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            std::vector< std::string > P( R - L + 1, std::string( '.', D - U + 1 ) );
+            for( int i = 0; i <= D - U; i ++ ) {
+                for( int j = 0; j <= R - L; j ++ ) {
+                    P.at( j ).at( D - U - i ) = S.at( i + U ).at( j + L );
+                }
+            }
+            for( int v = 0; v < N - ( R - L + 1 ); v ++ ) {
+                for( int u = 0; u < N - ( D - U + 1 ); u ++ ) {
+                    if( isYes = match( T, P ) ) {
+                        break;
+                    }
+                }
+            }
+        }
+    } 
+
+    //  Find the solution
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return( 0 );
