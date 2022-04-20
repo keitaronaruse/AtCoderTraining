@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <vector>
-#include <map>
+#include <algorithm>
 
 int main()
 {
@@ -26,18 +26,22 @@ int main()
 
     //  Main
     //  Preprocess
-    std::map< int, std::vector< int > > x_pos;
+    std::vector< std::pair< int, int > > xy( N );
     for( int i = 0; i < N; i ++ ) {
-        x_pos[ x.at( i ) ].push_back( i );
+        xy.at( i ).first = x.at( i );
+        xy.at( i ).second = y.at( i );
     }
-    //  Find the solution
+    std::sort( xy.begin(), xy.end() );
+    
     int answer = 0;
-    for( auto it = x_pos.begin(); it != x_pos.end(); it ++ ) {
-        if( it -> second.size() >= 2 ) {
-            auto jt = it; jt ++;
-            for( ; jt != x_pos.end(); jt ++ ) {
-                if( jt -> second.size() >= 2 ) {
-                    ;
+    for( int i = 0; i < N; i ++ ) {
+        for( int j = 0; j < N; j ++ ) {
+            if( xy.at( i ).first < xy.at( j ).first && xy.at( i ).second < xy.at( j ).second ) {
+                if( 
+                    std::binary_search( xy.begin(), xy.end(), std::make_pair( xy.at( i ).first, xy.at( j ).second ) ) 
+                 && std::binary_search( xy.begin(), xy.end(), std::make_pair( xy.at( j ).first, xy.at( i ).second ) )
+                ) {
+                    answer ++;
                 }
             }
         }
