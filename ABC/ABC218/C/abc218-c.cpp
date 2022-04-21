@@ -2,7 +2,7 @@
 * @file abc218-c.cpp
 * @brief ABC218 Problem C - Shapes
 * @author Keitaro Naruse
-* @date 2022-04-20
+* @date 2022-04-20, 2022-04-22
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc218/tasks/abc218_c
 */
@@ -58,21 +58,10 @@ bool match( const std::vector< std::string >& T, const std::vector< std::string 
     return( is_match );
 }
 
-int main()
+bool old_solution( int N, const std::vector< std::string >& S, const std::vector< std::string >& T )
 {
-    //  Read N = [ 1, 200 ]
-    int N;
-    std::cin >> N;
-    //  Read S, T
-    std::vector< std::string > S( N ), T( N );
-    for( int i = 0; i < N; i ++  ) {
-        std::cin >> S.at( i );
-    }
-    for( int i = 0; i < N; i ++  ) {
-        std::cin >> T.at( i );
-    }
+    bool isYes = false;
 
-    //  Main
     //  Preprocess
     int num_S = 0, num_T = 0;
     for( int i = 0; i < N; i ++ ) {
@@ -122,7 +111,6 @@ int main()
     } 
 
     //  Make patters
-    bool isYes = false;
     for( int k = 0; k < 4; k ++ ) {
         if( k == 0 ) {
             std::vector< std::string > P( D - U + 1, std::string( R - L + 1, '.' ) );
@@ -169,9 +157,32 @@ int main()
             }
         }
     } 
+    return( isYes );
+}
+
+bool new_solution( int N, const std::vector< std::string >& S, const std::vector< std::string >& T )
+{
+    bool isYes = true;
+
+    return( isYes );
+}
+
+int main()
+{
+    //  Read N = [ 1, 200 ]
+    int N;
+    std::cin >> N;
+    //  Read S, T
+    std::vector< std::string > S( N ), T( N );
+    for( int i = 0; i < N; i ++  ) {
+        std::cin >> S.at( i );
+    }
+    for( int i = 0; i < N; i ++  ) {
+        std::cin >> T.at( i );
+    }
 
     //  Find the solution
-    if( isYes ) {
+    if( old_solution( N, T, S ) ) {
         std::cout << "Yes" << std::endl;
     }
     else {
