@@ -13,156 +13,49 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-std::ostream& operator<<( std::ostream& os, const std::vector< std::string >& v )
-{
-    for( const auto& e : v ) {
-        os << e << std::endl;
-    }
-    return( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector < T > >& vv )
-{
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return( os );
-}
-
-bool match( const std::vector< std::string >& T, const std::vector< std::string >& P )
-{
-    const int N = T.size();
-    const int H = P.size();
-    const int W = P.at( 0 ).size();
-    bool is_match = false;
-    for( int v = 0; v <= N - H; v ++ ) {
-        for( int u = 0; u <= N - W; u ++ ) {
-            bool is_same = true;
-            for( int i = 0; is_same && i < H; i ++ ) {
-                for( int j = 0; j < W; j ++ ) {
-                    if( T.at( i + v ).at( j + u ) != P.at( i ).at( j ) ) {
-                        is_same = false;
-                        break;
-                    }
-                }
-            }
-            if( is_same ) {
-                is_match = true;
-                break;
-            }
-        }
-    }
-
-    return( is_match );
-}
-
-bool old_solution( int N, const std::vector< std::string >& S, const std::vector< std::string >& T )
+#include <utility>
+bool new_solution( int N, const std::vector< std::string >& S, const std::vector< std::string >& T )
 {
     bool isYes = false;
 
     //  Preprocess
-    int num_S = 0, num_T = 0;
+    std::vector< std::pair< int, int > > s, t;
     for( int i = 0; i < N; i ++ ) {
         for( int j = 0; j < N; j ++ ) {
             if( S.at( i ).at( j ) == '#' ) {
-                num_S ++;
+                s.push_back( std::make_pair( i, j ) );
             }
             if( T.at( i ).at( j ) == '#' ) {
-                num_T ++;
+                t.push_back( std::make_pair( i, j ) );
             }
         }
     }
-    if( num_S != num_T ) {
-        std::cout << "No" << std::endl;
-        return( 0 );
+    if( s.size() != t.size() ) {
+        isYes = false;
+        return( isYes );
     }
+    std::sort( s.begin(), s.end() );
+    std::sort( t.begin(), t.end() );
 
-    std::vector< int > S_row( N, 0 ), S_col( N, 0 );
-    for( int i = 0; i < N; i ++ ) {
-        for( int j = 0; j < N; j ++ ) {
-            if( S.at( i ).at( j ) == '#' ) {
-                S_row.at( i ) ++;
-                S_col.at( j ) ++;
-            }
+    std::vector< std::pair< int, int > > u = t;
+    const int K = 4;
+    for( int k = 0; k < K; k ++ ) {
+        int delta_i = u.at( 0 ).first - s.at(0).first;
+        int delta_j = u.at( 0 ).second - s.at(0).second;
+        for( auto& e : u ) {
+            e.first -= delta_i;
+            e.second -= delta_j;
         }
+        if( s == u ) {
+            isYes = true;
+            return( isYes );
+        }
+        for( auto& e : u ) {
+            std::swap( e.first, e.second );
+            e.second *= -1;
+        }
+        std::sort( u.begin(), u.end() );
     }
-    int L = 0, R = 0, U = 0, D = 0;
-    for( int j = 0; j < N; j ++ ) {
-        if( S_col.at( j ) != 0 ) {
-            L = j; break;
-        }
-    } 
-    for( int j = N - 1; j >= 0; j -- ) {
-        if( S_col.at( j ) != 0 ) {
-            R = j; break;
-        }
-    } 
-    for( int i = 0; i < N; i ++ ) {
-        if( S_row.at( i ) != 0 ) {
-            U = i; break;
-        }
-    } 
-    for( int i = N - 1; i >= 0; i -- ) {
-        if( S_row.at( i ) != 0 ) {
-            D = i; break;
-        }
-    } 
-
-    //  Make patters
-    for( int k = 0; k < 4; k ++ ) {
-        if( k == 0 ) {
-            std::vector< std::string > P( D - U + 1, std::string( R - L + 1, '.' ) );
-            for( int i = 0; i <= D - U; i ++ ) {
-                for( int j = 0; j <= R - L; j ++ ) {
-                    P.at( i ).at( j ) = S.at( i + U ).at( j + L );
-                }
-            }
-            if( ( isYes = match( T, P ) ) ) {
-                break;
-            }
-        }
-        else if( k == 1 ) {
-            std::vector< std::string > P( R - L + 1, std::string( D - U + 1, '.' ) );
-            for( int i = 0; i <= D - U; i ++ ) {
-                for( int j = 0; j <= R - L; j ++ ) {
-                    P.at( R - L - j ).at( i ) = S.at( i + U ).at( j + L );
-                }
-            }
-            if( ( isYes = match( T, P ) ) ) {
-                break;
-            }
-        }
-        else if( k == 2 ) {
-            std::vector< std::string > P( D - U + 1, std::string( R - L + 1, '.' ) );
-            for( int i = 0; i <= D - U; i ++ ) {
-                for( int j = 0; j <= R - L; j ++ ) {
-                    P.at( D - U - i ).at( R - L - j ) = S.at( i + U ).at( j + L );
-                }
-            }
-            if( ( isYes = match( T, P ) ) ) {
-                break;
-            }
-        }
-        else {
-            std::vector< std::string > P( R - L + 1, std::string( D - U + 1, '.' ) );
-            for( int i = 0; i <= D - U; i ++ ) {
-                for( int j = 0; j <= R - L; j ++ ) {
-                    P.at( j ).at( D - U - i ) = S.at( i + U ).at( j + L );
-                }
-            }
-            if( ( isYes = match( T, P ) ) ) {
-                break;
-            }
-        }
-    } 
-    return( isYes );
-}
-
-bool new_solution( int N, const std::vector< std::string >& S, const std::vector< std::string >& T )
-{
-    bool isYes = true;
 
     return( isYes );
 }
@@ -182,7 +75,7 @@ int main()
     }
 
     //  Find the solution
-    if( old_solution( N, T, S ) ) {
+    if( new_solution( N, S, T ) ) {
         std::cout << "Yes" << std::endl;
     }
     else {
