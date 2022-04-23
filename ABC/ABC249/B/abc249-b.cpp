@@ -1,8 +1,8 @@
 /**
 * @file abc249-b.cpp
-* @brief ABC249 Problem B
+* @brief ABC249 Problem B - Perfect String
 * @author Keitaro Naruse
-* @date 2022-04-23
+* @date 2022-04-23, 2022-04-24
 * @copyright MIT License
 * @details https://atcoder.jp/contests/abc249/tasks/abc249_b
 */
@@ -11,53 +11,39 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-
-template< class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p )
-{
-    os << "( " << p.first << ", " << p.second << " )";
-    return( os );
-}
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
-{
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return( os );
-}
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > > & vv )
-{
-    for( const auto& v : vv )  {
-        os << v << std::endl;
-    }
-    return( os );
-}
+#include <set>
 
 int main()
 {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i ++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
+    //  Read | S | = [ 1, 10^2 ]
     std::string S;
     std::cin >> S;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    bool isIncludeLarge = false, isIncludeSmall = false, isDuplicate = false;
+    std::set< char > table;
+    for( int i = 0; i < S.size(); i ++ ) {
+        if( 'A' <= S.at( i ) && S.at( i ) <= 'Z' ) {
+            isIncludeLarge = true;
+        }
+        if( 'a' <= S.at( i ) && S.at( i ) <= 'z' ) {
+            isIncludeSmall = true;
+        }
+        if( table.find( S.at( i ) ) == table.end() ) {
+            table.insert( S.at( i ) );
+        }
+        else {
+            isDuplicate = true;
+            break;
+        }
+    }
+
+    if( isIncludeLarge && isIncludeSmall && !isDuplicate ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return( 0 );
