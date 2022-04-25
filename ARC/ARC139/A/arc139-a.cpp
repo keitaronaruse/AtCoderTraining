@@ -1,6 +1,6 @@
 /**
 * @file arc139-a.cpp
-* @brief ARC139 Problem X
+* @brief ARC139 Problem A - Trailing Zeros
 * @author Keitaro Naruse
 * @date 2022-04-24, 2022-04-25
 * @copyright MIT License
@@ -12,7 +12,7 @@
 //   - Right shift of n bits followed by left shift of n bits make the n-LSB zero
 // - Procedure
 //   - if T[i] < T[i-1], A += (1 << T[i])
-//   - if T[i] >= T[i-1], A >>= n, A++, (another A++ if LSB == 0), A <<= n
+//   - if T[i] >= T[i-1], A >>= T[i], A++, (another A++ if LSB == 0), A <<= T[i]
 
 #include <iostream>
 #include <vector>
@@ -29,21 +29,21 @@ int main()
     }
 
     //  Main
-    long long ans = 1LL << T.at( 0 );
+    long long A = 1LL << T.at( 0 );
     for( int i = 1; i < N; i ++ ) {
         if( T.at( i ) < T.at( i - 1 ) ) {
-            ans += ( 1LL << T.at( i ) );
+            A += ( 1LL << T.at( i ) );
         }
         else {
-            ans >>= T.at( i );
-            ans ++;
-            if( ( ans & 1L ) == 0LL ) {
-                ans ++;
+            A >>= T.at( i );
+            A ++;
+            if( ( A & 1L ) == 0LL ) {
+                A ++;
             }
-            ans <<= T.at( i );
+            A <<= T.at( i );
         }
     }
-    std::cout << ans << std::endl;
+    std::cout << A << std::endl;
 
     //  Finalize
     return( 0 );
