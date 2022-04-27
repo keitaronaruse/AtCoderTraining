@@ -2,15 +2,21 @@
 * @file arc138-b.cpp
 * @brief ARC138 Problem X
 * @author Keitaro Naruse
-* @date 2022-04-09
+* @date 2022-04-09, 2022-04-28
 * @copyright MIT License
 * @details https://atcoder.jp/contests/arc138/tasks/arc138_b
 */
 
 // # Solution
+// - First: the inverse operation of B
+//   - Delete 0s at the tail
+// - Second: the inverse operation of A
+//   - Delete 0 at the head and flip the rest
+//   - Repeat the above operation until 1 appers at the head 
+// - If the sequence is empty, return Yes
+// - If the sequence is not (including 1), return No
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
@@ -19,15 +25,6 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v )
 {
     for( const auto& k : v ) {
         os << k << " ";
-    }
-    return( os );
-}
-
-template< class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< std::vector< T > > & vv )
-{
-    for( const auto& v : vv )  {
-        os << v << std::endl;
     }
     return( os );
 }
