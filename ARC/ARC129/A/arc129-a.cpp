@@ -40,12 +40,20 @@ int main( ) {
     if( lower.none() ) {
         lower[ 0 ] = 1;
     }
-    std::cout << n << std::endl;
-    std::cout << lower << std::endl;
-    std::cout << upper << std::endl;
+    // std::cout << n << std::endl;
+    // std::cout << lower << std::endl;
+    // std::cout << upper << std::endl;
 
     //  Find the solution
-    long long answer = 0LL;
+    unsigned long long LB = lower.to_ullong(), UB = upper.to_ullong();
+    if( LB < L ) {
+        LB = L;
+    }
+    if( R < UB ) {
+        UB = R;
+    }
+    std::cout << N << " " << LB << " " << UB << std::endl;
+    long long answer = UB - LB;
     std::cout << answer << std::endl;
 
     //  Finalize
