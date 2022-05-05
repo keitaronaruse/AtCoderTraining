@@ -24,25 +24,22 @@ int main( ) {
     std::bitset< Z > n( N ), lower( 0LL ), upper( 0LL );
     for( int k = Z - 2; k >= 0; k-- ) {
         if( n[ k ] == 1 ) {
-            lower[ k ] = 0;
+            lower[ k ] = 1;
             upper[ k ] = 1;
         }
         else {
+            lower[ k ] = 0;
             if( upper[ k + 1 ] == 1 ) {
-                upper[ k + 1 ] = 1;
+                upper[ k ] = 1;
             }
             else {
-                upper[ k + 1 ] = 0;
+                upper[ k ] = 0;
             }
-            lower[ k + 1 ] = 0;
         }
     }
-    if( lower.none() ) {
-        lower[ 0 ] = 1;
-    }
-    // std::cout << n << std::endl;
-    // std::cout << lower << std::endl;
-    // std::cout << upper << std::endl;
+    std::cout << n << std::endl;
+    std::cout << lower << std::endl;
+    std::cout << upper << std::endl;
 
     //  Find the solution
     unsigned long long LB = lower.to_ullong(), UB = upper.to_ullong();
@@ -52,8 +49,9 @@ int main( ) {
     if( R < UB ) {
         UB = R;
     }
+    std::cout << N << " " << L << " " << R<< std::endl;
     std::cout << N << " " << LB << " " << UB << std::endl;
-    long long answer = UB - LB;
+    long long answer = UB - ( LB - 1 );
     std::cout << answer << std::endl;
 
     //  Finalize
