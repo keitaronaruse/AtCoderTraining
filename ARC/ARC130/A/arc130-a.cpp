@@ -1,6 +1,6 @@
 /**
  * @file arc130-a.cpp
- * @brief ARC131 Problem A - Remove One Character
+ * @brief ARC130 Problem A - Remove One Character
  * @author Keitaro Naruse
  * @date 2022-05-03
  * @copyright MIT License

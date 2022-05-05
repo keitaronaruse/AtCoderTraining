@@ -1,6 +1,6 @@
 /**
  * @file arc130-b.cpp
- * @brief ARC131 Problem B - Colorful Lines
+ * @brief ARC130 Problem B - Colorful Lines
  * @author Keitaro Naruse
  * @date 2022-05-03
  * @copyright MIT License
