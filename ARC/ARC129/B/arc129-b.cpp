@@ -1,10 +1,10 @@
 /**
- * @file arc129-a.cpp
- * @brief ARC129 Problem A - Smaller XOR
+ * @file arc129-b.cpp
+ * @brief ARC129 Problem B - Range Point Distance 
  * @author Keitaro Naruse
- * @date 2022-05-05, 2022-05-06
+ * @date 2022-05-06
  * @copyright MIT License
- * @details https://atcoder.jp/contests/arc129/tasks/arc129_a
+ * @details https://atcoder.jp/contests/arc129/tasks/arc129_b
  */
 
 // # Solution
