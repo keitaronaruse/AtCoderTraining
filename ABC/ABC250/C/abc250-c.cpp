@@ -1,6 +1,6 @@
 /**
  * @file abc250-c.cpp
- * @brief ABC250 Problem C
+ * @brief ABC250 Problem C - Adjacent Swaps
  * @author Keitaro Naruse
  * @date 2022-05-08
  * @copyright MIT License
@@ -9,52 +9,48 @@
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
+#include <map>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
+    //  Read N = [ 2, 2*10^5 ], Q = [ 1, 2*10^5 ]
+    int N, Q;
+    std::cin >> N >> Q;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+    //  Read Xi = [ 1, N ]
+    std::vector< int > X( Q );
+    for( int k = 0; k < Q; k++ ) {
+        std::cin >> X.at( k );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Preprocess
+    std::map< int, int > val_idx, idx_val;
+    for( int i = 1; i <= N; i++ ) {
+        val_idx[ i ] = i;
+        idx_val[ i ] = i;
+    }
+    //  Find the solution
+    for( int k = 0; k < Q; k++ ) {
+        //  Find the two numbers
+        int x = X.at( k ), y;
+        int i = val_idx[ x ], j = i + 1;
+        if( i == N ) {
+            j = i - 1;
+        }
+        y = idx_val[ j ];
+        //  Swap them
+        val_idx[ y ] = i;
+        val_idx[ x ] = j;
+        idx_val[ i ] = y;
+        idx_val[ j ] = x;
+    }
+    //  Output the solution
+    for( int i = 1; i <= N; i++ ) {
+        std::cout << idx_val[ i ] << " ";
+    }
+    std::cout << std::endl;
 
     //  Finalize
     return ( 0 );

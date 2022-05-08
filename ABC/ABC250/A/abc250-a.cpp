@@ -1,6 +1,6 @@
 /**
  * @file abc250-a.cpp
- * @brief ABC250 Problem A
+ * @brief ABC250 Problem A - Adjacent Squares
  * @author Keitaro Naruse
  * @date 2022-05-08
  * @copyright MIT License
@@ -9,51 +9,49 @@
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read H, W = [ 1, 10 ], R = [ 1, H ], C = [ 1, W ]
+    int H, W, R, C;
+    std::cin >> H >> W >> R >> C;
 
     //  Main
     int answer = 0;
+    if( H == 1 && W == 1 ) {
+        answer = 0;
+    }
+    else if( H == 1 ) {
+        if( C == 1 || C == W ) {
+            answer = 1;
+        }
+        else {
+            answer = 2;
+        }
+    }
+    else if( W == 1 ) {
+        if( R == 1 || R == H ) {
+            answer = 1;
+        }
+        else {
+            answer = 2;
+        }
+    }
+    else {
+        if( ( R == 1 || R == H ) && ( C == 1 || C == W ) ) {
+            //  Corner cases
+            answer = 2;
+        }
+        else if( R == 1 || R == H || C == 1 || C == W ) {
+            //  Edge cases
+            answer = 3;
+        }
+        else {
+            //  Inside cases
+            answer = 4;
+        }
+    }
     std::cout << answer << std::endl;
 
     //  Finalize

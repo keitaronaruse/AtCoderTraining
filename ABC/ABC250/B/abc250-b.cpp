@@ -1,6 +1,6 @@
 /**
  * @file abc250-b.cpp
- * @brief ABC250 Problem B
+ * @brief ABC250 Problem B - Enlarged Checker Board
  * @author Keitaro Naruse
  * @date 2022-05-08
  * @copyright MIT License
@@ -9,52 +9,36 @@
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
 #include <string>
-#include <vector>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N, A, B = [ 1, 10 ]
+    int N, A, B;
+    std::cin >> N >> A >> B;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Preprocess
+    std::string white( B, '.' ), black( B, '#' ), first, second;
+    for( int h = 0; h < N; h++ ) {
+        if( h % 2 == 0 ) {
+            first = white;
+            second = black;
+        } else {
+            first = black;
+            second = white;
+        }
+        for( int k = 0; k < A; k++ ) {
+            for( int w = 0; w < N; w++ ) {
+                if( w % 2 == 0 ) {
+                    std::cout << first;
+                } else {
+                    std::cout << second;
+                }
+            }
+            std::cout << std::endl;
+        }
+    }
 
     //  Finalize
     return ( 0 );
