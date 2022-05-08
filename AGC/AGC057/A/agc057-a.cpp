@@ -4,7 +4,7 @@
  * @author Keitaro Naruse
  * @date 2022-05-08
  * @copyright MIT License
- * @details https://atcoder.jp/contests/agc057/tasks/agc075_a
+ * @details https://atcoder.jp/contests/agc057/tasks/agc057_a
  */
 
 // # Solution
@@ -38,23 +38,67 @@ std::ostream& operator<<( std::ostream& os,
 }
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
+    //  Read T = [ 1. 10^4 ]
+    int T;
+    std::cin >> T;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+    //  Read Li = [ 1, Ri ], Ri = [ Li, 10^9 ]
+    std::vector< int > L( T ), R( T );
+    for( int i = 0; i < T; i++ ) {
+        std::cin >> L.at( i ) >> R.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    for( int i = 0; i < T; i++ ) {
+        int L_num_digits = 0;
+        int l = L.at( i );
+        while( l != 0 ) {
+            L_num_digits ++; 
+            l /= 10;
+        }
+        int R_num_digits = 0;
+        int r = R.at( i );
+        while( r != 0 ) {
+            R_num_digits ++;
+            r /= 10;
+        }
+
+        int R_digits_min = 1;
+        for( int j = 1; j < R_num_digits; j ++ ) {
+            R_digits_min *= 10;
+        }
+
+        int answer = 0;
+        if( R_num_digits - L_num_digits == 0 ) {
+            answer = R.at( i ) - L.at( i ) + 1;
+        }
+        else if( R_num_digits - L_num_digits == 1 ) {
+            int R_high_num = R.at( i ) - R_digits_min + 1;
+            int R_low_num = R_digits_min - L.at( i );
+            if( R_low_num > R_high_num ) {
+                if( R_high_num + R_low_num < R_digits_min ) {
+                    answer = R_low_num + R_high_num;
+                }
+                else {
+                    answer = R_digits_min;
+                }
+            }
+            else {
+                if( R_high_num < R_digits_min ) {
+                    answer = R_digits_min;
+                }
+                else {
+                    answer = R_high_num;
+                }
+            }
+        }
+        else {
+            int R_high_num = R.at( i ) - R_digits_min + 1;
+            int R_low_num = R_digits_min - ( R_digits_min / 10 );
+            answer = std::max( R_high_num, R_low_num ); 
+        }
+        std::cout << answer << std::endl;
+    }
 
     //  Finalize
     return ( 0 );
