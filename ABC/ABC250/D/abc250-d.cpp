@@ -10,8 +10,8 @@
 // # Solution
 
 #include <iostream>
-#include <algorithm>
 #include <vector>
+#include <algorithm>
 
 int main( ) {
     //  Read N = [ 1, 10^18 ]
@@ -46,15 +46,13 @@ int main( ) {
 
     //  Find the solution
     long long answer = 0LL;
-    for( size_t i = 0; i < primes.size( ); i++ ) {
-        long long p = primes.at( i );
-        for( size_t j = i + 1; j < primes.size( ); j++ ) {
-            long long q = primes.at( j ), q3 = q * q * q;
-            long long r = N / q3;
-            if( p <= r && p * q3 <= N ) {
-                answer++;
-            } else {
-                break;
+    if( primes.size( ) >= 2 ) {
+        for( size_t i = 1; i < primes.size( ); i++ ) {
+            long long q = primes.at( i ), q3 = q * q * q, r = N / q3;
+            int k = std::upper_bound( primes.begin( ), primes.end( ), r ) -
+                    primes.begin( );
+            if( k != 0 ) {
+                answer += ( ( k < i ) ? k : i );
             }
         }
     }
