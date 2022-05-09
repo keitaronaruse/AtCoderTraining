@@ -10,8 +10,8 @@
 // # Solution
 
 #include <iostream>
-#include <algorithm>
 #include <vector>
+#include <algorithm>
 
 int main( ) {
     //  Read N = [ 1, 10^18 ]
