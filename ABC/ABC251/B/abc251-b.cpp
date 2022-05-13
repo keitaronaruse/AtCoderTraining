@@ -1,38 +1,22 @@
 /**
- * @file abc250-x.cpp
- * @brief ABC250 Problem X
+ * @file abc251-b.cpp
+ * @brief ABC251 Problem B
  * @author Keitaro Naruse
- * @date 2022-05-08
+ * @date 2022-05-14
  * @copyright MIT License
- * @details https://atcoder.jp/contests/abc250/tasks/abc250_x
+ * @details https://atcoder.jp/contests/abc251/tasks/abc251_b
  */
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
 
 template < class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
     for( const auto& k : v ) {
         os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
     }
     return ( os );
 }
