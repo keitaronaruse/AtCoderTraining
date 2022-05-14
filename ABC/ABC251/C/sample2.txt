@@ -1,0 +1,8 @@
+5
+aaa 9
+bbb 10
+ccc 10
+ddd 10
+bbb 11
+
+2

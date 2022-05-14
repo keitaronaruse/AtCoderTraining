@@ -1,6 +1,6 @@
 /**
  * @file abc251-c.cpp
- * @brief ABC251 Problem C
+ * @brief ABC251 Problem C - Poem Online Judge
  * @author Keitaro Naruse
  * @date 2022-05-14
  * @copyright MIT License
@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 template < class T >
@@ -23,23 +24,30 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
 }
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 1, 10^5 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
+    //  Read Si, | Si | = [ 1, 10 ]
+    std::vector< std::string > S( N );
+    std::vector< int > T( N );
     for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+        std::cin >> S.at( i ) >> T.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    int max_score = -1, max_score_index = 0;
+    std::map< std::string, int > submit;
+    for( int i = 0; i < N; i++ ) {
+        if( submit.find( S.at( i ) ) == submit.end( ) ) {
+            submit[ S.at( i ) ] = T.at( i );
+            if( max_score < T.at( i ) ) {
+                max_score = T.at( i );
+                max_score_index = i;
+            }
+        }
+    }
+    std::cout << max_score_index + 1 << std::endl;
 
     //  Finalize
     return ( 0 );

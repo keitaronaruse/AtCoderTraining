@@ -1,6 +1,6 @@
 /**
  * @file abc251-d.cpp
- * @brief ABC251 Problem D
+ * @brief ABC251 Problem D - At Most 3 (Contestant ver.)
  * @author Keitaro Naruse
  * @date 2022-05-14
  * @copyright MIT License
@@ -23,23 +23,24 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
 }
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read W = [ 1, 10^6 ]
+    int W;
+    std::cin >> W;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  N = [ 1, 300 ]
+    int N = 2;
+    //  A
+    std::vector< int > A;
+    A.push_back( 1 );
+    A.push_back( 2 );
+
+    for( int N = 2; A.at( N - 1 ) + A.at( N - 2 ) + 1 < W; N++ ) {
+        A.push_back( A.at( N - 1 ) + A.at( N - 2 ) + 1 );
+    }
+
+    std::cout << N << std::endl;
+    std::cout << A << std::endl;
 
     //  Finalize
     return ( 0 );
