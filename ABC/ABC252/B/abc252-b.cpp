@@ -1,6 +1,6 @@
 /**
  * @file abc252-b.cpp
- * @brief ABC252 Problem B
+ * @brief ABC252 Problem B - Takahashi's Failure
  * @author Keitaro Naruse
  * @date 2022-05-21
  * @copyright MIT License
@@ -10,51 +10,49 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
+    //  Read N = [ 1, 100 ], K = [ 1, N ]
+    int N, K;
+    std::cin >> N >> K;
 
-    //  Read Ai = [ 0, 10^9 ]
+    //  Read Ai = [ 1, 100 ]
     std::vector< int > A( N );
     for( int i = 0; i < N; i++ ) {
         std::cin >> A.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read Bj = [ 1, N ]
+    std::vector< int > B( K );
+    for( int j = 0; j < K; j++ ) {
+        std::cin >> B.at( j );
+    }
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    int max_A = 0;
+    for( int i = 0; i < N; i++ ) {
+        max_A = std::max( max_A, A.at( i ) );
+    }
+
+    bool isYes = false;
+    std::vector< int > C = B;
+    std::sort( C.begin(), C.end() );
+    for( int i = 0; i < N; i++ ) {
+        if( A.at( i ) == max_A ) {
+            if( std::binary_search( C.begin(), C.end(), i + 1 ) ) {
+                isYes = true;
+                break;
+            }
+        }
+    }
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    }
+    else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return ( 0 );
