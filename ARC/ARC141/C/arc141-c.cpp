@@ -1,10 +1,10 @@
 /**
- * @file arc140-x.cpp
- * @brief ARC140 Problem X
+ * @file arc141-c.cpp
+ * @brief ARC141 Problem C
  * @author Keitaro Naruse
- * @date 2022-05-15
+ * @date 2022-05-29
  * @copyright MIT License
- * @details https://atcoder.jp/contests/arc140/tasks/arc140_x
+ * @details https://atcoder.jp/contests/arc141/tasks/arc141_c
  */
 
 // # Solution
