@@ -1,6 +1,6 @@
 /**
  * @file arc141-a.cpp
- * @brief ARC141 Problem A
+ * @brief ARC141 Problem A - Periodic Number
  * @author Keitaro Naruse
  * @date 2022-05-29
  * @copyright MIT License
@@ -9,52 +9,47 @@
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^9 ]
-    int N;
-    std::cin >> N;
+    //  Read T = [ 1, 10^4 ]
+    int T;
+    std::cin >> T;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+    //  Read Ni = [ 11, 10^18 ]
+    std::vector< long long > N( T );
+    for( int i = 0; i < T; i++ ) {
+        std::cin >> N.at( i );
     }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    for( int i = 0; i < T; i++ ) {
+        const std::string str_n = std::to_string( N.at( i ) );
+        long long max_n = 0L;
+
+        //  k: period length
+        for( int k = 1; k <= 9; k++ ) {
+            std::string str_m;
+            if( ( int ) str_n.size( ) % k == 0 &&
+                ( int ) str_n.size( ) / k >= 2 ) {
+                std::string str_block = str_n.substr( 0, k );
+                if( str_n.substr( 0, k ) > str_n.substr( k, k ) ) {
+                    str_block = str_n.substr( 0, k );
+                    str_block.at( k - 1 )--;
+                }
+                for( int j = 0; j < ( int ) str_n.size( ) / k; j++ ) {
+                    str_m += str_block;
+                }
+                if( str_m <= str_n ) {
+                    max_n = std::max( max_n, std::stoll( str_m ) );
+                }
+            }
+            max_n = std::max( max_n, std::stoll( std::string( str_n.size( ) - 1, '9' ) ) );
+        }
+        std::cout << max_n << std::endl;
+    }
 
     //  Finalize
     return ( 0 );
