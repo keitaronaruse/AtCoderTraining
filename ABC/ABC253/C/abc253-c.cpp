@@ -1,6 +1,6 @@
 /**
  * @file abc253-c.cpp
- * @brief ABC253 Problem C
+ * @brief ABC253 Problem C - Max - Min Query
  * @author Keitaro Naruse
  * @date 2022-05-28
  * @copyright MIT License
@@ -10,51 +10,54 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
+#include <set>
 
 template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
+std::ostream& operator<<( std::ostream& os, const std::multiset< T >& v ) {
     for( const auto& k : v ) {
         os << k << " ";
     }
     return ( os );
 }
 
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
+    //  Read N = [ 1, 2*10^5 ]
+    int Q;
+    std::cin >> Q;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+    //  Read qi, xi, ci
+    std::vector< int > q( Q ), x( Q ), c( Q );
+    for( int i = 0; i < Q; i++ ) {
+        std::cin >> q.at( i );
+        if( q.at( i ) == 1 ) {
+            std::cin >> x.at( i );
+        } else if( q.at( i ) == 2 ) {
+            std::cin >> x.at( i ) >> c.at( i );
+        }
     }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    std::multiset< int > s;
+    for( int i = 0; i < Q; i++ ) {
+        if( q.at( i ) == 1 ) {
+            s.insert( x.at( i ) );
+        } else if( q.at( i ) == 2 ) {
+            for( int j = 0; j < c.at( i ); j++ ) {
+                auto it = s.find( x.at( i ) );
+                if( it != s.end( ) ) {
+                    s.erase( it );
+                } else {
+                    break;
+                }
+            }
+        } else {
+            auto max = s.end( );
+            max--;
+            auto min = s.begin( );
+            std::cout << ( *max - *min ) << std::endl;
+        }
+    }
 
     //  Finalize
     return ( 0 );

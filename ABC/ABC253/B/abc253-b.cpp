@@ -1,6 +1,6 @@
 /**
  * @file abc253-b.cpp
- * @brief ABC253 Problem B
+ * @brief ABC253 Problem B - Distance Between Tokens
  * @author Keitaro Naruse
  * @date 2022-05-28
  * @copyright MIT License
@@ -12,33 +12,45 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
 
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
+namespace nrs {
+    /**
+    * @brief absolute value
+    * @param[in] an integer
+    * @return T absolute value of a given integer
+    */    
+    template < class T >
+    T abs( T a )
+    {
+        return( ( a > 0 ) ? a : -a );
     }
-    return ( os );
 }
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
+    //  Read N = [ 2, 100 ]
+    int H, W;
+    std::cin >> H >> W;
 
     //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+    std::vector< std::string > S( H );
+    for( int i = 0; i < H; i++ ) {
+        std::cin >> S.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
+    const int K = 2;
+    int idx = 0;
+    std::vector<int> Pi( K ), Pj( K );
+    for( int i = 0; i < H; i ++ ) {
+        for(int j = 0; j < W; j ++ ) {
+            if( S.at( i ).at( j ) == 'o' ) {
+                Pi.at( idx ) = i;
+                Pj.at( idx ) = j;
+                idx ++;
+            }
+        }
+    }
+    int answer = nrs::abs( Pi.at( 0 ) - Pi.at(1) ) + nrs::abs( Pj.at( 0 ) - Pj.at(1) );
     std::cout << answer << std::endl;
 
     //  Finalize
