@@ -27,26 +27,34 @@ int main( ) {
     //  Main
     for( int i = 0; i < T; i++ ) {
         const std::string str_n = std::to_string( N.at( i ) );
-        long long max_n = 0L;
+        long long max_n = std::stoll( std::string( str_n.size( ) - 1, '9' ) );
 
         //  k: period length
         for( int k = 1; k <= 9; k++ ) {
             std::string str_m;
-            if( ( int ) str_n.size( ) % k == 0 &&
-                ( int ) str_n.size( ) / k >= 2 ) {
+            long long m;
+            int block_remainder = str_n.size( ) % k;
+            int block_num = str_n.size( ) / k;
+            if( block_remainder == 0 && block_num >= 2 ) {
                 std::string str_block = str_n.substr( 0, k );
-                if( str_n.substr( 0, k ) > str_n.substr( k, k ) ) {
-                    str_block = str_n.substr( 0, k );
-                    str_block.at( k - 1 )--;
-                }
-                for( int j = 0; j < ( int ) str_n.size( ) / k; j++ ) {
+                for( int j = 0; j < block_num; j++ ) {
                     str_m += str_block;
                 }
-                if( str_m <= str_n ) {
-                    max_n = std::max( max_n, std::stoll( str_m ) );
+                m = std::stoll( str_m );
+                if( m <= N.at( i ) ) {
+                    max_n = std::max( max_n, m );
+                }
+
+                str_m = "";
+                str_block.at( k - 1 )--;
+                for( int j = 0; j < block_num; j++ ) {
+                    str_m += str_block;
+                }
+                m = std::stoll( str_m );
+                if( m <= N.at( i ) ) {
+                    max_n = std::max( max_n, m );
                 }
             }
-            max_n = std::max( max_n, std::stoll( std::string( str_n.size( ) - 1, '9' ) ) );
         }
         std::cout << max_n << std::endl;
     }
