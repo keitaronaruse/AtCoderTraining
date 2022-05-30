@@ -13,6 +13,26 @@
 #include <string>
 #include <vector>
 
+namespace nrs {
+    template < class T >
+    int num_digits( T n ) {
+        int num_digits = 0;
+        while( n != T( 0 ) ) {
+            n /= T( 10 );
+            num_digits++;
+        }
+        return ( num_digits );
+    }
+
+    long long int_pow( long long a, int k ) {
+        long long pow = 1L;
+        for( int i = 0; i < k; i++ ) {
+            pow *= a;
+        }
+        return ( pow );
+    }
+}
+
 int main( ) {
     //  Read T = [ 1, 10^4 ]
     int T;
@@ -26,6 +46,10 @@ int main( ) {
 
     //  Main
     for( int i = 0; i < T; i++ ) {
+        int num_digits = nrs::num_digits( N.at( i ) );
+        std::cout << num_digits << std::endl;
+        std::cout << nrs::int_pow( 10L, num_digits - 1 ) - 1L << std::endl;
+
         const std::string str_n = std::to_string( N.at( i ) );
         long long max_n = std::stoll( std::string( str_n.size( ) - 1, '9' ) );
 
