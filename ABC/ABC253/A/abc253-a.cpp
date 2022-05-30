@@ -1,6 +1,6 @@
 /**
  * @file abc253-a.cpp
- * @brief ABC253 Problem A
+ * @brief ABC253 Problem A - Median?
  * @author Keitaro Naruse
  * @date 2022-05-28
  * @copyright MIT License
@@ -10,20 +10,18 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <algorithm>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    std::string S;
-    std::cin >> S;
+    //  Read a, b, c = [ 1, 100 ]
+    int a, b, c;
+    std::cin >> a >> b >> c;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    if( ( a <= b && b <= c ) || ( a >= b && b >= c ) ) {
+        std::cout << "Yes" << std::endl;
+    } else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return ( 0 );

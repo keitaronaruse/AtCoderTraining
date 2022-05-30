@@ -1,6 +1,6 @@
 /**
  * @file abc253-d.cpp
- * @brief ABC253 Problem D
+ * @brief ABC253 Problem D - FizzBuzz Sum Hard
  * @author Keitaro Naruse
  * @date 2022-05-28
  * @copyright MIT License
@@ -10,50 +10,50 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
+namespace nrs {
+template < class T >
+T gcd( T a, T b ) {
+    T dividend = ( a > b ) ? a : b;
+    T divisor = ( a > b ) ? b : a;
+    T residue = dividend % divisor;
+
+    while( residue != 0 ) {
+        dividend = divisor;
+        divisor = residue;
+        residue = dividend % divisor;
+    }
+
+    return ( divisor );
 }
 
 template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
+T lcm( T a, T b ) {
+    long long g = nrs::gcd( a, b );
+    return ( std::max( a, b ) / g * std::min( a, b ) );
 }
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
+}  // namespace nrs
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N, A, B = [ 1, 10^9 ]
+    long long N, A, B;
+    std::cin >> N >> A >> B;
 
     //  Main
-    int answer = 0;
+    long long sum_N = N * ( N + 1 ) / 2L;
+
+    long long kA = N / A;
+    long long sum_A = A * kA * ( kA + 1 ) / 2L;
+
+    long long kB = N / B;
+    long long sum_B = B * kB * ( kB + 1 ) / 2L;
+
+    long long C = nrs::lcm( A, B );
+    long long kC = N / C;
+    long long sum_C = C * kC * ( kC + 1 ) / 2L;
+
+    long long answer = sum_N - sum_A - sum_B + sum_C;
     std::cout << answer << std::endl;
 
     //  Finalize
