@@ -46,37 +46,31 @@ int main( ) {
 
     //  Main
     for( int i = 0; i < T; i++ ) {
-        int num_digits = nrs::num_digits( N.at( i ) );
-        std::cout << num_digits << std::endl;
-        std::cout << nrs::int_pow( 10L, num_digits - 1 ) - 1L << std::endl;
-
-        const std::string str_n = std::to_string( N.at( i ) );
+        const std::string str_n( std::to_string( N.at( i ) ) );
         long long max_n = std::stoll( std::string( str_n.size( ) - 1, '9' ) );
-
         //  k: period length
         for( int k = 1; k <= 9; k++ ) {
-            std::string str_m;
-            long long m;
-            int block_remainder = str_n.size( ) % k;
-            int block_num = str_n.size( ) / k;
+            int block_num = ( int ) str_n.size( ) / k;
+            int block_remainder = ( int ) str_n.size( ) % k;
             if( block_remainder == 0 && block_num >= 2 ) {
-                std::string str_block = str_n.substr( 0, k );
+                std::string str_m = str_n.substr( 0, k );
+                //  Pattern 1: "14"
+                std::string str = "";
                 for( int j = 0; j < block_num; j++ ) {
-                    str_m += str_block;
+                    str += str_m;
                 }
-                m = std::stoll( str_m );
-                if( m <= N.at( i ) ) {
-                    max_n = std::max( max_n, m );
+                if( std::stoll( str ) <= N.at( i ) ) {
+                    max_n = std::max( max_n, std::stoll( str ) );
                 }
 
-                str_m = "";
-                str_block.at( k - 1 )--;
+                //  Pattern 2: "13"
+                str = "";
+                str_m.at( k - 1 )--;
                 for( int j = 0; j < block_num; j++ ) {
-                    str_m += str_block;
+                    str += str_m;
                 }
-                m = std::stoll( str_m );
-                if( m <= N.at( i ) ) {
-                    max_n = std::max( max_n, m );
+                if( std::stoll( str ) <= N.at( i ) ) {
+                    max_n = std::max( max_n, std::stoll( str ) );
                 }
             }
         }
