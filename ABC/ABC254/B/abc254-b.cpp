@@ -1,6 +1,6 @@
 /**
  * @file abc254-b.cpp
- * @brief ABC254 Problem B
+ * @brief ABC254 Problem B - Practical Computing
  * @author Keitaro Naruse
  * @date 2022-06-04
  * @copyright MIT License
@@ -10,15 +10,7 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
 
 template < class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
@@ -28,33 +20,25 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
     return ( os );
 }
 
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 1, 30 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    std::vector< std::vector< int > > A( N );
+    A.at( 0 ) = std::vector< int >( 1 );
+    A.at( 0 ).at( 0 ) = 1;
+    std::cout << A.at( 0 ) << std::endl;
+    for( int i = 1; i < N; i ++ ) {
+        A.at( i ) = std::vector< int >( i + 1 );
+        A.at( i ).at( 0 ) = 1;
+        A.at( i ).at( i ) = 1;
+        for( int j = 1; j < i; j ++ ) {
+            A.at( i ).at( j ) = A.at( i - 1 ).at( j - 1 ) + A.at( i - 1 ).at( j );
+        }
+        std::cout << A.at( i ) << std::endl;
+    }
 
     //  Finalize
     return ( 0 );
