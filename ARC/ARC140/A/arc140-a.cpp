@@ -2,7 +2,7 @@
  * @file arc140-a.cpp
  * @brief ARC140 Problem A - Right String
  * @author Keitaro Naruse
- * @date 2022-05-15
+ * @date 2022-05-15, 2022-06-05
  * @copyright MIT License
  * @details https://atcoder.jp/contests/arc140/tasks/arc140_a
  */
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <set>
+#include <map>
 
 template < class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
@@ -51,72 +51,33 @@ int main( ) {
     std::cin >> S;
 
     //  Main
-    std::vector< std::string > dict( N );
-    std::string s = S, t = s;
-    for( int i = 0; i < N; i++ ) {
-        dict.at( i ) = t;
-        t = t.substr( 1, N - 1 ) + t.substr( 0, 1 );
-    }
-
-    std::vector< int > dist( N, 0 );
-    int sum_dist = 0;
-    for( int i = 1; i < N; i++ ) {
-        dist.at( i ) = hamming_dist( dict.at( 0 ), dict.at( i ) );
-        sum_dist += dist.at( i );
-    }
-
     int answer = 0;
-    for( int k = 0; sum_dist != 0 && k < K; k++ ) {
-        int idx_dist2 = -1;
-        for( int i = 1; i < N; i++ ) {
-            if( dist.at( i ) == 2 ) {
-                idx_dist2 = i;
+    for( int k = 1; k <= N; k++ ) {
+        if( N % k == 0 ) {
+            int num_changes = 0;
+            for( int j = 0; j < k; j++ ) {
+                const int Z = 26;
+                std::vector< int > counter( Z, 0 );
+                int max_char = 0;
+                int max_idx = 0;
+                for( int i = j; i < N; i += k ) {
+                    counter.at( S.at( i ) - 'a' )++;
+                    if( max_char < counter.at( S.at( i ) - 'a' ) ) {
+                        max_char = counter.at( S.at( i ) - 'a' );
+                        max_idx = S.at( i ) - 'a';
+                    }
+                }
+                for( int z = 0; z < Z; z ++ ) {
+                    if( z != max_idx ) {
+                        num_changes += counter.at( z );
+                    }
+                } 
+            }
+            if( num_changes <= K ) {
+                answer = k;
                 break;
             }
         }
-
-        if( idx_dist2 == -1 ) {
-            int n = N;
-            while( s.at( n / 2 ) == s.at( 0 ) ) {
-                n /= 2;
-            }
-            if( n != 0 ) {
-                s.at( n ) = s.at( 0 );
-            } else {
-                for( int i = 1; i < N; i++ ) {
-                    if( s.at( i ) != s.at( 0 ) ) {
-                        s.at( i ) = s.at( 0 );
-                    }
-                }
-            }
-        } else {
-            for( int j = 0; j < N; j++ ) {
-                if( s.at( j ) != dict.at( idx_dist2 ).at( j ) ) {
-                    s.at( j ) = dict.at( idx_dist2 ).at( j );
-                    break;
-                }
-            }
-        }
-        t = s;
-        for( int i = 0; i < N; i++ ) {
-            dict.at( i ) = t;
-            t = t.substr( 1, N - 1 ) + t.substr( 0, 1 );
-        }
-        sum_dist = 0;
-        for( int i = 1; i < N; i++ ) {
-            dist.at( i ) = hamming_dist( dict.at( 0 ), dict.at( i ) );
-            sum_dist += dist.at( i );
-        }
-    }
-    if( sum_dist == 0 ) {
-        answer = 1;
-    }
-    else {
-        std::set< std::string > counter;
-        for( int i = 0; i < N; i ++ ) {
-            counter.insert( dict.at(i) );
-        }
-        answer = counter.size();
     }
     std::cout << answer << std::endl;
 
