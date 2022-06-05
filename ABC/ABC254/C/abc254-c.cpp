@@ -13,8 +13,25 @@
 #include <vector>
 #include <algorithm>
 
+template < class T >
+std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
+    for( const auto& k : v ) {
+        os << k << " ";
+    }
+    return ( os );
+}
+
+template < class T >
+std::ostream& operator<<( std::ostream& os,
+                          const std::vector< std::vector< T > >& vv ) {
+    for( const auto& v : vv ) {
+        os << v << std::endl;
+    }
+    return ( os );
+}
+
 int main( ) {
-    //  Read N = [ 2, 2 * 10^5 ], K = [ 1, N - 1 ] 
+    //  Read N = [ 2, 2 * 10^5 ], K = [ 1, N - 1 ]
     int N, K;
     std::cin >> N >> K;
 
@@ -25,35 +42,30 @@ int main( ) {
     }
 
     //  Main
-    std::vector< int > B = A;
-    std::sort( B.begin(), B.end() );
+    //  Preprocess: Sort
+    std::vector< int > Asorted = A;
+    std::sort( Asorted.begin( ), Asorted.end( ) );
+    //  Preprocess: Block decomposition
+    std::vector< std::vector< int > > AK( K ), AsortedK( K );
+    for( int i = 0; i < N; i++ ) {
+        AK.at( i % K ).push_back( A.at( i ) );
+        AsortedK.at( i % K ).push_back( Asorted.at( i ) );
+    }
 
+    //  Find the solution
     bool isYes = true;
-    std::vector< bool > is_alligned( N, false );
-    for( int i = 0; i < N; i ++ ) {
-        if( !is_alligned.at( i ) ) {
-            if( A.at( i ) == B.at( i ) ) {
-                is_alligned.at( i ) = true;
-            }
-            else {
-                for( int j = i + K; j < N; j += K ) {
-                    if( A.at( i ) == B.at( j ) && !is_alligned.at( j ) ) {
-                        is_alligned.at( i ) = true;
-                        is_alligned.at( j ) = true;
-                        break;
-                    }
-                }
-            }
-            if( !is_alligned.at( i ) ) {
-                isYes = false;
-                break;
-            }
+    for( int k = 0; k < K; k ++ ) {
+        std::sort( AK.at( k ).begin(), AK.at( k ).end() );
+        if( AK.at( k ) != AsortedK.at( k ) ) {
+            isYes = false;
+            break;
         }
     }
+
+    //  Output the solution
     if( isYes ) {
         std::cout << "Yes" << std::endl;
-    }
-    else {
+    } else {
         std::cout << "No" << std::endl;
     }
 

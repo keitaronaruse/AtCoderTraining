@@ -26,17 +26,23 @@ int main( ) {
     std::cin >> N;
 
     //  Main
+    //  Preprocess and boundaries
     std::vector< std::vector< int > > A( N );
-    A.at( 0 ) = std::vector< int >( 1 );
-    A.at( 0 ).at( 0 ) = 1;
-    std::cout << A.at( 0 ) << std::endl;
-    for( int i = 1; i < N; i ++ ) {
+    for( int i = 0; i < N; i++ ) {
         A.at( i ) = std::vector< int >( i + 1 );
         A.at( i ).at( 0 ) = 1;
         A.at( i ).at( i ) = 1;
-        for( int j = 1; j < i; j ++ ) {
-            A.at( i ).at( j ) = A.at( i - 1 ).at( j - 1 ) + A.at( i - 1 ).at( j );
+    }
+    //  Find teh solution
+    for( int i = 1; i < N; i++ ) {
+        for( int j = 1; j < i; j++ ) {
+            A.at( i ).at( j ) =
+                A.at( i - 1 ).at( j - 1 ) + A.at( i - 1 ).at( j );
         }
+    }
+
+    //  Output the solution
+    for( int i = 0; i < N; i++ ) {
         std::cout << A.at( i ) << std::endl;
     }
 
