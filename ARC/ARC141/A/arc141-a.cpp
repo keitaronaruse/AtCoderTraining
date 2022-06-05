@@ -2,7 +2,7 @@
  * @file arc141-a.cpp
  * @brief ARC141 Problem A - Periodic Number
  * @author Keitaro Naruse
- * @date 2022-05-29
+ * @date 2022-05-29, 202206-05
  * @copyright MIT License
  * @details https://atcoder.jp/contests/arc141/tasks/arc141_a
  */
@@ -14,11 +14,10 @@
 #include <vector>
 
 namespace nrs {
-    template < class T >
-    int num_digits( T n ) {
+    int num_digits( long long n ) {
         int num_digits = 0;
-        while( n != T( 0 ) ) {
-            n /= T( 10 );
+        while( n != 0L ) {
+            n /= 10L;
             num_digits++;
         }
         return ( num_digits );
@@ -31,7 +30,7 @@ namespace nrs {
         }
         return ( pow );
     }
-}
+}  // namespace nrs
 
 int main( ) {
     //  Read T = [ 1, 10^4 ]
@@ -54,7 +53,7 @@ int main( ) {
             int block_remainder = ( int ) str_n.size( ) % k;
             if( block_remainder == 0 && block_num >= 2 ) {
                 std::string str_m = str_n.substr( 0, k );
-                //  Pattern 1: "14"
+                //  Pattern 1: "14", "10"
                 std::string str = "";
                 for( int j = 0; j < block_num; j++ ) {
                     str += str_m;
@@ -63,9 +62,13 @@ int main( ) {
                     max_n = std::max( max_n, std::stoll( str ) );
                 }
 
-                //  Pattern 2: "13"
+                //  Pattern 2: "13", "09"
+                long long val_m = std::stoll( str_m ) - 1L;
+                str_m = std::to_string( val_m );
+                if( str_m.size() == k - 1 ) {
+                    str_m = "0" + str_m;
+                }
                 str = "";
-                str_m.at( k - 1 )--;
                 for( int j = 0; j < block_num; j++ ) {
                     str += str_m;
                 }

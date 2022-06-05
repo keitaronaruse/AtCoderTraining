@@ -1,18 +1,18 @@
 /**
- * @file arc141-x.cpp
- * @brief ARC140 Problem X
+ * @file arc142-x.cpp
+ * @brief ARC142 Problem X
  * @author Keitaro Naruse
- * @date 2022-05-29
+ * @date 2022-06-19
  * @copyright MIT License
- * @details https://atcoder.jp/contests/arc141/tasks/arc141_x
+ * @details https://atcoder.jp/contests/arc142/tasks/arc142_x
  */
 
 // # Solution
 
-#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 template < class K, class V >
 std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
