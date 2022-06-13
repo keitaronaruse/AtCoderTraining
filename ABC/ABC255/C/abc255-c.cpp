@@ -20,46 +20,35 @@ int main( ) {
     //  Main
     long long min = 0L, max = 0L;
     long long answer = 0L;
-    if( D > 0L ) {
+    if( D == 0L ) {
+        min = A;
+        max = A;
+    } else if( D > 0L ) {
         min = A;
         max = A + ( N - 1L ) * D;
-        if( X <= min ) {
-            answer = min - X;
-        } else if( max <= X ) {
-            answer = X - max;
-        } else {
-            long long r = ( X - A ) % D;
-            answer = std::min( r, D - r );
-        }
     } else if( D < 0L ) {
-        max = A;
         min = A + ( N - 1L ) * D;
-        if( X <= min ) {
-            answer = min - X;
-        } else if( max <= X ) {
-            answer = X - max;
-        } else {
-            long long r = ( X - A ) % D;
-            if( X - A < 0L ) {
-                r = -( X - A ) % ( -D );
-            } else if( X - A > 0L ) {
-                r = -( X - A ) % ( -D );
-            }
-            answer = std::min( r, D - r );
+        max = A;
+    }
+
+    if( X <= min ) {
+        answer = min - X;
+    } else if( max <= X ) {
+        answer = X - max;
+    } else {
+        long long k = ( X - A ) / D;
+        long long upper, lower;
+        if( D > 0L ) {
+            upper = A + ( k + 1 ) * D;
+            lower = A + k * D;
+        } else if( D < 0L ) {
+            upper = A + k * D;
+            lower = A + ( k + 1L ) * D;
         }
-    } else if( D == 0L ) {
-        if( X >= A ) {
-            answer = X - A;
-        } else {
-            answer = A - X;
-        }
+        answer = std::min( upper - X, X - lower );
     }
     std::cout << answer << std::endl;
 
-    std::cout << "4 % 3 = " << ( ( 4 ) % ( 3 ) ) << std::endl;
-    std::cout << "-4 % 3 = " << ( ( -4 ) % ( 3 ) ) << std::endl;
-    std::cout << "4 % -3 = " << ( ( 4 ) % ( -3 ) ) << std::endl;
-    std::cout << "-4 % -3 = " << ( ( -4 ) % ( -3 ) ) << std::endl;
     //  Finalize
     return ( 0 );
 }
