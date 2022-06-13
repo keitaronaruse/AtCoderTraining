@@ -1,6 +1,6 @@
 /**
  * @file abc255-c.cpp
- * @brief ABC255 Problem C
+ * @brief ABC255 Problem C - ±1 Operation 1
  * @author Keitaro Naruse
  * @date 2022-06-11
  * @copyright MIT License
@@ -10,50 +10,50 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read X, A = [ -10^18, 10^18 ], D = [ -10^6, 10^6 ], N = [ 1, 10^12 ]
+    long long X, A, D, N;
+    std::cin >> X >> A >> D >> N;
 
     //  Main
-    int answer = 0;
+    long long min = 0L, max = 0L;
+    long long answer = 0L;
+    if( D > 0L ) {
+        min = A;
+        max = A + ( N - 1L ) * D;
+        if( X <= min ) {
+            answer = min - X;
+        } else if( max <= X ) {
+            answer = X - max;
+        } else {
+            long long r = ( X - A ) % D;
+            answer = std::min( r, D - r );
+        }
+    } else if( D < 0L ) {
+        max = A;
+        min = A + ( N - 1L ) * D;
+        if( X <= min ) {
+            answer = min - X;
+        } else if( max <= X ) {
+            answer = X - max;
+        } else {
+            long long r = ( X - A ) % D;
+            if( X - A < 0L ) {
+                r = -( X - A ) % ( -D );
+            } else if( X - A > 0L ) {
+                r = ;
+            }
+            answer = std::min( r, D - r );
+        }
+    } else if( D == 0L ) {
+        if( X >= A ) {
+            answer = X - A;
+        } else {
+            answer = A - X;
+        }
+    }
     std::cout << answer << std::endl;
 
     //  Finalize
