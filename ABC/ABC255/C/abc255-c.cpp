@@ -43,7 +43,7 @@ int main( ) {
             if( X - A < 0L ) {
                 r = -( X - A ) % ( -D );
             } else if( X - A > 0L ) {
-                r = ;
+                r = -( X - A ) % ( -D );
             }
             answer = std::min( r, D - r );
         }
@@ -56,6 +56,10 @@ int main( ) {
     }
     std::cout << answer << std::endl;
 
+    std::cout << "4 % 3 = " << ( ( 4 ) % ( 3 ) ) << std::endl;
+    std::cout << "-4 % 3 = " << ( ( -4 ) % ( 3 ) ) << std::endl;
+    std::cout << "4 % -3 = " << ( ( 4 ) % ( -3 ) ) << std::endl;
+    std::cout << "-4 % -3 = " << ( ( -4 ) % ( -3 ) ) << std::endl;
     //  Finalize
     return ( 0 );
 }
