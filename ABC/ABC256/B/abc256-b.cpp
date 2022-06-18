@@ -1,6 +1,6 @@
 /**
  * @file abc256-b.cpp
- * @brief ABC256 Problem B
+ * @brief ABC256 Problem B - Batters
  * @author Keitaro Naruse
  * @date 2022-06-18
  * @copyright MIT License
@@ -10,27 +10,38 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 1, 10^2 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
+    //  Read Ai = [ 1, 4 ]
     std::vector< int > A( N );
     for( int i = 0; i < N; i++ ) {
         std::cin >> A.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    const int K = 4;
+    std::vector< bool > B( K , false );
+    int P = 0;
+    for( int i = 0; i < N; i ++ ) {
+        B.at( 0 ) = true;
+        for( int k = K - 1; k >= 0; k -- ) {
+            if( B.at( k ) ) {
+                if( k + A.at( i ) >= K ) {
+                    P ++;
+                }
+                else {
+                    B.at( k + A.at( i ) ) = true;
+                }
+                B.at( k ) = false;
+            }
+        }
+    }
+    std::cout << P << std::endl;
 
     //  Finalize
     return ( 0 );

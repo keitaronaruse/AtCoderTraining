@@ -1,6 +1,6 @@
 /**
  * @file abc256-a.cpp
- * @brief ABC256 Problem A
+ * @brief ABC256 Problem A - 2^N
  * @author Keitaro Naruse
  * @date 2022-06-18
  * @copyright MIT License
@@ -10,19 +10,17 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 0, 30 ]
     int N;
     std::cin >> N;
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
+    int answer = 1;
+    for( int i = 0; i < N; i ++ ) {
+        answer *= 2;
+    }
     std::cout << answer << std::endl;
 
     //  Finalize
