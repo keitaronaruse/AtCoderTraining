@@ -1,6 +1,6 @@
 /**
  * @file abc257-b.cpp
- * @brief ABC257 Problem B
+ * @brief ABC257 Problem B - 1D Pawn
  * @author Keitaro Naruse
  * @date 2022-06-25
  * @copyright MIT License
@@ -10,36 +10,51 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm>
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
+    //  Read N, K = [ 1, 200 ], Q = [ 1, 10^3 ]
+    int N, K, Q;
+    std::cin >> N >> K >> Q;
+    //  Read Ai = [ 1, N ]
+    std::vector< int > A( K + 1 );
+    for( int i = 1; i <= K; i++ ) {
         std::cin >> A.at( i );
     }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read Li = [ 1, K ]
+    std::vector< int > L( Q );
+    for( int j = 0; j < Q; j++ ) {
+        std::cin >> L.at( j );
+    }
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Preprocess
+    std::vector< int > B( N + 1, 0 );
+    for( int i = 1; i <= K; i++ ) {
+        B.at( A.at( i ) ) = i;
+    }
+
+    std::vector< int > P( K + 1, 0 );
+    int k = 1;
+    for( int i = 1; i <= N; i++ ) {
+        if( B.at( i ) != 0 ) {
+            P.at( k ) = i;
+            k++;
+        }
+    }
+    //  Solution
+    for( int j = 0; j < Q; j ++ ) {
+        int p = P.at( L.at( j ) );
+        if( p < N && B.at( p + 1 ) == 0 ) {
+            B.at( p + 1 ) = B.at( p );
+            B.at( p ) = 0;
+            P.at( L.at( j ) ) = p + 1;
+        }
+    }
+
+    for( int i = 1; i <= K; i++ ) {
+        std::cout << P.at( i ) << " ";
+    }
+    std::cout << std::endl;
 
     //  Finalize
     return ( 0 );

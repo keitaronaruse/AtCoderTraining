@@ -1,6 +1,6 @@
 /**
  * @file abc257-a.cpp
- * @brief ABC257 Problem A
+ * @brief ABC257 Problem A - A to Z String 2
  * @author Keitaro Naruse
  * @date 2022-06-25
  * @copyright MIT License
@@ -8,22 +8,15 @@
  */
 
 // # Solution
-
 #include <iostream>
-#include <string>
-#include <algorithm>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N = [ 1, 10^2 ], X = [ 1,  N * 26 ]
+    int N, X;
+    std::cin >> N >> X;
 
     //  Main
-    int answer = 0;
+    char answer = ( char ) ( ( X - 1 ) / N ) + 'A';
     std::cout << answer << std::endl;
 
     //  Finalize
