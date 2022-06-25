@@ -1,10 +1,10 @@
 /**
- * @file abc256-x.cpp
- * @brief ABC256 Problem X
+ * @file abc257-d.cpp
+ * @brief ABC257 Problem D
  * @author Keitaro Naruse
- * @date 2022-06-18
+ * @date 2022-06-25
  * @copyright MIT License
- * @details https://atcoder.jp/contests/abc256/tasks/abc256_x
+ * @details https://atcoder.jp/contests/abc257/tasks/abc257_d
  */
 
 // # Solution
