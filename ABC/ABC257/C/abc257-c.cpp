@@ -42,12 +42,16 @@ int main( ) {
     }
     std::sort( W_CA.begin( ), W_CA.end( ),
                []( std::pair< int, char > a, std::pair< int, char > b ) {
-                   if( a.first == b.first ) {
-                       return ( a.second < b.second );
-                   } else {
-                       return ( a.first < b.first );
-                   }
+                   return ( a.first < b.first );
                } );
+    // std::sort( W_CA.begin( ), W_CA.end( ),
+    //            []( std::pair< int, char > a, std::pair< int, char > b ) {
+    //                if( a.first == b.first ) {
+    //                    return ( a.second < b.second );
+    //                } else {
+    //                    return ( a.first < b.first );
+    //                }
+    //            } );
 
     int answer = 0;
     if( Nc == 0 || Na == 0 ) {
