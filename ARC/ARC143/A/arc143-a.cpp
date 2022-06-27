@@ -10,50 +10,34 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^9 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N = [ 0, 10^18 ]
+    long long A, B, C;
+    std::cin >> A >> B >> C;
 
     //  Main
-    int answer = 0;
+    long long answer = -1L;
+    //  a <= b <= c
+    std::vector< long long > abc = { A, B, C };
+    std::sort( abc.begin( ), abc.end( ) );
+    long long k = abc.at( 0 );
+    abc.at( 0 ) -= k;
+    abc.at( 1 ) -= k;
+    abc.at( 2 ) -= k;
+    if( abc.at( 1 ) == abc.at( 2 ) ) {
+        answer = k + abc.at( 2 );
+    } else if( abc.at( 1 ) + 1 == abc.at( 2 ) ) {
+        if( k > 0L ) {
+            answer = k + abc.at( 2 );
+        } else {
+            answer = -1L;
+        }
+    } else {
+        answer = -1L;
+    }
     std::cout << answer << std::endl;
 
     //  Finalize
