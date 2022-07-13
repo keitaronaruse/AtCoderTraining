@@ -1,6 +1,6 @@
 /**
  * @file abc259-a.cpp
- * @brief ABC259 Problem A
+ * @brief ABC259 Problem A - Growth Record
  * @author Keitaro Naruse
  * @date 2022-07-09
  * @copyright MIT License
@@ -10,19 +10,20 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N = [ 1, 100 ]
+    int N, M, X, T, D;
+    std::cin >> N >> M >> X >> T >> D;
 
     //  Main
+    int a = T - D * X;
     int answer = 0;
+    if( M < X ) {
+        answer = a + M * D;
+    } else if( X <= M ) {
+        answer = T;
+    }
     std::cout << answer << std::endl;
 
     //  Finalize

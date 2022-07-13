@@ -1,6 +1,6 @@
 /**
  * @file abc259-b.cpp
- * @brief ABC259 Problem B
+ * @brief ABC259 Problem B - Counterclockwise Rotation
  * @author Keitaro Naruse
  * @date 2022-07-09
  * @copyright MIT License
@@ -10,44 +10,23 @@
 // # Solution
 
 #include <iostream>
-#include <string>
-#include <vector>
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
+#include <iomanip>
+#include <cmath>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read a, b = [ -10^3, 10^3 ]
+    double a, b;
+    std::cin >> a >> b;
+    //  Read d= [ 1, 360 ]
+    double d;
+    std::cin >> d;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    double q = d / 180.0 * M_PI;
+    double a2 = a * std::cos( q ) - b * std::sin( q );
+    double b2 = a * std::sin( q ) + b * std::cos( q );
+
+    std::cout << std::fixed << std::setprecision( 20 ) << a2 << " " << b2 << std::endl;
 
     //  Finalize
     return ( 0 );

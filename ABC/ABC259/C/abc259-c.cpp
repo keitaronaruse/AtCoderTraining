@@ -1,6 +1,6 @@
 /**
  * @file abc259-c.cpp
- * @brief ABC259 Problem C
+ * @brief ABC259 Problem C - XX to XXX
  * @author Keitaro Naruse
  * @date 2022-07-09
  * @copyright MIT License
@@ -11,51 +11,43 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read | S, T | = [ 2, 2*10^5 ]
+    std::string S, T;
+    std::cin >> S >> T;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    bool isYes = true;
+    int N = S.size( ), M = T.size( );
+    if( N <= M ) {
+        int i = 0, j = 0;
+        while( j < M ) {
+            if( S.at( i ) == T.at( j ) ) {
+                if( i < N - 1 ) {
+                    i++;
+                }
+                j++;
+            } else {
+                if( j >= 2 && T.at( j ) == T.at( j - 1 ) &&
+                    T.at( j - 1 ) == T.at( j - 2 ) ) {
+                    j++;
+                } else {
+                    isYes = false;
+                    break;
+                }
+            }
+        }
+    } else {
+        isYes = false;
+    }
+    if( isYes ) {
+        std::cout << "Yes" << std::endl;
+    } else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
+
     return ( 0 );
 }
