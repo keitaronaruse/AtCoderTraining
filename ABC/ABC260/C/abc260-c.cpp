@@ -1,10 +1,10 @@
 /**
- * @file abc259-x.cpp
- * @brief ABC259 Problem X
+ * @file abc260-c.cpp
+ * @brief ABC260 Problem C
  * @author Keitaro Naruse
- * @date 2022-07-09
+ * @date 2022-07-17
  * @copyright MIT License
- * @details https://atcoder.jp/contests/abc259/tasks/abc259_x
+ * @details https://atcoder.jp/contests/abc260/tasks/abc260_c
  */
 
 // # Solution
@@ -13,12 +13,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
 
 template < class T >
 std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
