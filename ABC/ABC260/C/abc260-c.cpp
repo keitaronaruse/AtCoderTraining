@@ -1,6 +1,6 @@
 /**
  * @file abc260-c.cpp
- * @brief ABC260 Problem C
+ * @brief ABC260 Problem C - Changing Jewels
  * @author Keitaro Naruse
  * @date 2022-07-17
  * @copyright MIT License
@@ -10,45 +10,27 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N = [ 1, 10 ], X, Y = [ 1, 5 ]
+    int N, X, Y;
+    std::cin >> N >> X >> Y;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Preprocess
+    std::vector< long long > Red( N, 0L ), Blue( N, 0L );
+    int n = N - 1;
+    Red.at( n ) = 1L;
+    while( n >= 1 ) {
+        Blue.at( n ) += Red.at( n ) * X;
+        Red.at( n - 1 ) += Red.at( n );
+        Red.at( n - 1 ) += Blue.at( n );
+        Blue.at( n - 1 ) += Blue.at( n ) * Y; 
+        n--;
+    }
+    std::cout << Blue.at( 0 ) << std::endl;
 
     //  Finalize
     return ( 0 );
