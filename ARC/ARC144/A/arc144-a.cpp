@@ -1,6 +1,6 @@
 /**
  * @file arc144-a.cpp
- * @brief ARC144 Problem A
+ * @brief ARC144 Problem A - Digit Sum of 2x
  * @author Keitaro Naruse
  * @date 2022-07-16
  * @copyright MIT License
@@ -11,50 +11,20 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
 
 int main( ) {
-    //  Read N = [ 1, 10^9 ]
+    //  Read N = [ 1, 10^5 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    int num_digits = ( N - 1 ) / 4 + 1;
+    std::string x( num_digits, '4' );
+    x.at( 0 ) = '0' + ( N - 1 ) % 4 + 1;
+
+    int M = 2 * N;
+    std::cout << M << std::endl;
+    std::cout << x << std::endl;
 
     //  Finalize
     return ( 0 );
