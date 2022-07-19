@@ -2,7 +2,7 @@
  * @file abc260-b.cpp
  * @brief ABC260 Problem B - Better Students Are Needed!
  * @author Keitaro Naruse
- * @date 2022-07-17
+ * @date 2022-07-17, 2022-07-19
  * @copyright MIT License
  * @details https://atcoder.jp/contests/abc260/tasks/abc260_b
  */
@@ -42,7 +42,7 @@ int main( ) {
         P.at( i ).A = A.at( i );
         P.at( i ).B = B.at( i );
     }
-    //  top X by A
+    //  sort by A
     std::sort( P.begin( ), P.end( ), []( const IAB& a, const IAB& b ) {
         if( a.A == b.A ) {
             return ( a.I < b.I );
@@ -50,12 +50,17 @@ int main( ) {
             return ( a.A > b.A );
         }
     } );
-    for( int i = 0; i < X; i++ ) {
-        Q.at( P.at( i ).I ) = true;
-        P.at( i ).A = -100;
-        P.at( i ).B = -100;
+    //  Take top X
+    int k = 0;
+    for( int i = 0; i < N; i++ ) {
+        if( k < X ) {
+            if( !Q.at( P.at( i ).I ) ) {
+                Q.at( P.at( i ).I ) = true;
+                k++;
+            }
+        }
     }
-    //  top Y by B
+    //  sort by B
     std::sort( P.begin( ), P.end( ), []( const IAB& a, const IAB& b ) {
         if( a.B == b.B ) {
             return ( a.I < b.I );
@@ -63,12 +68,17 @@ int main( ) {
             return ( a.B > b.B );
         }
     } );
-    for( int i = 0; i < Y; i++ ) {
-        Q.at( P.at( i ).I ) = true;
-        P.at( i ).A = -100;
-        P.at( i ).B = -100;
+    //  Take top Y
+    k = 0;
+    for( int i = 0; i < N; i++ ) {
+        if( k < Y ) {
+            if( !Q.at( P.at( i ).I ) ) {
+                Q.at( P.at( i ).I ) = true;
+                k++;
+            }
+        }
     }
-    //  top Y by A + B
+    //  sort by A + B
     std::sort( P.begin( ), P.end( ), []( const IAB& a, const IAB& b ) {
         if( a.A + a.B == b.A + b.B ) {
             return ( a.I < b.I );
@@ -76,11 +86,17 @@ int main( ) {
             return ( a.A + a.B > b.A + b.B );
         }
     } );
-    for( int i = 0; i < Z; i++ ) {
-        Q.at( P.at( i ).I ) = true;
-        P.at( i ).A = -100;
-        P.at( i ).B = -100;
+    //  Take top Z
+    k = 0;
+    for( int i = 0; i < N; i++ ) {
+        if( k < Z ) {
+            if( !Q.at( P.at( i ).I ) ) {
+                Q.at( P.at( i ).I ) = true;
+                k++;
+            }
+        }
     }
+    //  Display the solution
     for( int i = 0; i < N; i++ ) {
         if( Q.at( i ) ) {
             std::cout << i + 1 << std::endl;
