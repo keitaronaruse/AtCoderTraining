@@ -1,6 +1,6 @@
 /**
  * @file abc261-a.cpp
- * @brief ABC261 Problem B
+ * @brief ABC261 Problem B - Tournament Result
  * @author Keitaro Naruse
  * @date 2022-07-23
  * @copyright MIT License
@@ -10,35 +10,58 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 2, 10^3 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
+    //  Read Aij = [ -, W, L, D ]
+    std::vector< std::vector< char > > A( N, std::vector< char >( N ) );
     for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+        for( int j = 0; j < N; j++ ) {
+            std::cin >> A.at( i ).at( j );
+        }
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    bool isCorrect = true;
+    for( int i = 0; i < N; i++ ) {
+        for( int j = i; j < N; j++ ) {
+            if( i == j ) {
+                if( A.at( i ).at( i ) != '-' ) {
+                    isCorrect = false;
+                    break;
+                }
+            } else {
+                if( A.at( i ).at( j ) == 'W' ) {
+                    if( A.at( j ).at( i ) != 'L' ) {
+                        isCorrect = false;
+                        break;
+                    }
+                } else if( A.at( i ).at( j ) == 'L' ) {
+                    if( A.at( j ).at( i ) != 'W' ) {
+                        isCorrect = false;
+                        break;
+                    }
+                } else if( A.at( i ).at( j ) == 'D' ) {
+                    if( A.at( j ).at( i ) != 'D' ) {
+                        isCorrect = false;
+                        break;
+                    }
+                } else {
+                    isCorrect = false;
+                    break;
+                }
+            }
+        }
+    }
+    if( isCorrect ) {
+        std::cout << "correct" << std::endl;
+    } else {
+        std::cout << "incorrect " << std::endl;
+    }
 
     //  Finalize
     return ( 0 );

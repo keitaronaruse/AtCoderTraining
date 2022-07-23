@@ -1,6 +1,6 @@
 /**
  * @file abc261-c.cpp
- * @brief ABC261 Problem C
+ * @brief ABC261 Problem C - NewFolder(1)
  * @author Keitaro Naruse
  * @date 2022-07-23
  * @copyright MIT License
@@ -12,49 +12,32 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
+#include <map>
 
 int main( ) {
-    //  Read N = [ 1, 10^3 ]
+    //  Read N = [ 2, 2*10^5 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
+    //  Read  | Si | = [ 1, 10 ]
+    std::vector< std::string > S( N );
     for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
+        std::cin >> S.at( i );
     }
 
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
-
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    //  Preprocess
+    std::map< std::string, int > counter;
+    for( int i = 0; i < N; i++ ) {
+        if( counter.count( S.at( i ) ) == 0 ) {
+            std::cout << S.at( i ) << std::endl;
+        } else {
+            std::cout << S.at( i ) << "("
+                      << std::to_string( counter.at( S.at( i ) ) ) << ")"
+                      << std::endl;
+        }
+        counter[ S.at( i ) ]++;
+    }
 
     //  Finalize
     return ( 0 );

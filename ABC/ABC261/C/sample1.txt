@@ -1,0 +1,12 @@
+5
+newfile
+newfile
+newfolder
+newfile
+newfolder
+
+newfile
+newfile(1)
+newfolder
+newfile(2)
+newfolder(1)
