@@ -1,1 +1,1 @@
-add_executable( abc260-x abc260-x.cpp )
+add_executable( abc261-x abc261-x.cpp )
