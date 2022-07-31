@@ -1,6 +1,6 @@
 /**
  * @file arc145-b.cpp
- * @brief ARC145 Problem B
+ * @brief ARC145 Problem B - AB Game
  * @author Keitaro Naruse
  * @date 2022-07-30
  * @copyright MIT License
@@ -10,9 +10,31 @@
 // # Solution
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
+
+namespace nrs {
+    template < class T >
+    T gcd( T a, T b ) {
+        T dividend = ( a > b ) ? a : b;
+        T divisor = ( a > b ) ? b : a;
+        T residue = dividend % divisor;
+
+        while( residue != 0 ) {
+            dividend = divisor;
+            divisor = residue;
+            residue = dividend % divisor;
+        }
+
+        return ( divisor );
+    }
+
+    template < class T >
+    T lcm( T a, T b ) {
+        long long g = nrs::gcd( a, b );
+        return ( std::max( a, b ) / g * std::min( a, b ) );
+    }
+}  // namespace nrs
 
 template < class K, class V >
 std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
@@ -28,33 +50,27 @@ std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
     return ( os );
 }
 
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
-
 int main( ) {
-    //  Read N = [ 1, 10^9 ]
-    int N;
-    std::cin >> N;
-
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
-    std::string S;
-    std::cin >> S;
+    //  Read N = [ 1, 10^18 ]
+    long long N, A, B;
+    std::cin >> N >> A >> B;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    long long A_wins = 0L;
+    if( A <= B ) {
+        A_wins = N - B;
+    } else {
+        if( N < A ) {
+            A_wins = 0L;
+        } else {
+            long long k = N / A;
+            A_wins = k  * B;
+            if( N % A - B > 0L ) {
+                A_wins += (N % A - B);
+            }
+        }
+    }
+    std::cout << A_wins << std::endl;
 
     //  Finalize
     return ( 0 );

@@ -1,6 +1,6 @@
 /**
  * @file arc145-a.cpp
- * @brief ARC145 Problem A
+ * @brief ARC145 Problem A - AB Palindrome
  * @author Keitaro Naruse
  * @date 2022-07-30
  * @copyright MIT License
@@ -11,50 +11,38 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-
-template < class K, class V >
-std::ostream& operator<<( std::ostream& os, const std::pair< K, V >& p ) {
-    os << "( " << p.first << ", " << p.second << " )";
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os, const std::vector< T >& v ) {
-    for( const auto& k : v ) {
-        os << k << " ";
-    }
-    return ( os );
-}
-
-template < class T >
-std::ostream& operator<<( std::ostream& os,
-                          const std::vector< std::vector< T > >& vv ) {
-    for( const auto& v : vv ) {
-        os << v << std::endl;
-    }
-    return ( os );
-}
 
 int main( ) {
-    //  Read N = [ 1, 10^9 ]
+    //  Read N = [ 2, 2*10^5 ]
     int N;
     std::cin >> N;
 
-    //  Read Ai = [ 0, 10^9 ]
-    std::vector< int > A( N );
-    for( int i = 0; i < N; i++ ) {
-        std::cin >> A.at( i );
-    }
-
-    //  Read | S | = [ 1, 10^6 ]
+    //  Read | S | = [ N ]
     std::string S;
     std::cin >> S;
 
     //  Main
-    int answer = 0;
-    std::cout << answer << std::endl;
+    bool answer = true;
+    if( N == 2 ) {
+        if( S.at( 0 ) == S.at( N - 1 ) ) {
+            answer = true;
+        } else {
+            answer = false;
+        }
+    } else {
+        if( S.at( N - 1 ) == 'A' ) {
+            answer = true;
+        } else if( S.at( N - 1 ) == 'B' && S.at( 0 ) == 'B' ) {
+            answer = true;
+        } else {
+            answer = false;
+        }
+    }
+    if( answer ) {
+        std::cout << "Yes" << std::endl;
+    } else {
+        std::cout << "No" << std::endl;
+    }
 
     //  Finalize
     return ( 0 );
